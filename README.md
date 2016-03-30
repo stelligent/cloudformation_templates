@@ -6,7 +6,7 @@ This repository contains a collaboration of general and specific Amazon Web Serv
 ## Notable Templates
 
 ### Infrastructure
-* [vpc.template](https://github.com/stelligent/cloudformation_templates/infrastructure/vpc.template)
+* [vpc.template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template)
   * Used to create an entire VPC from scratch.
     * VPC
     * 3 Public Subnets
@@ -15,7 +15,7 @@ This repository contains a collaboration of general and specific Amazon Web Serv
     * Private Network ACLs
     * Internet Gateway attached to Public Subnets
     * Instance to Instance Allow All Security Group
-* [vpc-natgateway.template](https://github.com/stelligent/cloudformation_templates/infrastructure/vpc-natgateway.template)
+* [vpc-natgateway.template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc-natgateway.template)
   * Used to create an entire VPC from scratch including a NAT Gateway.
     * VPC
     * 3 Public Subnets
@@ -28,7 +28,7 @@ This repository contains a collaboration of general and specific Amazon Web Serv
     * Instance to Internet Security Group to be used to allow specific instances usage access to the NAT Gateway.
 
 ### Labs
-* [chef-compliance-lab.template](https://github.com/stelligent/cloudformation_templates/labs/chef-compliance-lab.template)
+* [chef-compliance-lab.template](https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef-compliance-lab.template)
   * Used to create an entire Chef Compliance lab environment including it's own VPC from scratch.
     * VPC
     * 3 Public Subnets
