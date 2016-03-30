@@ -1,0 +1,16 @@
+"oregon":"ami-9ebb55fe"
+"IAMRole": "default_ec2instance_role"
+"SecurityGroup": {
+  "Name": "chef-compliance-anywhere-levon",
+  "InboundAllow": ["22", "8443", "443"]
+}
+"ChefComplianceInstance": {
+  "Tags": [
+        "Name": "chef-compliance-poc-levon",
+        "Create Date": "03/30/2016",
+        "Delete After": "05/01/2016",
+        "Owner": "Levon Becker",
+        "AMI Version": ""
+],
+"Type": "t2.medium"
+}
