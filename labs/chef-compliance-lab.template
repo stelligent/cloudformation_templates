@@ -53,15 +53,6 @@
   },
   "Mappings": {
     "RegionMap": {
-      "us-west-1": {
-        "VPC": "10.30.0.0/20",
-        "PublicAZ1": "10.30.0.0/24",
-        "PublicAZ2": "10.30.1.0/24",
-        "PublicAZ3": "10.30.2.0/24",
-        "PrivateAZ1": "10.30.3.0/24",
-        "PrivateAZ2": "10.30.4.0/24",
-        "PrivateAZ3": "10.30.5.0/24"
-      },
       "us-west-2": {
         "VPC": "10.31.0.0/20",
         "PublicAZ1": "10.31.0.0/24",
@@ -70,12 +61,11 @@
         "PrivateAZ1": "10.31.3.0/24",
         "PrivateAZ2": "10.31.4.0/24",
         "PrivateAZ3": "10.31.5.0/24",
-        "AMIChefComplianceVersion": "2016_03_10_17_13_16",
+        "ChefComplianceVersion": "0.15.13-1",
         "AMIChefCompliance": "ami-9ebb55fe",
-        "AMIRHEL6": "ami-9ebb55fe",
-        "AMIRHEL7": "ami-9ebb55fe",
-        "AMIUbuntu14": "ami-9ebb55fe",
-        "AMIWin2012": "ami-9ebb55fe",
+        "AMIRHEL7": "ami-775e4f16",
+        "AMIUbuntu14": "ami-9abea4fb",
+        "AMIWin2012": "ami-1719f677",
         "StopTime": "* 9 * * *",
         "StartTime": "* 15 * * *",
         "InstanceTypeChefCompliance": "t2.medium",
@@ -90,7 +80,18 @@
         "PublicAZ3": "10.32.2.0/24",
         "PrivateAZ1": "10.32.3.0/24",
         "PrivateAZ2": "10.32.4.0/24",
-        "PrivateAZ3": "10.32.5.0/24"
+        "PrivateAZ3": "10.32.5.0/24",
+        "ChefComplianceVersion": "0.15.13-1",
+        "AMIChefCompliance": "ami-a83b3fc2",
+        "AMIRHEL7": "ami-2051294a",
+        "AMIUbuntu14": "ami-fce3c696",
+        "AMIWin2012": "ami-3d787d57",
+        "StopTime": "* 9 * * *",
+        "StartTime": "* 15 * * *",
+        "InstanceTypeChefCompliance": "t2.medium",
+        "InstanceTypeRHEL7": "t2.micro",
+        "InstanceTypeUbuntu14": "t2.micro",
+        "InstanceTypeWin2012": "t2.medium"
       }
     },
     "bootstrap": {
@@ -998,9 +999,7 @@
       "DependsOn": "VPC",
       "Properties": {
         "GroupDescription": "Instance to Instance Access in VPC",
-        "VpcId": {
-          "Ref": "VPC"
-        },
+        "VpcId": {"Ref": "VPC"},
         "Tags": [
           {
             "Key": "Name",
@@ -1056,9 +1055,7 @@
       "DependsOn": "VPC",
       "Properties": {
         "GroupDescription": "ELB to Web Server in VPC Access",
-        "VpcId": {
-          "Ref": "VPC"
-        },
+        "VpcId": {"Ref": "VPC"},
         "Tags": [
           {
             "Key": "Name",
@@ -1095,9 +1092,7 @@
       "DependsOn": "VPC",
       "Properties": {
         "GroupDescription": "Internet to ELB Access",
-        "VpcId": {
-          "Ref": "VPC"
-        },
+        "VpcId": {"Ref": "VPC"},
         "Tags": [
           {
             "Key": "Name",
@@ -1105,13 +1100,11 @@
           },
           {
             "Key": "Owner",
-            "Value": {"Ref": "Owner"},
-            "PropagateAtLaunch": "true"
+            "Value": {"Ref": "Owner"}
           },
           {
             "Key": "Project",
-            "Value": {"Ref": "Project"},
-            "PropagateAtLaunch": "true"
+            "Value": {"Ref": "Project"}
           }
         ],
         "SecurityGroupIngress": [
@@ -1150,6 +1143,7 @@
     "ElasticLoadBalancer": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "DependsOn": [
+        "VPC",
         "PublicSubnet1",
         "PublicSubnet2",
         "PublicSubnet3",
@@ -1158,15 +1152,9 @@
       ],
       "Properties": {
         "Subnets": [
-          {
-            "Ref": "PublicSubnet1"
-          },
-          {
-            "Ref": "PublicSubnet2"
-          },
-          {
-            "Ref": "PublicSubnet3"
-          }
+          {"Ref": "PublicSubnet1"},
+          {"Ref": "PublicSubnet2"},
+          {"Ref": "PublicSubnet3"}
         ],
         "ConnectionDrainingPolicy": {
           "Enabled": true,
@@ -1183,22 +1171,16 @@
           },
           {
             "Key": "Owner",
-            "Value": {"Ref": "Owner"},
-            "PropagateAtLaunch": "true"
+            "Value": {"Ref": "Owner"}
           },
           {
             "Key": "Project",
-            "Value": {"Ref": "Project"},
-            "PropagateAtLaunch": "true"
+            "Value": {"Ref": "Project"}
           }
         ],
         "SecurityGroups": [
-          {
-            "Ref": "InstanceToELBSecurityGroup"
-          },
-          {
-            "Ref": "InternetToELBSecurityGroup"
-          }
+          {"Ref": "InstanceToELBSecurityGroup"},
+          {"Ref": "InternetToELBSecurityGroup" }
         ],
         "Listeners": [
           {
@@ -1220,12 +1202,13 @@
     "LaunchConfiguration": {
       "Type": "AWS::AutoScaling::LaunchConfiguration",
       "DependsOn": [
+        "VPC",
         "InstanceToELBSecurityGroup",
         "InternalAccessSecurityGroup"
       ],
       "Properties": {
         "AssociatePublicIpAddress": "false",
-        "IamInstanceProfile": { "Ref": "IamInstanceProfile" },
+        "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
         "InstanceType": {
           "Fn::FindInMap": [
             "RegionMap",
@@ -1234,15 +1217,9 @@
           ]
         },
         "SecurityGroups": [
-          {
-            "Ref": "InstanceToELBSecurityGroup"
-          },
-          {
-            "Ref": "InternalAccessSecurityGroup"
-          },
-          {
-            "Ref": "NatSecurityGroup"
-          }
+          {"Ref": "InstanceToELBSecurityGroup"},
+          {"Ref": "InternalAccessSecurityGroup"},
+          {"Ref": "NatSecurityGroup"}
         ],
         "ImageId": {
           "Fn::FindInMap": [
@@ -1294,6 +1271,7 @@
     "AutoScalingGroup": {
       "Type": "AWS::AutoScaling::AutoScalingGroup",
       "DependsOn": [
+        "VPC",
         "LaunchConfiguration",
         "PrivateSubnet1",
         "PrivateSubnet2",
@@ -1309,9 +1287,7 @@
         "DesiredCapacity": "1",
         "HealthCheckType": "EC2",
         "LoadBalancerNames": [
-          {
-            "Ref": "ElasticLoadBalancer"
-          }
+          {"Ref": "ElasticLoadBalancer"}
         ],
         "MetricsCollection": [
           {
@@ -1334,15 +1310,9 @@
           }
         ],
         "VPCZoneIdentifier": [
-          {
-            "Ref": "PrivateSubnet1"
-          },
-          {
-            "Ref": "PrivateSubnet2"
-          },
-          {
-            "Ref": "PrivateSubnet3"
-          }
+          {"Ref": "PrivateSubnet1"},
+          {"Ref": "PrivateSubnet2"},
+          {"Ref": "PrivateSubnet3"}
         ],
         "Tags": [
           {
@@ -1358,6 +1328,17 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"},
+            "PropagateAtLaunch": "true"
+          },
+          {
+            "Key": "ChefComplianceVersion",
+            "Value": {
+              "Fn::FindInMap": [
+                "RegionMap",
+                {"Ref": "AWS::Region"},
+                "ChefComplianceVersion"
+              ]
+            },
             "PropagateAtLaunch": "true"
           }
         ]
@@ -1400,6 +1381,94 @@
           ]
         }
       }
+    },
+    "EC2InstanceRHEL7" : {
+      "DependsOn": [
+        "VPC",
+        "PrivateSubnet1",
+        "InternalAccessSecurityGroup",
+        "NatSecurityGroup"
+      ],
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : {
+          "Fn::FindInMap": [
+            "RegionMap",
+            {"Ref": "AWS::Region"},
+            "InstanceTypeRHEL7"
+          ]
+        },
+        "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
+        "ImageId" : {
+          "Fn::FindInMap": [
+            "RegionMap",
+            {"Ref": "AWS::Region"},
+            "AMIRHEL7"
+          ]
+        },
+        "NetworkInterfaces": [{
+          "GroupSet": [
+            {"Ref": "InternalAccessSecurityGroup"},
+            {"Ref": "NatSecurityGroup"}
+          ],
+          "AssociatePublicIpAddress": "false",
+          "DeviceIndex": "0",
+          "DeleteOnTermination": "true",
+          "SubnetId": {"Ref": "PrivateSubnet1"}
+        }],
+        "KeyName": {
+          "Ref": "Ec2KeyPair"
+        },
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "DeleteOnTermination": "true",
+              "VolumeType": "gp2"
+            }
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash\n",
+                {
+                  "Fn::FindInMap": [
+                    "bootstrap",
+                    "linux",
+                    "installpackages"
+                  ]
+                },
+                "\n",
+                {
+                  "Fn::FindInMap": [
+                    "bootstrap",
+                    "linux",
+                    "warmebs"
+                  ]
+                },
+                "\n"
+              ]
+            ]
+          }
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-rhel7"]]}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          }
+        ]
+      }
     }
   },
   "Outputs": {
@@ -1413,21 +1482,15 @@
     },
     "VPCId": {
       "Description": "VPC ID",
-      "Value": {
-        "Ref": "VPC"
-      }
+      "Value": {"Ref": "VPC"}
     },
     "VPCe": {
       "Description": "VPC Endpoint ID",
-      "Value": {
-        "Ref": "S3VpcEndpoint"
-      }
+      "Value": {"Ref": "S3VpcEndpoint"}
     },
     "NatEIP": {
       "Description": "NAT Elastic IP Address",
-      "Value": {
-        "Ref": "NatEIP"
-      }
+      "Value": {"Ref": "NatEIP"}
     },
     "NatSecurityGroup": {
       "Description": "NAT Security Group ID for Instances to have Internet Access",
@@ -1464,6 +1527,16 @@
     "InternetToELBSecurityGroup": {
       "Description": "ELB Fully qualified domain name",
       "Value": {"Ref": "InternetToELBSecurityGroup"}
+    },
+    "ChefComplianceVersion": {
+      "Description": "Chef Compliance Server Version",
+      "Value": {
+        "Fn::FindInMap": [
+          "RegionMap",
+          {"Ref": "AWS::Region"},
+          "ChefComplianceVersion"
+        ]
+      }
     },
     "DeleteAfter": {
       "Description": "It is ok to delete the stack after this date",
