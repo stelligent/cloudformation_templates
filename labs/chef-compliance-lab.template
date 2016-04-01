@@ -123,10 +123,6 @@
             "Value": {"Ref": "AWS::StackName"}
           },
           {
-            "Key": "Network",
-            "Value": "Public"
-          },
-          {
             "Key": "Owner",
             "Value": {"Ref": "Owner"}
           },
@@ -239,8 +235,12 @@
             "Value": {"Ref": "AWS::StackName"}
           },
           {
-            "Key": "Network",
-            "Value": "Public"
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
           }
         ]
       }
