@@ -1,10 +1,10 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Stelligent VPC CloudFormation Template 20160330",
+  "Description": "Stelligent Create Tiered VPC v20160330-1500",
   "Parameters": {
     "Environment": {
       "Default": "dev",
-      "Description": "Select Environment",
+      "Description": "Select IP Supernet",
       "Type": "String",
       "AllowedValues": [
         "dev",

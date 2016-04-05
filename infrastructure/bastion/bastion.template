@@ -1,0 +1,539 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Stelligent Bastion Host CloudFormation Template 20160307",
+  "Parameters": {
+    "Ec2KeyPair": {
+      "Description": "Select Keypair to Assign to EC2 Instances",
+      "Type": "AWS::EC2::KeyPair::KeyName"
+    },
+    "Environment": {
+      "Default": "dev",
+      "Description": "Select Environment",
+      "Type": "String",
+      "AllowedValues": [
+        "dev",
+        "qa",
+        "stg",
+        "prd"
+      ]
+    },
+    "DisableScheduledTurnOff": {
+      "Default": "false",
+      "Description": "Disable Scheduled Turn Off?",
+      "Type": "String",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "Region": {
+      "Default": "uswest2",
+      "Description": "Select Region",
+      "Type": "String",
+      "AllowedValues": [
+        "uswest2",
+        "useast1"
+      ]
+    },
+    "RemoteAccessSource": {
+      "Description": "Source that has SSH access to the bastion host (70.39.108.38/32).",
+      "Type": "String",
+      "MinLength": "9",
+      "MaxLength": "18",
+      "Default": "50.39.107.38/32",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "must be a valid CIDR range of the form x.x.x.x/x."
+    }
+  },
+  "Mappings": {
+    "uswest2": {
+      "dev": {
+        "AMI": "ami-4d5d577d",
+        "VPC": "vpc-95b545f1",
+        "VPCe": "vpce-ae52b0c7",
+        "InstanceType": "t2.nano",
+        "InternalAccessSecurityGroup": "sg-9a8e03fd",
+        "MinAutoScaleCount": "1",
+        "MaxAutoScaleCount": "1",
+        "ScheduledTurnOffTime": "* 9 * * *",
+        "ScheduledTurnOnTime": "* 15 * * *",
+        "PublicSubnets": ["subnet-d10ef5b5", "subnet-1eaab669", "subnet-bb8da6e2"],
+        "SnsTopicArn": "arn:aws:sns:us-west-2:213533013207:cloudwatch-alerts",
+        "IamInstanceProfile": "arn:aws:iam::213533013207:instance-profile/ec2-base-policy"
+      },
+      "qa": {
+        "AMI": "ami-",
+        "VPC": "vpc-",
+        "VPCe": "vpce-",
+        "InstanceType": "t2.nano",
+        "InternalAccessSecurityGroup": "sg-",
+        "MinAutoScaleCount": "1",
+        "MaxAutoScaleCount": "1",
+        "ScheduledTurnOffTime": "* 9 * * *",
+        "ScheduledTurnOnTime": "* 15 * * *",
+        "PublicSubnets": ["subnet-", "subnet-", "subnet-"],
+        "SnsTopicArn": "arn:aws:sns:us-west-2:213533013207:cloudwatch-alerts",
+        "IamInstanceProfile": "arn:aws:iam::213533013207:instance-profile/ec2-base-policy"
+      },
+      "stg": {
+        "AMI": "ami-",
+        "VPC": "vpc-",
+        "VPCe": "vpce-",
+        "InstanceType": "t2.nano",
+        "InternalAccessSecurityGroup": "sg-",
+        "MinAutoScaleCount": "1",
+        "MaxAutoScaleCount": "1",
+        "ScheduledTurnOffTime": "* 9 * * *",
+        "ScheduledTurnOnTime": "* 15 * * *",
+        "PublicSubnets": ["subnet-", "subnet-", "subnet-"],
+        "SnsTopicArn": "arn:aws:sns:us-west-2:213533013207:cloudwatch-alerts",
+        "IamInstanceProfile": "arn:aws:iam::213533013207:instance-profile/ec2-base-policy"
+      },
+      "prd": {
+        "AMI": "ami-",
+        "VPC": "vpc-",
+        "VPCe": "vpce-",
+        "InstanceType": "t2.nano",
+        "InternalAccessSecurityGroup": "sg-",
+        "MinAutoScaleCount": "1",
+        "MaxAutoScaleCount": "1",
+        "ScheduledTurnOffTime": "* 9 * * *",
+        "ScheduledTurnOnTime": "* 15 * * *",
+        "PublicSubnets": ["subnet-", "subnet-", "subnet-"],
+        "SnsTopicArn": "arn:aws:sns:us-west-2:213533013207:cloudwatch-alerts",
+        "IamInstanceProfile": "arn:aws:iam::213533013207:instance-profile/ec2-base-policy"
+      }
+    },
+    "useast1": {
+      "dev": {
+        "AMI": "ami-",
+        "VPC": "vpc-",
+        "VPCe": "vpce-",
+        "InstanceType": "t2.nano",
+        "InternalAccessSecurityGroup": "sg-",
+        "MinAutoScaleCount": "1",
+        "MaxAutoScaleCount": "1",
+        "ScheduledTurnOffTime": "* 9 * * *",
+        "ScheduledTurnOnTime": "* 15 * * *",
+        "PublicSubnets": ["subnet-", "subnet-", "subnet-"],
+        "SnsTopicArn": "arn:aws:sns:us-west-2:213533013207:cloudwatch-alerts",
+        "IamInstanceProfile": "arn:aws:iam::213533013207:instance-profile/ec2-base-policy"
+      },
+      "qa": {
+        "AMI": "ami-",
+        "VPC": "vpc-",
+        "VPCe": "vpce-",
+        "InstanceType": "t2.nano",
+        "InternalAccessSecurityGroup": "sg-",
+        "MinAutoScaleCount": "1",
+        "MaxAutoScaleCount": "1",
+        "ScheduledTurnOffTime": "* 9 * * *",
+        "ScheduledTurnOnTime": "* 15 * * *",
+        "PublicSubnets": ["subnet-", "subnet-", "subnet-"],
+        "SnsTopicArn": "arn:aws:sns:us-west-2:213533013207:cloudwatch-alerts",
+        "IamInstanceProfile": "arn:aws:iam::213533013207:instance-profile/ec2-base-policy"
+      },
+      "stg": {
+        "AMI": "ami-",
+        "VPC": "vpc-",
+        "VPCe": "vpce-",
+        "InstanceType": "t2.nano",
+        "InternalAccessSecurityGroup": "sg-",
+        "MinAutoScaleCount": "1",
+        "MaxAutoScaleCount": "1",
+        "ScheduledTurnOffTime": "* 9 * * *",
+        "ScheduledTurnOnTime": "* 15 * * *",
+        "PublicSubnets": ["subnet-", "subnet-", "subnet-"],
+        "SnsTopicArn": "arn:aws:sns:us-west-2:213533013207:cloudwatch-alerts",
+        "IamInstanceProfile": "arn:aws:iam::213533013207:instance-profile/ec2-base-policy"
+      },
+      "prd": {
+        "AMI": "ami-",
+        "VPC": "vpc-",
+        "VPCe": "vpce-",
+        "InstanceType": "t2.nano",
+        "InternalAccessSecurityGroup": "sg-",
+        "MinAutoScaleCount": "1",
+        "MaxAutoScaleCount": "1",
+        "ScheduledTurnOffTime": "* 9 * * *",
+        "ScheduledTurnOnTime": "* 15 * * *",
+        "PublicSubnets": ["subnet-", "subnet-", "subnet-"],
+        "SnsTopicArn": "arn:aws:sns:us-west-2:213533013207:cloudwatch-alerts",
+        "IamInstanceProfile": "arn:aws:iam::213533013207:instance-profile/ec2-base-policy"
+      }
+    },
+    "bash": {
+      "base": {
+        "warmebs": "dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M",
+        "installpackages": "yum install curl wget cloud-utils mysql htop vim"
+      }
+    }
+  },
+  "Conditions": {
+    "TurnOffNightly": {
+      "Fn::And": [
+        {"Fn::Or": [
+          { "Fn::Equals": [ { "Ref": "Environment" }, "dev" ] },
+          { "Fn::Equals": [ { "Ref": "Environment" }, "qa" ] },
+          { "Fn::Equals": [ { "Ref": "Environment" }, "stg" ] }
+        ]},
+        { "Fn::Equals": [ { "Ref": "DisableScheduledTurnOff" }, "false" ] }
+      ]
+    },
+    "CreateAlarms": {
+      "Fn::Or": [
+        { "Fn::Equals": [ { "Ref": "Environment" }, "stg" ] },
+        { "Fn::Equals": [ { "Ref": "Environment" }, "prd" ] }
+      ]
+    }
+  },
+  "Resources": {
+    "BastionSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "SSH Access to Bastion Instance",
+        "VpcId": {
+          "Fn::FindInMap": [
+            { "Ref" : "Region" },
+            { "Ref": "Environment" },
+            "VPC"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-bastion"]]}
+          }
+        ],
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": {"Ref": "RemoteAccessSource"}
+          },
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": {"Ref": "RemoteAccessSource"}
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+    "LaunchConfiguration": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "DependsOn": ["BastionSecurityGroup"],
+      "Properties": {
+        "AssociatePublicIpAddress": "true",
+        "IamInstanceProfile": {
+          "Fn::FindInMap": [
+            { "Ref" : "Region" },
+            { "Ref": "Environment" },
+            "IamInstanceProfile"
+          ]
+        },
+        "InstanceType": {
+          "Fn::FindInMap": [
+            { "Ref" : "Region" },
+            { "Ref": "Environment" },
+            "InstanceType"
+          ]
+        },
+        "SecurityGroups": [
+          {"Ref": "BastionSecurityGroup"},
+          {
+            "Fn::FindInMap": [
+              { "Ref" : "Region" },
+              { "Ref": "Environment" },
+              "InternalAccessSecurityGroup"
+            ]
+          }
+        ],
+        "ImageId": {
+          "Fn::FindInMap": [
+            {"Ref" : "Region"},
+            {"Ref": "Environment"},
+            "AMI"
+          ]
+        },
+        "KeyName": {"Ref": "Ec2KeyPair"},
+        "BlockDeviceMappings" : [
+          {
+            "DeviceName" : "/dev/sda1",
+            "Ebs": {
+              "DeleteOnTermination": "true",
+              "VolumeType": "gp2"
+            }
+          }
+        ],
+        "UserData" : {
+          "Fn::Base64" : {
+            "Fn::Join" : [
+              "",
+              [
+                "#!/bin/bash\n",
+                {
+                  "Fn::FindInMap": [
+                    "bash",
+                    "base",
+                    "installpackages"
+                  ]
+                },
+                "\n",
+                {
+                  "Fn::FindInMap": [
+                    "bash",
+                    "base",
+                    "warmebs"
+                  ]
+                },
+                "\n"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "AutoScalingGroup": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "DependsOn": ["LaunchConfiguration"],
+      "Properties": {
+        "LaunchConfigurationName": {
+          "Ref": "LaunchConfiguration"
+        },
+        "MinSize": {
+          "Fn::FindInMap": [
+            {"Ref": "Region"},
+            {"Ref": "Environment"},
+            "MinAutoScaleCount"
+          ]
+        },
+        "MaxSize": {
+          "Fn::FindInMap": [
+            {"Ref": "Region"},
+            {"Ref": "Environment"},
+            "MaxAutoScaleCount"
+          ]
+        },
+        "DesiredCapacity": {
+          "Fn::FindInMap": [
+            {"Ref": "Region"},
+            {"Ref": "Environment"},
+            "MinAutoScaleCount"
+          ]
+        },
+        "HealthCheckType": "EC2",
+        "MetricsCollection": [
+          {
+            "Granularity": "1Minute",
+            "Metrics": ["GroupMinSize", "GroupMaxSize"]
+          }
+        ],
+        "NotificationConfigurations": [
+          {
+            "TopicARN": {
+              "Fn::FindInMap": [
+                {"Ref" : "Region"},
+                {"Ref": "Environment"},
+                "SnsTopicArn"
+              ]
+            },
+            "NotificationTypes": [
+              "autoscaling:EC2_INSTANCE_LAUNCH",
+              "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+              "autoscaling:EC2_INSTANCE_TERMINATE",
+              "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+            ]
+          }
+        ],
+        "VPCZoneIdentifier": {
+          "Fn::FindInMap": [
+            {"Ref": "Region"},
+            {"Ref": "Environment"},
+            "PublicSubnets"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [{"Ref": "Environment"}, "-bastion"]]},
+            "PropagateAtLaunch": "true"
+          }
+        ]
+      }
+    },
+    "cpuhigh": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "DependsOn": [
+        "AutoScalingGroup",
+        "ScaleUpPolicy"
+      ],
+      "Properties": {
+        "AlarmActions": [{"Ref": "ScaleUpPolicy"}],
+        "AlarmDescription": "Scale up if CPU > 60% average over 10 minutes",
+        "ComparisonOperator": "GreaterThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "AutoScalingGroup",
+            "Value": {
+              "Ref": "AutoScalingGroup"
+            }
+          }
+        ],
+        "EvaluationPeriods": 2,
+        "MetricName": "CPUUtilization",
+        "Namespace": "AWS/EC2",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": "60",
+        "Unit": "Percent"
+      }
+    },
+    "cpulow": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "DependsOn": [
+        "AutoScalingGroup",
+        "ScaleDownPolicy"
+      ],
+      "Properties": {
+        "AlarmActions": [{"Ref": "ScaleDownPolicy"}],
+        "AlarmDescription": "Scale down if CPU <= 30% average over 30 minutes",
+        "ComparisonOperator": "LessThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "AutoScalingGroup",
+            "Value": {"Ref": "AutoScalingGroup"}
+          }
+        ],
+        "EvaluationPeriods": 6,
+        "MetricName": "CPUUtilization",
+        "Namespace": "AWS/EC2",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": "30",
+        "Unit": "Percent"
+      }
+    },
+    "ScaleDownPolicy": {
+      "Type": "AWS::AutoScaling::ScalingPolicy",
+      "DependsOn": ["AutoScalingGroup"],
+      "Properties": {
+        "AdjustmentType": "ChangeInCapacity",
+        "AutoScalingGroupName": {
+          "Ref": "AutoScalingGroup"
+        },
+        "Cooldown": 1800,
+        "ScalingAdjustment": "-1"
+      }
+    },
+    "ScaleUpPolicy": {
+      "Type": "AWS::AutoScaling::ScalingPolicy",
+      "DependsOn": ["AutoScalingGroup"],
+      "Properties": {
+        "AdjustmentType": "ChangeInCapacity",
+        "AutoScalingGroupName": {"Ref": "AutoScalingGroup"},
+        "Cooldown": 300,
+        "ScalingAdjustment": "1"
+      }
+    },
+    "ASGScheduledActionDown": {
+      "Condition": "TurnOffNightly",
+      "Type": "AWS::AutoScaling::ScheduledAction",
+      "Properties": {
+        "AutoScalingGroupName": {
+          "Ref": "AutoScalingGroup"
+        },
+        "DesiredCapacity": "0",
+        "MaxSize": "0",
+        "MinSize": "0",
+        "Recurrence": {
+          "Fn::FindInMap": [
+            {"Ref": "Region"},
+            {"Ref": "Environment"},
+            "ScheduledTurnOffTime"
+          ]
+        }
+      }
+    },
+    "ASGScheduledActionUp": {
+      "Condition": "TurnOffNightly",
+      "Type": "AWS::AutoScaling::ScheduledAction",
+      "Properties": {
+        "AutoScalingGroupName": {"Ref": "AutoScalingGroup"},
+        "DesiredCapacity": {
+          "Fn::FindInMap": [
+            {"Ref": "Region"},
+            {"Ref": "Environment"},
+            "MinAutoScaleCount"
+          ]
+        },
+        "MaxSize": {
+          "Fn::FindInMap": [
+            {"Ref": "Region"},
+            {"Ref": "Environment"},
+            "MaxAutoScaleCount"
+          ]
+        },
+        "MinSize": {
+          "Fn::FindInMap": [
+            {"Ref": "Region"},
+            {"Ref": "Environment"},
+            "MinAutoScaleCount"
+          ]
+        },
+        "Recurrence": {
+          "Fn::FindInMap": [
+            {"Ref": "Region"},
+            {"Ref": "Environment"},
+            "ScheduledTurnOnTime"
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "KeyPairLoaded": {
+      "Description": "Key Pair used.",
+      "Value": { "Ref": "Ec2KeyPair" }
+    },
+    "PeriodicallyTurnOff": {
+      "Description": "Scheduled turn off.",
+      "Value": {
+        "Fn::If": [
+          "TurnOffNightly",
+          {
+            "Fn::Join": [
+              "",
+              [
+                "Turn off at: ",
+                {
+                  "Fn::FindInMap": [
+                    {"Ref": "Region"},
+                    {"Ref": "Environment"},
+                    "ScheduledTurnOffTime"
+                  ]
+                },
+                " - Turn on at: ",
+                {
+                  "Fn::FindInMap": [
+                    {"Ref": "Region"},
+                    {"Ref": "Environment"},
+                    "ScheduledTurnOnTime"
+                  ]
+                }
+              ]
+            ]
+          },
+          "No periodic turn off"
+        ]
+      }
+    }
+  }
+}

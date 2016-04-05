@@ -1,29 +1,19 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Stelligent Chef Compliance Lab by Levon Becker v20160330-1445",
+  "Description": "Stelligent Chef Compliance Lab by Levon Becker v20160401-1135",
   "Parameters": {
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to EC2 Instances",
       "Type": "AWS::EC2::KeyPair::KeyName"
     },
     "BastionAccessSource": {
-      "Description": "Source that has SSH access to the bastion host.",
+      "Description": "Source that has SSH access to the bastion host. (i.e. 50.32.108.38/32)",
       "Type": "String",
       "MinLength": "9",
       "MaxLength": "18",
       "Default": "0.0.0.0/0",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
       "ConstraintDescription": "must be a valid CIDR range of the form x.x.x.x/x."
-    },
-    "IamInstanceProfile": {
-      "Description": "IAM Instance Profile Name.",
-      "Type": "String",
-      "Default": "default_ec2instance_role"
-    },
-    "NotificationEmail": {
-      "Description": "Email Address for Notifications.",
-      "Type": "String",
-      "Default": "levon.becker@stelligent.com"
     },
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -40,15 +30,6 @@
       "Type": "String",
       "Default": "05/01/2016",
       "AllowedPattern": "^(1[0-2]|0[1-9])/(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$"
-    },
-    "ShutdownNightly": {
-      "Default": "true",
-      "Description": "Stop Instances at Night?",
-      "Type": "String",
-      "AllowedValues": [
-        "true",
-        "false"
-      ]
     }
   },
   "Mappings": {
@@ -69,6 +50,7 @@
         "StopTime": "* 9 * * *",
         "StartTime": "* 15 * * *",
         "InstanceTypeChefCompliance": "t2.medium",
+        "InstanceTypeBastion": "t2.micro",
         "InstanceTypeRHEL7": "t2.micro",
         "InstanceTypeUbuntu14": "t2.micro",
         "InstanceTypeWin2012": "t2.medium"
@@ -89,20 +71,23 @@
         "StopTime": "* 9 * * *",
         "StartTime": "* 15 * * *",
         "InstanceTypeChefCompliance": "t2.medium",
+        "InstanceTypeBastion": "t2.micro",
         "InstanceTypeRHEL7": "t2.micro",
         "InstanceTypeUbuntu14": "t2.micro",
         "InstanceTypeWin2012": "t2.medium"
       }
     },
     "bootstrap": {
-      "linux": {
+      "rhel": {
         "warmebs": "dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M",
-        "installpackages": "yum install curl wget cloud-utils mysql htop vim"
+        "installpackages": "yum install curl wget cloud-utils ca-certificate vim",
+        "installbastionpackages": "yum install mysql openssl"
+      },
+      "ubuntu": {
+        "warmebs": "dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M",
+        "installpackages": "apt-get update && apt-get install curl wget cloud-utils ca-certificate vim"
       }
     }
-  },
-  "Conditions": {
-    "TurnOffNightly" : {"Fn::Equals" : [{"Ref" : "ShutdownNightly"}, "true"]}
   },
   "Resources": {
     "VPC": {
@@ -549,7 +534,7 @@
           {"Ref": "PrivateRouteTable"},
           {"Ref": "PublicRouteTable"}
         ],
-        "ServiceName": { "Fn::Join": [ "", [ "com.amazonaws.", { "Ref": "AWS::Region" }, ".s3" ] ] },
+        "ServiceName": {"Fn::Join": ["", ["com.amazonaws.", {"Ref": "AWS::Region"}, ".s3" ]]},
         "VpcId": {
           "Ref": "VPC"
         }
@@ -631,8 +616,8 @@
         "Egress": "false",
         "CidrBlock": "0.0.0.0/0",
         "PortRange": {
-          "From": "22",
-          "To": "22"
+          "From": "8080",
+          "To": "8080"
         }
       }
     },
@@ -649,8 +634,8 @@
         "Egress": "false",
         "CidrBlock": "0.0.0.0/0",
         "PortRange": {
-          "From": "3389",
-          "To": "3389"
+          "From": "8443",
+          "To": "8443"
         }
       }
     },
@@ -667,8 +652,8 @@
         "Egress": "false",
         "CidrBlock": "0.0.0.0/0",
         "PortRange": {
-          "From": "1024",
-          "To": "65535"
+          "From": "22",
+          "To": "22"
         }
       }
     },
@@ -680,6 +665,42 @@
           "Ref": "PublicNetworkAcl"
         },
         "RuleNumber": "125",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "3389",
+          "To": "3389"
+        }
+      }
+    },
+    "InboundPublicNetworkAclEntry130": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "DependsOn": "PublicNetworkAcl",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "130",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "1024",
+          "To": "65535"
+        }
+      }
+    },
+    "InboundPublicNetworkAclEntry135": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "DependsOn": "PublicNetworkAcl",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "135",
         "Protocol": "-1",
         "RuleAction": "allow",
         "Egress": "false",
@@ -1031,9 +1052,14 @@
     },
     "NatGateway": {
       "Type": "AWS::EC2::NatGateway",
+      "DependsOn": [
+        "VPC",
+        "PublicSubnet1",
+        "NatEIP"
+      ],
       "Properties": {
-        "AllocationId": { "Fn::GetAtt": ["NatEIP", "AllocationId"]},
-        "SubnetId": { "Ref": "PublicSubnet1"}
+        "AllocationId": {"Fn::GetAtt": ["NatEIP", "AllocationId"]},
+        "SubnetId": {"Ref": "PublicSubnet1"}
       }
     },
     "NatEIP": {
@@ -1044,22 +1070,180 @@
     },
     "NatRoute": {
       "Type": "AWS::EC2::Route",
+      "DependsOn": [
+        "VPC",
+        "PrivateRouteTable",
+        "NatGateway"
+      ],
       "Properties": {
-        "RouteTableId": { "Ref": "PrivateRouteTable" },
+        "RouteTableId": {"Ref": "PrivateRouteTable"},
         "DestinationCidrBlock": "0.0.0.0/0",
-        "NatGatewayId": { "Ref": "NatGateway" }
+        "NatGatewayId": {"Ref": "NatGateway"}
       }
     },
-    "InstanceToELBSecurityGroup": {
+    "IamRole": {
+      "Type"  : "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [ {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": ["ec2.amazonaws.com" ]
+            },
+            "Action": ["sts:AssumeRole" ]
+          } ]
+        },
+        "Path": "/"
+      }
+    },
+    "IamPolicies": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-s3-cloudwatch-ec2"]]},
+        "PolicyDocument": {
+          "Statement": [ {
+            "Effect": "Allow",
+            "Action": [
+              "s3:*",
+              "ec2:Describe*",
+              "elasticloadbalancing:Describe*",
+              "autoscaling:Describe*",
+              "cloudwatch:*",
+              "logs:*",
+              "sns:*"
+            ],
+            "Resource": "*"
+          }]
+        },
+        "Roles": [{"Ref": "IamRole"}]
+      }
+    },
+    "IamInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [{"Ref": "IamRole"}]
+      }
+    },
+    "BastionSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "DependsOn": "VPC",
       "Properties": {
-        "GroupDescription": "ELB to Web Server in VPC Access",
+        "GroupDescription": "SSH Access to Bastion Instance",
         "VpcId": {"Ref": "VPC"},
         "Tags": [
           {
             "Key": "Name",
-            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-instance-to-elb"]]}
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-bastion-access"]]}
+          }
+        ],
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": {"Ref": "BastionAccessSource"}
+          },
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": {
+              "Fn::FindInMap": [
+                "RegionMap",
+                {"Ref": "AWS::Region"},
+                "VPC"
+              ]
+            }
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+    "BastionInstance": {
+      "Type": "AWS::EC2::Instance",
+      "DependsOn": [
+        "PublicSubnet1",
+        "BastionSecurityGroup",
+        "InternalAccessSecurityGroup",
+        "IamInstanceProfile"
+      ],
+      "Properties": {
+        "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
+        "ImageId": {
+          "Fn::FindInMap": [
+            "RegionMap",
+            {"Ref": "AWS::Region"},
+            "AMIRHEL7"
+          ]
+        },
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "InstanceType": {
+          "Fn::FindInMap": [
+            "RegionMap",
+            {"Ref": "AWS::Region"},
+            "InstanceTypeBastion"
+          ]
+        },
+        "KeyName": {"Ref": "Ec2KeyPair"},
+        "Monitoring": "true",
+        "SecurityGroupIds": [
+          {"Ref": "BastionSecurityGroup"},
+          {"Ref": "InternalAccessSecurityGroup"}
+        ],
+        "SubnetId": {"Ref": "PublicSubnet1"},
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "DeleteOnTermination": "true",
+              "VolumeType": "gp2"
+            }
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash\n",
+                {
+                  "Fn::FindInMap": [
+                    "bootstrap",
+                    "rhel",
+                    "warmebs"
+                  ]
+                },
+                "\n",
+                {
+                  "Fn::FindInMap": [
+                    "bootstrap",
+                    "rhel",
+                    "installpackages"
+                  ]
+                },
+                "\n",
+                {
+                  "Fn::FindInMap": [
+                    "bootstrap",
+                    "rhel",
+                    "installbastionpackages"
+                  ]
+                },
+                "\n"
+              ]
+            ]
+          }
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-bastion"]]}
           },
           {
             "Key": "Owner",
@@ -1072,31 +1256,23 @@
         ]
       }
     },
-    "InstanceToELBSecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "DependsOn": "InstanceToELBSecurityGroup",
+    "BastionEIP": {
+      "Type": "AWS::EC2::EIP",
+      "DependsOn": "BastionInstance",
       "Properties": {
-        "GroupId": {
-          "Ref": "InstanceToELBSecurityGroup"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "80",
-        "ToPort": "80",
-        "SourceSecurityGroupId": {
-          "Ref": "InstanceToELBSecurityGroup"
-        }
+        "InstanceId": {"Ref": "BastionInstance"}
       }
     },
-    "InternetToELBSecurityGroup": {
+    "InternetToChefComplianceServerSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "DependsOn": "VPC",
       "Properties": {
-        "GroupDescription": "Internet to ELB Access",
+        "GroupDescription": "Internet to Chef Compliance Server Access",
         "VpcId": {"Ref": "VPC"},
         "Tags": [
           {
             "Key": "Name",
-            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-internet-to-elb"]]}
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-internet-to-chefcompliance"]]}
           },
           {
             "Key": "Owner",
@@ -1119,6 +1295,12 @@
             "FromPort": "443",
             "ToPort": "443",
             "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8443",
+            "ToPort": "8443",
+            "CidrIp": "0.0.0.0/0"
           }
         ],
         "SecurityGroupEgress": [
@@ -1129,86 +1311,15 @@
         ]
       }
     },
-    "SNSTopic": {
-      "Type": "AWS::SNS::Topic",
-      "Properties": {
-        "TopicName": {"Ref": "AWS::StackName"},
-        "DisplayName": {"Ref": "AWS::StackName"},
-        "Subscription": [ {
-          "Endpoint": {"Ref": "NotificationEmail"},
-          "Protocol": "email"
-        } ]
-      }
-    },
-    "ElasticLoadBalancer": {
-      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+    "EC2InstanceChefCompliance": {
       "DependsOn": [
-        "VPC",
         "PublicSubnet1",
-        "PublicSubnet2",
-        "PublicSubnet3",
-        "InstanceToELBSecurityGroup",
-        "InternetToELBSecurityGroup"
+        "InternalAccessSecurityGroup",
+        "InternetToChefComplianceServerSecurityGroup",
+        "IamInstanceProfile"
       ],
+      "Type": "AWS::EC2::Instance",
       "Properties": {
-        "Subnets": [
-          {"Ref": "PublicSubnet1"},
-          {"Ref": "PublicSubnet2"},
-          {"Ref": "PublicSubnet3"}
-        ],
-        "ConnectionDrainingPolicy": {
-          "Enabled": true,
-          "Timeout": 120
-        },
-        "ConnectionSettings": {
-          "IdleTimeout": 90
-        },
-        "CrossZone": "true",
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {"Ref": "AWS::StackName"}
-          },
-          {
-            "Key": "Owner",
-            "Value": {"Ref": "Owner"}
-          },
-          {
-            "Key": "Project",
-            "Value": {"Ref": "Project"}
-          }
-        ],
-        "SecurityGroups": [
-          {"Ref": "InstanceToELBSecurityGroup"},
-          {"Ref": "InternetToELBSecurityGroup" }
-        ],
-        "Listeners": [
-          {
-            "LoadBalancerPort": "80",
-            "InstancePort": "80",
-            "Protocol": "HTTP"
-          }
-        ],
-        "LoadBalancerName": {"Ref": "AWS::StackName"},
-        "HealthCheck": {
-          "Target": "TCP:80",
-          "HealthyThreshold": "3",
-          "UnhealthyThreshold": "5",
-          "Interval": "30",
-          "Timeout": "5"
-        }
-      }
-    },
-    "LaunchConfiguration": {
-      "Type": "AWS::AutoScaling::LaunchConfiguration",
-      "DependsOn": [
-        "VPC",
-        "InstanceToELBSecurityGroup",
-        "InternalAccessSecurityGroup"
-      ],
-      "Properties": {
-        "AssociatePublicIpAddress": "false",
-        "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
         "InstanceType": {
           "Fn::FindInMap": [
             "RegionMap",
@@ -1216,11 +1327,7 @@
             "InstanceTypeChefCompliance"
           ]
         },
-        "SecurityGroups": [
-          {"Ref": "InstanceToELBSecurityGroup"},
-          {"Ref": "InternalAccessSecurityGroup"},
-          {"Ref": "NatSecurityGroup"}
-        ],
+        "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
         "ImageId": {
           "Fn::FindInMap": [
             "RegionMap",
@@ -1228,9 +1335,17 @@
             "AMIChefCompliance"
           ]
         },
-        "KeyName": {
-          "Ref": "Ec2KeyPair"
-        },
+        "NetworkInterfaces": [{
+          "GroupSet": [
+            {"Ref": "InternetToChefComplianceServerSecurityGroup"},
+            {"Ref": "InternalAccessSecurityGroup"}
+          ],
+          "AssociatePublicIpAddress": "true",
+          "DeviceIndex": "0",
+          "DeleteOnTermination": "true",
+          "SubnetId": {"Ref": "PublicSubnet1"}
+        }],
+        "KeyName": {"Ref": "Ec2KeyPair"},
         "BlockDeviceMappings": [
           {
             "DeviceName": "/dev/sda1",
@@ -1249,86 +1364,35 @@
                 {
                   "Fn::FindInMap": [
                     "bootstrap",
-                    "linux",
-                    "installpackages"
+                    "rhel",
+                    "warmebs"
                   ]
                 },
                 "\n",
                 {
                   "Fn::FindInMap": [
                     "bootstrap",
-                    "linux",
-                    "warmebs"
+                    "rhel",
+                    "installpackages"
                   ]
                 },
                 "\n"
               ]
             ]
           }
-        }
-      }
-    },
-    "AutoScalingGroup": {
-      "Type": "AWS::AutoScaling::AutoScalingGroup",
-      "DependsOn": [
-        "VPC",
-        "LaunchConfiguration",
-        "PrivateSubnet1",
-        "PrivateSubnet2",
-        "PrivateSubnet3",
-        "ElasticLoadBalancer"
-      ],
-      "Properties": {
-        "LaunchConfigurationName": {
-          "Ref": "LaunchConfiguration"
         },
-        "MinSize": "1",
-        "MaxSize": "1",
-        "DesiredCapacity": "1",
-        "HealthCheckType": "EC2",
-        "LoadBalancerNames": [
-          {"Ref": "ElasticLoadBalancer"}
-        ],
-        "MetricsCollection": [
-          {
-            "Granularity": "1Minute",
-            "Metrics": [
-              "GroupMinSize",
-              "GroupMaxSize"
-            ]
-          }
-        ],
-        "NotificationConfigurations": [
-          {
-            "TopicARN": {"Ref": "SNSTopic"},
-            "NotificationTypes": [
-              "autoscaling:EC2_INSTANCE_LAUNCH",
-              "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
-              "autoscaling:EC2_INSTANCE_TERMINATE",
-              "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
-            ]
-          }
-        ],
-        "VPCZoneIdentifier": [
-          {"Ref": "PrivateSubnet1"},
-          {"Ref": "PrivateSubnet2"},
-          {"Ref": "PrivateSubnet3"}
-        ],
         "Tags": [
           {
             "Key": "Name",
-            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-webserver"]]},
-            "PropagateAtLaunch": "true"
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-web"]]}
           },
           {
             "Key": "Owner",
-            "Value": {"Ref": "Owner"},
-            "PropagateAtLaunch": "true"
+            "Value": {"Ref": "Owner"}
           },
           {
             "Key": "Project",
-            "Value": {"Ref": "Project"},
-            "PropagateAtLaunch": "true"
+            "Value": {"Ref": "Project"}
           },
           {
             "Key": "ChefComplianceVersion",
@@ -1338,60 +1402,21 @@
                 {"Ref": "AWS::Region"},
                 "ChefComplianceVersion"
               ]
-            },
-            "PropagateAtLaunch": "true"
+            }
           }
         ]
       }
     },
-    "ScheduledActionDown": {
-      "Condition": "TurnOffNightly",
-      "Type": "AWS::AutoScaling::ScheduledAction",
-      "Properties": {
-        "AutoScalingGroupName": {
-          "Ref": "AutoScalingGroup"
-        },
-        "DesiredCapacity": "0",
-        "MaxSize": "0",
-        "MinSize": "0",
-        "Recurrence": {
-          "Fn::FindInMap": [
-            "RegionMap",
-            {"Ref": "AWS::Region"},
-            "StopTime"
-          ]
-        }
-      }
-    },
-    "ScheduledActionUp": {
-      "Condition": "TurnOffNightly",
-      "Type": "AWS::AutoScaling::ScheduledAction",
-      "Properties": {
-        "AutoScalingGroupName": {
-          "Ref": "AutoScalingGroup"
-        },
-        "DesiredCapacity": "1",
-        "MaxSize": "1",
-        "MinSize": "1",
-        "Recurrence": {
-          "Fn::FindInMap": [
-            "RegionMap",
-            {"Ref": "AWS::Region"},
-            "StartTime"
-          ]
-        }
-      }
-    },
-    "EC2InstanceRHEL7" : {
+    "EC2InstanceRHEL7": {
       "DependsOn": [
-        "VPC",
         "PrivateSubnet1",
         "InternalAccessSecurityGroup",
-        "NatSecurityGroup"
+        "NatSecurityGroup",
+        "IamInstanceProfile"
       ],
-      "Type" : "AWS::EC2::Instance",
-      "Properties" : {
-        "InstanceType" : {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": {
           "Fn::FindInMap": [
             "RegionMap",
             {"Ref": "AWS::Region"},
@@ -1399,7 +1424,7 @@
           ]
         },
         "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
-        "ImageId" : {
+        "ImageId": {
           "Fn::FindInMap": [
             "RegionMap",
             {"Ref": "AWS::Region"},
@@ -1416,9 +1441,7 @@
           "DeleteOnTermination": "true",
           "SubnetId": {"Ref": "PrivateSubnet1"}
         }],
-        "KeyName": {
-          "Ref": "Ec2KeyPair"
-        },
+        "KeyName": {"Ref": "Ec2KeyPair"},
         "BlockDeviceMappings": [
           {
             "DeviceName": "/dev/sda1",
@@ -1437,16 +1460,16 @@
                 {
                   "Fn::FindInMap": [
                     "bootstrap",
-                    "linux",
-                    "installpackages"
+                    "rhel",
+                    "warmebs"
                   ]
                 },
                 "\n",
                 {
                   "Fn::FindInMap": [
                     "bootstrap",
-                    "linux",
-                    "warmebs"
+                    "rhel",
+                    "installpackages"
                   ]
                 },
                 "\n"
@@ -1458,6 +1481,152 @@
           {
             "Key": "Name",
             "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-rhel7"]]}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          }
+        ]
+      }
+    },
+    "EC2InstanceUbuntu14": {
+      "DependsOn": [
+        "PrivateSubnet2",
+        "InternalAccessSecurityGroup",
+        "NatSecurityGroup",
+        "IamInstanceProfile"
+      ],
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": {
+          "Fn::FindInMap": [
+            "RegionMap",
+            {"Ref": "AWS::Region"},
+            "InstanceTypeUbuntu14"
+          ]
+        },
+        "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
+        "ImageId": {
+          "Fn::FindInMap": [
+            "RegionMap",
+            {"Ref": "AWS::Region"},
+            "AMIUbuntu14"
+          ]
+        },
+        "NetworkInterfaces": [{
+          "GroupSet": [
+            {"Ref": "InternalAccessSecurityGroup"},
+            {"Ref": "NatSecurityGroup"}
+          ],
+          "AssociatePublicIpAddress": "false",
+          "DeviceIndex": "0",
+          "DeleteOnTermination": "true",
+          "SubnetId": {"Ref": "PrivateSubnet2"}
+        }],
+        "KeyName": {"Ref": "Ec2KeyPair"},
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "DeleteOnTermination": "true",
+              "VolumeType": "gp2"
+            }
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash\n",
+                {
+                  "Fn::FindInMap": [
+                    "bootstrap",
+                    "ubuntu",
+                    "warmebs"
+                  ]
+                },
+                "\n",
+                {
+                  "Fn::FindInMap": [
+                    "bootstrap",
+                    "ubuntu",
+                    "installpackages"
+                  ]
+                },
+                "\n"
+              ]
+            ]
+          }
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-ubuntu14"]]}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          }
+        ]
+      }
+    },
+    "EC2InstanceWin2012": {
+      "DependsOn": [
+        "PrivateSubnet3",
+        "InternalAccessSecurityGroup",
+        "NatSecurityGroup",
+        "IamInstanceProfile"
+      ],
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": {
+          "Fn::FindInMap": [
+            "RegionMap",
+            {"Ref": "AWS::Region"},
+            "InstanceTypeWin2012"
+          ]
+        },
+        "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
+        "ImageId": {
+          "Fn::FindInMap": [
+            "RegionMap",
+            {"Ref": "AWS::Region"},
+            "AMIWin2012"
+          ]
+        },
+        "NetworkInterfaces": [{
+          "GroupSet": [
+            {"Ref": "InternalAccessSecurityGroup"},
+            {"Ref": "NatSecurityGroup"}
+          ],
+          "AssociatePublicIpAddress": "false",
+          "DeviceIndex": "0",
+          "DeleteOnTermination": "true",
+          "SubnetId": {"Ref": "PrivateSubnet3"}
+        }],
+        "KeyName": {"Ref": "Ec2KeyPair"},
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "DeleteOnTermination": "true",
+              "VolumeType": "gp2"
+            }
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-win2012"]]}
           },
           {
             "Key": "Owner",
@@ -1496,9 +1665,21 @@
       "Description": "NAT Security Group ID for Instances to have Internet Access",
       "Value": {"Ref": "NatSecurityGroup"}
     },
-    "InternalAccessSecurityGroup": {
-      "Description": "Instance to Instance Access within VPC",
-      "Value": {"Ref": "InternalAccessSecurityGroup"}
+    "BastionIP": {
+      "Description": "IP address of the Bastion Instance EIP",
+      "Value": {"Ref": "BastionEIP"}
+    },
+    "BastionSecurityGroup": {
+      "Description": "Bastion Host Access Security Group ID",
+      "Value": {"Ref": "BastionSecurityGroup"}
+    },
+    "KeyPair": {
+      "Description": "Key Pair used.",
+      "Value": {"Ref": "Ec2KeyPair"}
+    },
+    "IamRole": {
+      "Description": "EC2 IAM Profile Role.",
+      "Value": {"Ref": "IamRole"}
     },
     "PublicSubnets": {
       "Description": "Public Subnets Created for VPC",
@@ -1508,25 +1689,17 @@
       "Description": "Public Subnets Created for VPC",
       "Value": {"Fn::Join": ["", [{"Ref": "PrivateSubnet1"}, ", ", {"Ref": "PrivateSubnet2"}, ", ", {"Ref": "PrivateSubnet3"}]]}
     },
-    "KeyPair": {
-      "Description": "Key Pair used.",
-      "Value": {"Ref": "Ec2KeyPair"}
+    "InternalAccessSecurityGroup": {
+      "Description": "Instance to Instance Access within VPC",
+      "Value": {"Ref": "InternalAccessSecurityGroup"}
     },
-    "SNSTopic": {
-      "Description": "SNS Notification Topic Created.",
-      "Value": {"Ref": "SNSTopic"}
+    "InternetToChefComplianceServerSecurityGroup": {
+      "Description": "Internet to Chef Compliance Server Security Group",
+      "Value": {"Ref": "InternetToChefComplianceServerSecurityGroup"}
     },
-    "ElbDNS": {
-      "Description": "ELB Fully qualified domain name",
-      "Value": {"Fn::GetAtt": ["ElasticLoadBalancer", "DNSName"]}
-    },
-    "InstanceToELBSecurityGroup": {
-      "Description": "ELB Fully qualified domain name",
-      "Value": {"Ref": "InstanceToELBSecurityGroup"}
-    },
-    "InternetToELBSecurityGroup": {
-      "Description": "ELB Fully qualified domain name",
-      "Value": {"Ref": "InternetToELBSecurityGroup"}
+    "ChefComplianceDNS": {
+      "Description": "Chef Compliance Server FQDN",
+      "Value": {"Fn::GetAtt": ["EC2InstanceChefCompliance", "PublicDnsName"]}
     },
     "ChefComplianceVersion": {
       "Description": "Chef Compliance Server Version",

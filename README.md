@@ -8,40 +8,26 @@ This repository contains a collaboration of general and specific Amazon Web Serv
 ### Infrastructure
 * [vpc.template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template)
   * Used to create an entire VPC from scratch.
-    * VPC
-    * 3 Public Subnets
-    * 3 Private Subnets
+    * Creates a New VPC
+    * Creates 3 Public Subnets
+    * Creates 3 Private Subnets
     * Public Network ACLs
     * Private Network ACLs
     * Internet Gateway attached to Public Subnets
     * Instance to Instance Allow All Security Group
-* [vpc-natgateway.template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc-natgateway.template)
-  * Used to create an entire VPC from scratch including a NAT Gateway.
-    * VPC
-    * 3 Public Subnets
-    * 3 Private Subnets
-    * Public Network ACLs
-    * Private Network ACLs
-    * Internet Gateway attached to Public Subnets
-    * Instance to Instance Allow All Security Group
-    * NAT Gateway configured on the first Public Subnet and available to all the Private Subnets
-    * Instance to Internet Security Group to be used to allow specific instances usage access to the NAT Gateway.
+* [natgateway.template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/natgateway.template)
+  * Used to create a NAT Gateway on an existing VPC with Public and Private subnets.
+    * Creates NAT Gateway on existing VPC with Public and Private subnets.
+    * Creates Security Group to Allow Instances NAT Access to the Internet.
+    * Updated Route Table for functionality of the NAT solution.
+* [bastion.template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion.template)
+  * Used to create a Bastion host instance on an existing VPC.
+    * Creates single Bastion instance on a Public subnet.
 
 ### Labs
-* [chef-compliance-lab.template](https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef-compliance-lab.template)
-  * Used to create an entire Chef Compliance lab environment including it's own VPC from scratch.
-    * VPC
-    * 3 Public Subnets
-    * 3 Private Subnets
-    * Public Network ACLs
-    * Private Network ACLs
-    * Internet Gateway attached to Public Subnets
-    * Instance to Instance Allow All Security Group
-    * NAT Gateway configured on the first Public Subnet and available to all the Private Subnets
-    * Instance to Internet Security Group to be used to allow specific instances usage access to the NAT Gateway.
-    * Chef Compliance Autoscaling group of 1. (So can enable scheduled shutdowns at night)
-    * Bastion Instance
-    * ELB to Chef Compliance server
-    * Red Hat Enterprise Linux 7 test server in private subnet
-    * Ubuntu 14 test server in private subnet
-    * Windows 2012 R2 test server in private subnet
+* [chef-compliance-lab.template](https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance/chef-compliance-lab.template)
+  * Used to create a Chef Compliance lab environment on an existing VPC with a Public subnet.
+    * Creates Chef Compliance Instance using Chef created AMI
+    * Creates Red Hat Enterprise Linux 7 test server in private subnet
+    * Creates Ubuntu 14 test server in private subnet
+    * Creates Windows 2012 R2 test server in private subnet

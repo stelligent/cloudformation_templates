@@ -1,0 +1,223 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "NAT Gateway by Levon Becker v20160404-1220",
+  "Parameters": {
+    "Owner": {
+      "Description": "Enter Team or Individual Name Responsible for the Stack.",
+      "Type": "String",
+      "Default": "Levon Becker"
+    },
+    "Project": {
+      "Description": "Enter Project Name.",
+      "Type": "String",
+      "Default": "Continuous Security"
+    },
+    "DeleteAfter": {
+      "Description": "Enter Date It's Ok to Delete the Stack.",
+      "Type": "String",
+      "Default": "05/01/2016",
+      "AllowedPattern": "^(1[0-2]|0[1-9])/(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$"
+    },
+    "VPC": {
+      "Description": "Select VPC.",
+      "Type": "AWS::EC2::VPC::Id"
+    },
+    "PublicSubnet": {
+      "Description": "Public Subnet to Attach NAT Gateway.",
+      "Type": "AWS::EC2::Subnet::Id"
+    },
+    "PrivateRouteTable": {
+      "Description": "Enter Private Route Table.",
+      "Type": "String"
+    },
+    "PrivateSubnetCidrBlock1": {
+      "Description": "Enter Private Subnet 1 CIDR Block.",
+      "Type": "String",
+      "Default": "10.20.3.0/24",
+      "MinLength": "10",
+      "MaxLength": "18",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    },
+    "PrivateSubnetCidrBlock2": {
+      "Description": "Enter Private Subnet 2 CIDR Block.",
+      "Type": "String",
+      "Default": "10.20.4.0/24",
+      "MinLength": "10",
+      "MaxLength": "18",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    },
+    "PrivateSubnetCidrBlock3": {
+      "Description": "Enter Private Subnet 3 CIDR Block.",
+      "Type": "String",
+      "Default": "10.20.5.0/24",
+      "MinLength": "10",
+      "MaxLength": "18",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    }
+  },
+  "Resources": {
+    "NatSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "NAT Internet Access",
+        "VpcId": {"Ref": "VPC"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-nat-private-to-internet"]]}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          }
+        ],
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": {"Ref": "PrivateSubnetCidrBlock1"}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": {"Ref": "PrivateSubnetCidrBlock1"}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": {"Ref": "PrivateSubnetCidrBlock2"}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": {"Ref": "PrivateSubnetCidrBlock2"}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": {"Ref": "PrivateSubnetCidrBlock3"}
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": {"Ref": "PrivateSubnetCidrBlock3"}
+          },
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": {"Ref": "PrivateSubnetCidrBlock3"}
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "-1",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+    "NatGateway": {
+      "Type": "AWS::EC2::NatGateway",
+      "DependsOn": "NatEIP",
+      "Properties": {
+        "AllocationId": {"Fn::GetAtt": ["NatEIP", "AllocationId"]},
+        "SubnetId": {"Ref": "PublicSubnet"}
+      }
+    },
+    "NatEIP": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain": "vpc"
+      }
+    },
+    "NatRoute": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "NatGateway",
+      "Properties": {
+        "RouteTableId": {"Ref": "PrivateRouteTable"},
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {"Ref": "NatGateway"}
+      }
+    }
+  },
+  "Outputs": {
+    "Owner": {
+      "Description": "The dude or team to bug about cleaning up",
+      "Value": {"Ref": "Owner"}
+    },
+    "Project": {
+      "Description": "The project name",
+      "Value": {"Ref": "Project"}
+    },
+    "VPCId": {
+      "Description": "VPC ID",
+      "Value": {"Ref": "VPC"}
+    },
+    "NatEIP": {
+      "Description": "NAT Elastic IP Address",
+      "Value": {"Ref": "NatEIP"}
+    },
+    "NatSecurityGroup": {
+      "Description": "NAT Security Group ID for Instances to have Internet Access",
+      "Value": {"Ref": "NatSecurityGroup"}
+    },
+    "DeleteAfter": {
+      "Description": "It is ok to delete the stack after this date",
+      "Value": {"Ref": "DeleteAfter"}
+    }
+  },
+  "Metadata" : {
+    "AWS::CloudFormation::Interface" : {
+      "ParameterGroups" : [
+        {
+          "Label" : { "default" : "Ownership" },
+          "Parameters" : [ "Owner", "Project", "DeleteAfter" ]
+        },
+        {
+          "Label" : { "default" : "Network Configuration" },
+          "Parameters" : [
+            "VPC",
+            "PublicSubnet",
+            "PrivateSubnetCidrBlock1",
+            "PrivateSubnetCidrBlock2",
+            "PrivateSubnetCidrBlock3"
+          ]
+        }
+      ],
+      "ParameterLabels" : {
+        "Owner" : { "default" : "Team or Individual Owner" },
+        "DeleteAfter" : { "default" : "Delete After Date" },
+        "PublicSubnet" : { "default" : "Public Subnet" },
+        "PrivateRouteTable" : { "default" : "Private Route Table" },
+        "PrivateSubnetCidrBlock1" : { "default" : "Private Subnet 1" },
+        "PrivateSubnetCidrBlock2" : { "default" : "Private Subnet 2" },
+        "PrivateSubnetCidrBlock3" : { "default" : "Private Subnet 3" }
+      }
+    }
+  }
+}
