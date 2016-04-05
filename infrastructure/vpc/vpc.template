@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "VPC by Levon Becker v20160404-0915",
+  "Description": "VPC by Levon Becker v20160405-0745",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -852,6 +852,14 @@
     "PrivateRouteTable": {
       "Description": "Private Route Table Created for VPC",
       "Value": {"Ref": "PrivateRouteTable"}
+    },
+    "PublicNetworkAcl": {
+      "Description": "Public Network ACL Created for VPC",
+      "Value": {"Ref": "PublicNetworkAcl"}
+    },
+    "PrivateNetworkAcl": {
+      "Description": "Private Netowrk ACL Created for VPC",
+      "Value": {"Ref": "PrivateNetworkAcl"}
     },
     "InternalAccessSecurityGroup": {
       "Description": "Instance to Instance Access within VPC",
