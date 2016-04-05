@@ -588,7 +588,7 @@
         "Egress": "false",
         "CidrBlock": "0.0.0.0/0",
         "PortRange": {
-          "From": "1024",
+          "From": "49152",
           "To": "65535"
         }
       }
@@ -826,9 +826,9 @@
       "Value": {
           "Fn::Join": [
           "", [
-            "AZ1=", {"Ref": "PublicSubnetCidrBlock1"}, ", ",
-            "AZ2=", {"Ref": "PublicSubnetCidrBlock2"}, ", ",
-            "AZ3=", {"Ref": "PublicSubnetCidrBlock3"}
+            "AZ1: ", {"Ref": "PublicSubnetCidrBlock1"}, ", ",
+            "AZ2: ", {"Ref": "PublicSubnetCidrBlock2"}, ", ",
+            "AZ3: ", {"Ref": "PublicSubnetCidrBlock3"}
           ]
         ]
       }
@@ -838,9 +838,9 @@
       "Value": {
           "Fn::Join": [
           "", [
-            "AZ1=", {"Ref": "PrivateSubnetCidrBlock1"}, ", ",
-            "AZ2=", {"Ref": "PrivateSubnetCidrBlock2"}, ", ",
-            "AZ3=", {"Ref": "PrivateSubnetCidrBlock3"}
+            "AZ1: ", {"Ref": "PrivateSubnetCidrBlock1"}, ", ",
+            "AZ2: ", {"Ref": "PrivateSubnetCidrBlock2"}, ", ",
+            "AZ3: ", {"Ref": "PrivateSubnetCidrBlock3"}
           ]
         ]
       }
