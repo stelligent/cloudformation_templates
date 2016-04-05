@@ -49,7 +49,7 @@
         "windows"
       ]
     },
-    "BastionAccessSource": {
+    "NetworkAccessIP": {
       "Description": "Source that has SSH access to the bastion host. (i.e. 50.32.108.38/32)",
       "Type": "String",
       "MinLength": "9",
@@ -158,13 +158,13 @@
             "IpProtocol": "tcp",
             "FromPort": "22",
             "ToPort": "22",
-            "CidrIp": {"Ref": "BastionAccessSource"}
+            "CidrIp": {"Ref": "NetworkAccessIP"}
           },
           {
             "IpProtocol": "icmp",
             "FromPort": "-1",
             "ToPort": "-1",
-            "CidrIp": {"Ref": "BastionAccessSource"}
+            "CidrIp": {"Ref": "NetworkAccessIP"}
           }
         ],
         "SecurityGroupEgress": [
@@ -313,7 +313,7 @@
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
-        "CidrBlock": {"Ref": "BastionAccessSource"},
+        "CidrBlock": {"Ref": "NetworkAccessIP"},
         "PortRange": {
           "From": "22",
           "To": "22"
@@ -329,7 +329,7 @@
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
-        "CidrBlock": {"Ref": "BastionAccessSource"},
+        "CidrBlock": {"Ref": "NetworkAccessIP"},
         "PortRange": {
           "From": "22",
           "To": "22"
@@ -345,7 +345,7 @@
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
-        "CidrBlock": {"Ref": "BastionAccessSource"},
+        "CidrBlock": {"Ref": "NetworkAccessIP"},
         "PortRange": {
           "From": "3389",
           "To": "3389"
@@ -360,7 +360,7 @@
         "Protocol": "1",
         "RuleAction": "allow",
         "Egress": "false",
-        "CidrBlock": {"Ref": "BastionAccessSource"},
+        "CidrBlock": {"Ref": "NetworkAccessIP"},
         "Icmp": {
           "Code": "-1",
           "Type": "-1"
@@ -428,7 +428,7 @@
             "PublicSubnet",
             "InternalAccessSecurityGroup",
             "PublicNetworkAcl",
-            "BastionAccessSource"
+            "NetworkAccessIP"
           ]
         }
       ],
@@ -438,7 +438,7 @@
         "PublicSubnet" : { "default" : "Public Subnet" },
         "PublicNetworkAcl" : { "default" : "Public Network ACL" },
         "InternalAccessSecurityGroup" : { "default" : "Instance Access Security Group" },
-        "BastionAccessSource" : { "default" : "Source IP to Access Bastion Host" },
+        "NetworkAccessIP" : { "default" : "Network IP to Access Bastion Host" },
         "BastionOS" : { "default" : "Bastion OS" }
       }
     }
