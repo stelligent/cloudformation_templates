@@ -861,6 +861,10 @@
       "Description": "Private Netowrk ACL Created for VPC",
       "Value": {"Ref": "PrivateNetworkAcl"}
     },
+    "InternetGateway": {
+      "Description": "Internet Gateway Created for VPC",
+      "Value": {"Ref": "InternetGateway"}
+    },
     "InternalAccessSecurityGroup": {
       "Description": "Instance to Instance Access within VPC",
       "Value": {"Ref": "InternalAccessSecurityGroup"}
