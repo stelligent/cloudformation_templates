@@ -25,4 +25,4 @@ Follow the setup instructions in the readme.md files associated to each template
 2. Create a Ubuntu 14 EC2 Instance a Private Subnet.
 3. Create a Windows 2012 EC2 Instance a Private Subnet.
 
-# TODO: Maybe I make this a generic template for setting up 3 instances and just point to it for the lab setup... Then can be used by other labs as desired.
+### TODO: Maybe I make this a generic template for setting up 3 instances and just point to it for the lab setup... Then can be used by other labs as desired. Better yet write script that triggers all the templates as an option.
