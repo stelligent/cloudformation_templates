@@ -82,13 +82,7 @@
       "Type"  : "AWS::IAM::Role",
       "Properties": {
         "AssumeRolePolicyDocument": {
-          "Statement": [ {
-            "Effect": "Allow",
-            "Principal": {
-              "Service": ["ec2.amazonaws.com" ]
-            },
-            "Action": ["sts:AssumeRole" ]
-          } ]
+          "Statement": [{"Effect": "Allow", "Principal": {"Service": ["ec2.amazonaws.com"]}, "Action": ["sts:AssumeRole"]}]
         },
         "Path": "/"
       }
@@ -96,9 +90,9 @@
     "IamPolicies": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
-        "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-instance-profile"]]},
+        "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-instance-policy"]]},
         "PolicyDocument": {
-          "Statement": [ {
+          "Statement": [{
             "Effect": "Allow",
             "Action": [
               "s3:*",

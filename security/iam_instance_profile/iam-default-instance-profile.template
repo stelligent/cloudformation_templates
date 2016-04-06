@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Default EC2 Instance IAM Profile and Role by Levon Becker v20160405-0800",
+  "Description": "Default EC2 Instance IAM Profile and Role by Levon Becker v20160406-1200",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -24,13 +24,7 @@
       "Type"  : "AWS::IAM::Role",
       "Properties": {
         "AssumeRolePolicyDocument": {
-          "Statement": [ {
-            "Effect": "Allow",
-            "Principal": {
-              "Service": ["ec2.amazonaws.com" ]
-            },
-            "Action": ["sts:AssumeRole" ]
-          } ]
+          "Statement": [{"Effect": "Allow", "Principal": {"Service": ["ec2.amazonaws.com"]}, "Action": ["sts:AssumeRole"]}]
         },
         "Path": "/"
       }
@@ -40,7 +34,7 @@
       "Properties": {
         "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-s3-cloudwatch-ec2"]]},
         "PolicyDocument": {
-          "Statement": [ {
+          "Statement": [{
             "Effect": "Allow",
             "Action": [
               "s3:*",
