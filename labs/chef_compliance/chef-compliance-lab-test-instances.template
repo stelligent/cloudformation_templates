@@ -26,10 +26,6 @@
       "Description": "Select VPC.",
       "Type": "AWS::EC2::VPC::Id"
     },
-    "PublicSubnet": {
-      "Description": "Public Subnet to Deploy Chef Compliance Instance.",
-      "Type": "AWS::EC2::Subnet::Id"
-    },
     "PrivateSubnet1": {
       "Description": "Private Subnet to Deploy RHEL 7 Instances.",
       "Type": "AWS::EC2::Subnet::Id"
@@ -54,27 +50,17 @@
   "Mappings": {
     "RegionMap": {
       "us-west-2": {
-        "ChefComplianceVersion": "0.15.13-1",
-        "AMIChefCompliance": "ami-9ebb55fe",
         "AMIRHEL7": "ami-775e4f16",
         "AMIUbuntu14": "ami-9abea4fb",
         "AMIWin2012": "ami-1719f677",
-        "StopTime": "* 9 * * *",
-        "StartTime": "* 15 * * *",
-        "InstanceTypeChefCompliance": "t2.medium",
         "InstanceTypeRHEL7": "t2.micro",
         "InstanceTypeUbuntu14": "t2.micro",
         "InstanceTypeWin2012": "t2.medium"
       },
       "us-east-1": {
-        "ChefComplianceVersion": "0.15.13-1",
-        "AMIChefCompliance": "ami-a83b3fc2",
         "AMIRHEL7": "ami-2051294a",
         "AMIUbuntu14": "ami-fce3c696",
         "AMIWin2012": "ami-3d787d57",
-        "StopTime": "* 9 * * *",
-        "StartTime": "* 15 * * *",
-        "InstanceTypeChefCompliance": "t2.medium",
         "InstanceTypeRHEL7": "t2.micro",
         "InstanceTypeUbuntu14": "t2.micro",
         "InstanceTypeWin2012": "t2.medium"
@@ -134,134 +120,6 @@
       "Properties": {
         "Path": "/",
         "Roles": [{"Ref": "IamRole"}]
-      }
-    },
-    "InternetToChefComplianceServerSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "Internet to Chef Compliance Server Access",
-        "VpcId": {"Ref": "VPC"},
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-internet-to-chefcompliance"]]}
-          },
-          {
-            "Key": "Owner",
-            "Value": {"Ref": "Owner"}
-          },
-          {
-            "Key": "Project",
-            "Value": {"Ref": "Project"}
-          }
-        ],
-        "SecurityGroupIngress": [
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "80",
-            "ToPort": "80",
-            "CidrIp": "0.0.0.0/0"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "443",
-            "ToPort": "443",
-            "CidrIp": "0.0.0.0/0"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "8443",
-            "ToPort": "8443",
-            "CidrIp": "0.0.0.0/0"
-          }
-        ],
-        "SecurityGroupEgress": [
-          {
-            "IpProtocol": "-1",
-            "CidrIp": "0.0.0.0/0"
-          }
-        ]
-      }
-    },
-    "EC2InstanceChefCompliance": {
-      "DependsOn": [
-        "InternetToChefComplianceServerSecurityGroup",
-        "IamInstanceProfile"
-      ],
-      "Type": "AWS::EC2::Instance",
-      "Properties": {
-        "InstanceType": {
-          "Fn::FindInMap": [
-            "RegionMap",
-            {"Ref": "AWS::Region"},
-            "InstanceTypeChefCompliance"
-          ]
-        },
-        "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
-        "ImageId": {
-          "Fn::FindInMap": [
-            "RegionMap",
-            {"Ref": "AWS::Region"},
-            "AMIChefCompliance"
-          ]
-        },
-        "NetworkInterfaces": [{
-          "GroupSet": [
-            {"Ref": "InternetToChefComplianceServerSecurityGroup"},
-            {"Ref": "InternalAccessSecurityGroup"}
-          ],
-          "AssociatePublicIpAddress": "true",
-          "DeviceIndex": "0",
-          "DeleteOnTermination": "true",
-          "SubnetId": {"Ref": "PublicSubnet"}
-        }],
-        "KeyName": {"Ref": "Ec2KeyPair"},
-        "BlockDeviceMappings": [
-          {
-            "DeviceName": "/dev/sda1",
-            "Ebs": {
-              "DeleteOnTermination": "true",
-              "VolumeType": "gp2"
-            }
-          }
-        ],
-        "UserData": {
-          "Fn::Base64": {
-            "Fn::Join": [
-              "", [
-                "#!/bin/bash\n",
-                {"Fn::FindInMap": ["bootstrap", "rhel", "warmebs"]},
-                "\n",
-                {"Fn::FindInMap": ["bootstrap", "rhel", "installpackages"]},
-                "\n"
-              ]
-            ]
-          }
-        },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-web"]]}
-          },
-          {
-            "Key": "Owner",
-            "Value": {"Ref": "Owner"}
-          },
-          {
-            "Key": "Project",
-            "Value": {"Ref": "Project"}
-          },
-          {
-            "Key": "ChefComplianceVersion",
-            "Value": {
-              "Fn::FindInMap": [
-                "RegionMap",
-                {"Ref": "AWS::Region"},
-                "ChefComplianceVersion"
-              ]
-            }
-          }
-        ]
       }
     },
     "EC2InstanceRHEL7": {
@@ -500,14 +358,6 @@
       "Description": "IAM Instance Profile Role Created.",
       "Value": {"Ref": "IamRole"}
     },
-    "DeployedToSubnet": {
-      "Description": "Public Subnet the Bastion Host was Deployed on.",
-      "Value": {"Ref": "PublicSubnet"}
-    },
-    "PublicSubnet": {
-      "Description": "Public Subnet Chef Compliance Instance Deployed to.",
-      "Value": {"Ref": "PublicSubnet"}
-    },
     "PrivateSubnet1": {
       "Description": "Private Subnet RHEL Instance Deployed to.",
       "Value": {"Ref": "PrivateSubnet1"}
@@ -519,24 +369,6 @@
     "PrivateSubnet3": {
       "Description": "Private Subnet Windows Instance Deployed to.",
       "Value": {"Ref": "PrivateSubnet3"}
-    },
-    "InternetToChefComplianceServerSecurityGroup": {
-      "Description": "Internet to Chef Compliance Server Security Group",
-      "Value": {"Ref": "InternetToChefComplianceServerSecurityGroup"}
-    },
-    "ChefComplianceDNS": {
-      "Description": "Chef Compliance Server FQDN",
-      "Value": {"Fn::GetAtt": ["EC2InstanceChefCompliance", "PublicDnsName"]}
-    },
-    "ChefComplianceVersion": {
-      "Description": "Chef Compliance Server Version",
-      "Value": {
-        "Fn::FindInMap": [
-          "RegionMap",
-          {"Ref": "AWS::Region"},
-          "ChefComplianceVersion"
-        ]
-      }
     }
   },
   "Metadata" : {
@@ -549,26 +381,19 @@
         {
           "Label" : { "default" : "Instance Settings" },
           "Parameters" : [
+            "VPC",
             "Ec2KeyPair",
-            "PublicSubnet",
             "PrivateSubnet1",
             "PrivateSubnet2",
             "PrivateSubnet3",
             "InternalAccessSecurityGroup",
             "NatSecurityGroup"
           ]
-        },
-        {
-          "Label" : { "default" : "Network Configuration" },
-          "Parameters" : [
-            "VPC"
-          ]
         }
       ],
       "ParameterLabels" : {
         "Owner" : { "default" : "Team or Individual Owner" },
         "DeleteAfter" : { "default" : "Delete After Date" },
-        "PublicSubnet" : { "default" : "Public Subnet for Chef Compliance Instance" },
         "PrivateSubnet1" : { "default" : "Private Subnet for RHEL Test Instance" },
         "PrivateSubnet2" : { "default" : "Private Subnet for Ubuntu Test Instance" },
         "PrivateSubnet3" : { "default" : "Private Subnet for Windows Test Instance" },
