@@ -39,7 +39,7 @@
       "Type": "AWS::EC2::Subnet::Id"
     },
     "InternalAccessSecurityGroup": {
-      "Description": "Security Group That Allows Bastion Host Access to Instances.",
+      "Description": "Security Group That Allows Chef Compliance Host Access to Instances.",
       "Type": "AWS::EC2::SecurityGroup::Id"
     },
     "NatSecurityGroup": {
