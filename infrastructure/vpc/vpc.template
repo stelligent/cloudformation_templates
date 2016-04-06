@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "VPC by Levon Becker v20160405-1100",
+  "Description": "VPC by Levon Becker v20160406-1130",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -73,6 +73,15 @@
       "MinLength": "10",
       "MaxLength": "18",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    },
+    "RemoteAccessCidrBlock": {
+      "Description": "Source that has SSH/RDP access to the Public Network. (i.e. 50.32.108.38/32)",
+      "Type": "String",
+      "MinLength": "9",
+      "MaxLength": "18",
+      "Default": "0.0.0.0/0",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "must be a valid CIDR range of the form x.x.x.x/x."
     }
   },
   "Resources": {
@@ -532,7 +541,7 @@
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
-        "CidrBlock": "0.0.0.0/0",
+        "CidrBlock": {"Ref": "RemoteAccessCidrBlock"},
         "PortRange": {
           "From": "22",
           "To": "22"
@@ -548,7 +557,7 @@
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
-        "CidrBlock": "0.0.0.0/0",
+        "CidrBlock": {"Ref": "RemoteAccessCidrBlock"},
         "PortRange": {
           "From": "3389",
           "To": "3389"
@@ -934,7 +943,8 @@
             "PublicSubnetCidrBlock3",
             "PrivateSubnetCidrBlock1",
             "PrivateSubnetCidrBlock2",
-            "PrivateSubnetCidrBlock3"
+            "PrivateSubnetCidrBlock3",
+            "RemoteAccessCidrBlock"
           ]
         }
       ],
@@ -947,7 +957,8 @@
         "PublicSubnetCidrBlock3" : { "default" : "Public Subnet 3" },
         "PrivateSubnetCidrBlock1" : { "default" : "Private Subnet 1" },
         "PrivateSubnetCidrBlock2" : { "default" : "Private Subnet 2" },
-        "PrivateSubnetCidrBlock3" : { "default" : "Private Subnet 3" }
+        "PrivateSubnetCidrBlock3" : { "default" : "Private Subnet 3" },
+        "RemoteAccessCidrBlock" : { "default" : "Remote SSH/RDP Access CidrBlock to Public Subnets" }
       }
     }
   }
