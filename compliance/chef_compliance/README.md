@@ -3,12 +3,12 @@
 ## Purpose
 Chef Compliance Webapp Server Setup Template that uses a Chef Compliance AMI provided by Chef.
 
-## Setup Instructions
-
-### Requirements
+## Requirements
 1. A VPC with a Public Subnet that has internet access
 2. An Available EIP
 3. AWS Permissions to create IAM roles
+
+## Instructions
 
 ### Infrastructure
 Setup the following as needed or desired. Obviously you will need permissions to create these items to continue.
