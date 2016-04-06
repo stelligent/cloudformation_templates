@@ -5,8 +5,14 @@ This repository contains a collaboration of general and specific Amazon Web Serv
 
 ## Notable Templates
 
+### Compliance
+
+* [Chef Compliance](https://github.com/stelligent/cloudformation_templates/blob/master/compliance/chef_compliance)
+  * Create a Chef Compliance Webapp EC2 Instance using Chef's published AMI in an existing VPC with a public network.
+
 ### Infrastructure
-* [vpc.template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template)
+
+* [VPC](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template)
   * Used to create an entire VPC from scratch.
     * Creates a New VPC
     * Creates 3 Public Subnets
@@ -15,19 +21,20 @@ This repository contains a collaboration of general and specific Amazon Web Serv
     * Private Network ACLs
     * Internet Gateway attached to Public Subnets
     * Instance to Instance Allow All Security Group
-* [natgateway.template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/natgateway.template)
+* [NAT Gateway](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat/natgateway.template)
   * Used to create a NAT Gateway on an existing VPC with Public and Private subnets.
     * Creates NAT Gateway on existing VPC with Public and Private subnets.
     * Creates Security Group to Allow Instances NAT Access to the Internet.
     * Updated Route Table for functionality of the NAT solution.
-* [bastion.template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion.template)
+* [Bastion Host](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion/bastion.template)
   * Used to create a Bastion host instance on an existing VPC.
     * Creates single Bastion instance on a Public subnet.
+    * Select from RHEL, Ubuntu and Windows as the Bastion Host OS.
 
 ### Labs
-* [chef-compliance-lab.template](https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance/chef-compliance-lab.template)
-  * Used to create a Chef Compliance lab environment on an existing VPC with a Public subnet.
-    * Creates Chef Compliance Instance using Chef created AMI
+
+* [Chef Compliance Lab](https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance)
+  * Using existing VPC, NAT, Bastion and Chef Compliance Webapp or creating new with various templates in this repo to setup a test lab for Chef Compliance.
     * Creates Red Hat Enterprise Linux 7 test server in private subnet
     * Creates Ubuntu 14 test server in private subnet
     * Creates Windows 2012 R2 test server in private subnet
