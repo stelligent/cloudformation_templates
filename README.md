@@ -1,4 +1,4 @@
-# Stelligent CloudFormation Templates (WIP)
+# Stelligent CloudFormation Templates
 
 ## Purpose
 This repository contains a collaboration of general and specific Amazon Web Services CloudFormation Template Examples.

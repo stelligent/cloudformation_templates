@@ -1,4 +1,4 @@
-# Chef Compliance Lab CloudFormation Templates (WIP)
+# Chef Compliance Lab CloudFormation Templates
 
 ## Purpose
 Chef Compliance Lab Setup Template that uses a Chef Compliance AMI provided by Chef.
