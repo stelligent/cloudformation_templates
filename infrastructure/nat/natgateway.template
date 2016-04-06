@@ -29,12 +29,12 @@
     "PrivateRouteTable": {
       "Description": "Enter Private Route Table ID.",
       "Type": "String",
-      "Default": "rtb-203c8b44"
+      "Default": "rtb-0000000"
     },
     "PublicNetworkAcl": {
       "Description": "Enter Public Network ACL ID.",
       "Type": "String",
-      "Default": "acl-398c565d"
+      "Default": "acl-0000000"
     }
   },
   "Resources": {

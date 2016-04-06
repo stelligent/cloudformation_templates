@@ -37,7 +37,7 @@
     "PublicNetworkAcl": {
       "Description": "Enter Public Network ACL ID.",
       "Type": "String",
-      "Default": "acl-398c565d"
+      "Default": "acl-0000000"
     },
     "BastionOS": {
       "Description": "Select OS Type for Bastion Host.",
@@ -274,7 +274,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-bastion"]]}
+            "Value": {"Ref": "AWS::StackName"}
           },
           {
             "Key": "Owner",
@@ -381,6 +381,14 @@
       "Description": "The project name",
       "Value": {"Ref": "Project"}
     },
+    "DeleteAfter": {
+      "Description": "It is ok to delete the Formation after this date",
+      "Value": {"Ref": "DeleteAfter"}
+    },
+    "KeyPairLoaded": {
+      "Description": "Key Pair used.",
+      "Value": {"Ref": "Ec2KeyPair"}
+    },
     "VPC": {
       "Description": "VPC Used",
       "Value": {"Ref": "VPC"}
@@ -400,14 +408,6 @@
     "DeployedToSubnet": {
       "Description": "Public Subnet the Bastion Host was Deployed on.",
       "Value": {"Ref": "PublicSubnet"}
-    },
-    "KeyPairLoaded": {
-      "Description": "Key Pair used.",
-      "Value": {"Ref": "Ec2KeyPair"}
-    },
-    "DeleteAfter": {
-      "Description": "It is ok to delete the Formation after this date",
-      "Value": {"Ref": "DeleteAfter"}
     }
   },
   "Metadata" : {
