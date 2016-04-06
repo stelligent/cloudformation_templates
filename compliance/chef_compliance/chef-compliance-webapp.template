@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Stelligent Chef Compliance Lab by Levon Becker v20160401-1135",
+  "Description": "Chef Compliance Webapp Server by Levon Becker v20160406-1130",
   "Parameters": {
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to Chef Compliance EC2 Instance.",
@@ -33,6 +33,20 @@
     "InternalAccessSecurityGroup": {
       "Description": "Security Group That Allows Chef Compliance Host Access to Instances.",
       "Type": "AWS::EC2::SecurityGroup::Id"
+    },
+    "PublicNetworkAcl": {
+      "Description": "Enter Public Network ACL ID.",
+      "Type": "String",
+      "Default": "acl-0000000"
+    },
+    "SshAccessIP": {
+      "Description": "Source that has SSH access to the Chef Compliance server. (i.e. 50.32.108.38/32)",
+      "Type": "String",
+      "MinLength": "9",
+      "MaxLength": "18",
+      "Default": "0.0.0.0/0",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "must be a valid CIDR range of the form x.x.x.x/x."
     }
   },
   "Mappings": {
@@ -52,10 +66,6 @@
       "rhel": {
         "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
         "installpackages": "yum install -y curl wget mlocate ca-certificates openssl vim"
-      },
-      "ubuntu": {
-        "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
-        "installpackages": "apt-get update && apt-get install curl wget cloud-utils ca-certificates vim"
       }
     }
   },
@@ -64,13 +74,7 @@
       "Type"  : "AWS::IAM::Role",
       "Properties": {
         "AssumeRolePolicyDocument": {
-          "Statement": [ {
-            "Effect": "Allow",
-            "Principal": {
-              "Service": ["ec2.amazonaws.com" ]
-            },
-            "Action": ["sts:AssumeRole" ]
-          } ]
+          "Statement": [{"Effect": "Allow", "Principal": {"Service": ["ec2.amazonaws.com"]}, "Action": ["sts:AssumeRole"]}]
         },
         "Path": "/"
       }
@@ -78,9 +82,9 @@
     "IamPolicies": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
-        "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-instance-profile"]]},
+        "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-instance-policy"]]},
         "PolicyDocument": {
-          "Statement": [ {
+          "Statement": [{
             "Effect": "Allow",
             "Action": [
               "s3:*",
@@ -141,6 +145,12 @@
             "FromPort": "8443",
             "ToPort": "8443",
             "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": {"Ref": "SshAccessIP"}
           }
         ],
         "SecurityGroupEgress": [
@@ -231,6 +241,21 @@
           }
         ]
       }
+    },
+    "InboundPublicNetworkAclEntry230": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {"Ref": "PublicNetworkAcl"},
+        "RuleNumber": "230",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": {"Ref": "SshAccessIP"},
+        "PortRange": {
+          "From": "22",
+          "To": "22"
+        }
+      }
     }
   },
   "Outputs": {
@@ -294,7 +319,9 @@
             "VPC",
             "Ec2KeyPair",
             "PublicSubnet",
-            "InternalAccessSecurityGroup"
+            "InternalAccessSecurityGroup",
+            "PublicNetworkAcl",
+            "SshAccessIP"
           ]
         }
       ],
@@ -303,7 +330,8 @@
         "DeleteAfter" : { "default" : "Delete After Date" },
         "PublicSubnet" : { "default" : "Public Subnet" },
         "InternalAccessSecurityGroup" : { "default" : "Instance Access SG" },
-        "Ec2KeyPair" : { "default" : "EC2 Access Keypair" }
+        "Ec2KeyPair" : { "default" : "EC2 Access Keypair" },
+        "SshAccessIP" : { "default" : "SSH Access CIDR Block" }
       }
     }
   }
