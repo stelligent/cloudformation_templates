@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "VPC by Levon Becker v20160406-1130",
+  "Description": "VPC by Levon Becker v20160406-1330",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -13,15 +13,14 @@
       "Default": "Continuous Security"
     },
     "DeleteAfter": {
-      "Description": "Enter Date It's Ok to Delete the Stack.",
+      "Description": "Enter Date It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
       "Type": "String",
-      "Default": "05/01/2016",
-      "AllowedPattern": "^(1[0-2]|0[1-9])/(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$"
+      "Default": "00/00/201x"
     },
     "VPCSubnetCidrBlock": {
-      "Description": "Enter VPC CIDR Block.",
+      "Description": "Enter VPC CIDR Block. (i.e. 10.0.0.0/20 = 10.0.0.0-10.0.15.255 is 4094 hosts)",
       "Type": "String",
-      "Default": "10.20.0.0/20",
+      "Default": "10.0.0.0/20",
       "MinLength": "10",
       "MaxLength": "18",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
@@ -29,7 +28,7 @@
     "PublicSubnetCidrBlock1": {
       "Description": "Enter Public Subnet 1 CIDR Block.",
       "Type": "String",
-      "Default": "10.20.0.0/24",
+      "Default": "10.0.1.0/24",
       "MinLength": "10",
       "MaxLength": "18",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
@@ -37,7 +36,7 @@
     "PublicSubnetCidrBlock2": {
       "Description": "Enter Public Subnet 2 CIDR Block.",
       "Type": "String",
-      "Default": "10.20.1.0/24",
+      "Default": "10.0.2.0/24",
       "MinLength": "10",
       "MaxLength": "18",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
@@ -45,7 +44,7 @@
     "PublicSubnetCidrBlock3": {
       "Description": "Enter Public Subnet 3 CIDR Block.",
       "Type": "String",
-      "Default": "10.20.2.0/24",
+      "Default": "10.0.3.0/24",
       "MinLength": "10",
       "MaxLength": "18",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
@@ -53,7 +52,7 @@
     "PrivateSubnetCidrBlock1": {
       "Description": "Enter Private Subnet 1 CIDR Block.",
       "Type": "String",
-      "Default": "10.20.3.0/24",
+      "Default": "10.0.4.0/24",
       "MinLength": "10",
       "MaxLength": "18",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
@@ -61,7 +60,7 @@
     "PrivateSubnetCidrBlock2": {
       "Description": "Enter Private Subnet 2 CIDR Block.",
       "Type": "String",
-      "Default": "10.20.4.0/24",
+      "Default": "10.0.5.0/24",
       "MinLength": "10",
       "MaxLength": "18",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
@@ -69,7 +68,7 @@
     "PrivateSubnetCidrBlock3": {
       "Description": "Enter Private Subnet 3 CIDR Block.",
       "Type": "String",
-      "Default": "10.20.5.0/24",
+      "Default": "10.0.6.0/24",
       "MinLength": "10",
       "MaxLength": "18",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
@@ -958,7 +957,7 @@
         "PrivateSubnetCidrBlock1" : { "default" : "Private Subnet 1" },
         "PrivateSubnetCidrBlock2" : { "default" : "Private Subnet 2" },
         "PrivateSubnetCidrBlock3" : { "default" : "Private Subnet 3" },
-        "RemoteAccessCidrBlock" : { "default" : "Remote SSH/RDP Access CidrBlock to Public Subnets" }
+        "RemoteAccessCidrBlock" : { "default" : "SSH/RDP Access CIDR Block to Public Subnets" }
       }
     }
   }

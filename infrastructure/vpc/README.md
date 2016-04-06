@@ -8,6 +8,8 @@ Create a VPC with private and public networks.
 
 ### Requirements
 1. Permissions to create all of the following with the CloudFormation Template.
+2. The Subnet CIDR Blocks you enter can not be used within you VPC or Peered VPC. So Change the defaults to what works for your environment.
+    1. There are online subnet calculators that help such as this one I use [Online Subnet Calculator](http://www.subnet-calculator.com/subnet.php?net_class=A).
 
 ### Details
 1. Create new VPC.
