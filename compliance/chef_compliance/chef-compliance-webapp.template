@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Chef Compliance Webapp Server by Levon Becker v20160406-1130",
+  "Description": "Chef Compliance Webapp Server by Levon Becker v20160406-1200",
   "Parameters": {
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to Chef Compliance EC2 Instance.",
@@ -14,13 +14,12 @@
     "Project": {
       "Description": "Enter Project Name.",
       "Type": "String",
-      "Default": "Continuous Security"
+      "Default": "Chef Compliance Webapp Server"
     },
     "DeleteAfter": {
-      "Description": "Enter Date It's Ok to Delete the Stack.",
+      "Description": "Enter Date It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
       "Type": "String",
-      "Default": "05/01/2016",
-      "AllowedPattern": "^(1[0-2]|0[1-9])/(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$"
+      "Default": "00/00/201x"
     },
     "VPC": {
       "Description": "Select VPC.",
@@ -65,7 +64,8 @@
     "bootstrap": {
       "rhel": {
         "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
-        "installpackages": "yum install -y curl wget mlocate ca-certificates openssl vim"
+        "installpackages": "yum install -y curl wget mlocate ca-certificates openssl vim",
+        "updatechefcompliance": "echo 'ACTION: Upgrading Chef Marketplace to the Latest' && chef-marketplace-ctl upgrade -y && chef-compliance-ctl restart"
       }
     }
   },
@@ -161,6 +161,23 @@
         ]
       }
     },
+    "EIP": {
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain" : "vpc"
+      }
+    },
+    "EIPAssociation": {
+      "Type": "AWS::EC2::EIPAssociation",
+      "DependsOn": [
+        "EC2Instance",
+        "EIP"
+      ],
+      "Properties": {
+        "InstanceId": {"Ref": "EC2Instance"},
+        "AllocationId": { "Fn::GetAtt" : [ "EIP", "AllocationId" ]}
+      }
+    },
     "EC2Instance": {
       "DependsOn": [
         "InternetToChefComplianceServerSecurityGroup",
@@ -183,16 +200,11 @@
             "AMIChefCompliance"
           ]
         },
-        "NetworkInterfaces": [{
-          "GroupSet": [
-            {"Ref": "InternetToChefComplianceServerSecurityGroup"},
-            {"Ref": "InternalAccessSecurityGroup"}
-          ],
-          "AssociatePublicIpAddress": "true",
-          "DeviceIndex": "0",
-          "DeleteOnTermination": "true",
-          "SubnetId": {"Ref": "PublicSubnet"}
-        }],
+        "SecurityGroupIds": [
+          {"Ref": "InternetToChefComplianceServerSecurityGroup"},
+          {"Ref": "InternalAccessSecurityGroup"}
+        ],
+        "SubnetId": {"Ref": "PublicSubnet"},
         "KeyName": {"Ref": "Ec2KeyPair"},
         "BlockDeviceMappings": [
           {
@@ -211,6 +223,8 @@
                 {"Fn::FindInMap": ["bootstrap", "rhel", "warmebs"]},
                 "\n",
                 {"Fn::FindInMap": ["bootstrap", "rhel", "installpackages"]},
+                "\n",
+                {"Fn::FindInMap": ["bootstrap", "rhel", "updatechefcompliance"]},
                 "\n"
               ]
             ]
@@ -271,6 +285,14 @@
       "Description": "It is ok to delete the Formation after this date",
       "Value": {"Ref": "DeleteAfter"}
     },
+    "FQDN": {
+      "Description": "Chef Compliance Server FQDN",
+      "Value": {"Fn::GetAtt": ["EC2Instance", "PublicDnsName"]}
+    },
+    "EIP": {
+      "Description": "External IP Address for Chef Compliance Webapp Server",
+      "Value": {"Ref": "EIP"}
+    },
     "KeyPairLoaded": {
       "Description": "Key Pair used.",
       "Value": {"Ref": "Ec2KeyPair"}
@@ -290,20 +312,6 @@
     "InternetToChefComplianceServerSecurityGroup": {
       "Description": "Internet to Chef Compliance Server Security Group",
       "Value": {"Ref": "InternetToChefComplianceServerSecurityGroup"}
-    },
-    "ChefComplianceDNS": {
-      "Description": "Chef Compliance Server FQDN",
-      "Value": {"Fn::GetAtt": ["EC2Instance", "PublicDnsName"]}
-    },
-    "ChefComplianceVersion": {
-      "Description": "Chef Compliance Server Version",
-      "Value": {
-        "Fn::FindInMap": [
-          "RegionMap",
-          {"Ref": "AWS::Region"},
-          "ChefComplianceVersion"
-        ]
-      }
     }
   },
   "Metadata" : {
@@ -329,6 +337,7 @@
         "Owner" : { "default" : "Team or Individual Owner" },
         "DeleteAfter" : { "default" : "Delete After Date" },
         "PublicSubnet" : { "default" : "Public Subnet" },
+        "PublicNetworkAcl" : { "default" : "Public Network ACL" },
         "InternalAccessSecurityGroup" : { "default" : "Instance Access SG" },
         "Ec2KeyPair" : { "default" : "EC2 Access Keypair" },
         "SshAccessIP" : { "default" : "SSH Access CIDR Block" }

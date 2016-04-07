@@ -26,10 +26,11 @@ Setup the following as needed or desired. Obviously you will need permissions to
 
 1. Run [Chef Compliance Webapp](https://github.com/stelligent/cloudformation_templates/blob/master/compliance/chef_compliance/chef-compliance-webapp.template) CloudFormation Template.
 2. Wait 15 minutes for initialization to complete
-3. SSH to the host and perform an upgrade of both the Chef Compliance system and Chef Marketplace system
-    1. ```ssh -i ~/.ssh/my-aws-key.pem ec2-user@x.x.x.x```
-    2. ```sudo chef-marketplace-ctl upgrade -y```
-    3. ```sudo chef-compliance-ctl restart```
+    1. Part of the bootstrap in the CloudFormation is to upgrade the Chef Compliance and Chef Marketplace packages. Be sure to check the ```/var/log/cloud-init.log``` to see that it upgraded correctly if you notice a problem with the setup wizard.
+        1. How to Manually upgrade
+            1. ```ssh -i ~/.ssh/my-aws-key.pem ec2-user@x.x.x.x```
+            2. ```sudo chef-marketplace-ctl upgrade -y```
+            3. ```sudo chef-compliance-ctl restart```
 4. Launch Setup Wizard
     1. ```https://ec2-x-x-x-x.us-west-2.compute.amazonaws.com/#/setup```
 5. Create user
