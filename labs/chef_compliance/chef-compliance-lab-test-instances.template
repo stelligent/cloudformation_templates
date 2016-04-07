@@ -17,10 +17,9 @@
       "Default": "Continuous Security"
     },
     "DeleteAfter": {
-      "Description": "Enter Date It's Ok to Delete the Stack.",
+      "Description": "Enter Date It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
       "Type": "String",
-      "Default": "05/01/2016",
-      "AllowedPattern": "^(1[0-2]|0[1-9])/(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$"
+      "Default": "00/00/201x"
     },
     "VPC": {
       "Description": "Select VPC.",
