@@ -1,0 +1,382 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Bonusbits Mediawiki Full Stack Cloudformation Template 20160129",
+  "Parameters": {
+    "Owner": {
+      "Description": "Enter Team or Individual Name Responsible for the Stack.",
+      "Type": "String",
+      "Default": "Levon Becker"
+    },
+    "Project": {
+      "Description": "Enter Project Name.",
+      "Type": "String",
+      "Default": "Mediawiki ASG with ELB Creation"
+    },
+    "DeleteAfter": {
+      "Description": "Enter Date It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
+      "Type": "String",
+      "Default": "00/00/201x"
+    },
+    "VPC": {
+      "Description": "Select VPC.",
+      "Type": "AWS::EC2::VPC::Id"
+    },
+    "PrivateSubnet1": {
+      "Description": "Private Subnet 1.",
+      "Type": "AWS::EC2::Subnet::Id"
+    },
+    "PrivateSubnet2": {
+      "Description": "Private Subnet 2.",
+      "Type": "AWS::EC2::Subnet::Id"
+    },
+    "PrivateSubnet3": {
+      "Description": "Private Subnet 3.",
+      "Type": "AWS::EC2::Subnet::Id"
+    },
+    "MasterUsername": {
+      "Default": "rdsroot",
+      "Description": "Database administration name . First character must be a letter.",
+      "Type": "String"
+    },
+    "MasterUserPassword": {
+      "NoEcho": "true",
+      "Description": "Database administration password. Minimum of 8 alphanumeric characters (pattern of [a-zA-Z0-9]).",
+      "Type": "String",
+      "MinLength": "8",
+      "AllowedPattern": "[a-zA-Z0-9]*",
+      "ConstraintDescription": "Must only contain upper and lowercase letters and numbers"
+    },
+    "BackupRetentionPeriod": {
+      "Default": "7",
+      "Description": "Backup Retention Period in Days.",
+      "Type": "Number"
+    },
+    "UseMultiAZ": {
+      "Default": "true",
+      "Description": "Setup Multi-Availability Zone.",
+      "Type": "String",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "SnsTopicArn": {
+      "Description": "Enter Notification SNS Topic ARN.",
+      "Type": "String",
+      "Default": "arn:aws:sns:us-west-2:000000000000:cloudwatch-alerts"
+    },
+    "InstanceType": {
+      "Description": "Select RDS Instance Type.",
+      "Type": "String",
+      "Default": "db.t2.micro",
+      "AllowedValues": [
+        "db.t2.micro",
+        "db.t2.small",
+        "db.t2.medium",
+        "db.m3.medium"
+      ],
+      "ConstraintDescription": "Must be a valid RDS instance type."
+    },
+    "PreferredBackupWindow": {
+      "Description": "Enter Preferred RDS Backup Window.",
+      "Type": "String",
+      "Default": "17:00-19:00"
+    },
+    "PreferredMaintenanceWindow": {
+      "Description": "Enter Preferred RDS Maintenance Window.",
+      "Type": "String",
+      "Default": "Sun:19:00-Sun:23:00"
+    },
+    "AllocatedStorage": {
+      "Description": "Enter RDS Allocated Storage in Gigabytes.",
+      "Type": "Number",
+      "Default": "5"
+    },
+    "TcpPort": {
+      "Description": "Enter TCP Port Number to Listen on.",
+      "Type": "Number",
+      "Default": "3306"
+    },
+    "AutoMinorVersionUpgrade": {
+      "Description": "Allow Automatic Minor Versino Upgrades?",
+      "Type": "String",
+      "Default": "true",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "CreateAlarms": {
+      "Description": "Create RDS Cloudwatch Alerts?",
+      "Type": "String",
+      "Default": "true",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "Engine": {
+      "Description": "Select an RDS Engine.",
+      "Type": "String",
+      "Default": "MySQL",
+      "AllowedValues": [
+        "MySQL"
+      ]
+    },
+    "EngineVersion": {
+      "Description": "Enter RDS Engine Version.",
+      "Type": "String",
+      "Default": "5.6",
+      "AllowedValues": [
+        "5.6"
+      ]
+    }
+  },
+  "Conditions": {
+    "CreateAlarmsEnabled": {"Fn::Equals": [{"Ref": "CreateAlarms"}, "true"]}
+  },
+  "Resources": {
+    "RDSAccessSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "RDS Access",
+        "VpcId": {"Ref": "VPC"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-rds"]]}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          }
+        ]
+      }
+    },
+    "RDSAccessSecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "DependsOn": "RDSAccessSecurityGroup",
+      "Properties": {
+        "GroupId": {
+          "Ref": "RDSAccessSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": {"Ref": "TcpPort"},
+        "ToPort": {"Ref": "TcpPort"},
+        "SourceSecurityGroupId": {
+          "Ref": "RDSAccessSecurityGroup"
+        }
+      }
+    },
+    "RdsSubnetGroup": {
+      "Type": "AWS::RDS::DBSubnetGroup",
+      "Properties": {
+        "DBSubnetGroupDescription": {"Fn::Join": ["", ["RDS Subnet Group for ", {"Ref": "AWS::StackName"}]]},
+        "SubnetIds": [ {"Ref": "PrivateSubnet1"}, {"Ref": "PrivateSubnet2"}, {"Ref": "PrivateSubnet3"} ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Ref": "AWS::StackName"}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          }
+        ]
+      }
+    },
+    "RdsMysql": {
+      "Type": "AWS::RDS::DBInstance",
+      "DeletionPolicy": "Snapshot",
+      "Properties": {
+        "AvailabilityZone": "us-west-2a",
+        "AllocatedStorage":{"Ref": "AllocatedStorage"},
+        "AllowMajorVersionUpgrade": "false",
+        "AutoMinorVersionUpgrade": {"Ref": "AutoMinorVersionUpgrade"},
+        "BackupRetentionPeriod": {"Ref": "BackupRetentionPeriod"},
+        "DBInstanceClass": {"Ref": "InstanceType"},
+        "DBInstanceIdentifier": {"Ref": "AWS::StackName"},
+        "DBName": {"Ref": "AWS::StackName"},
+        "DBSubnetGroupName": {"Ref": "RdsSubnetGroup"},
+        "Engine": {"Ref": "Engine"},
+        "EngineVersion": {"Ref": "EngineVersion"},
+        "MasterUsername": {"Ref": "MasterUsername"},
+        "MasterUserPassword": {"Ref": "MasterUserPassword"},
+        "MultiAZ": {"Ref": "UseMultiAZ"},
+        "Port": {"Ref": "TcpPort"},
+        "PreferredBackupWindow": {"Ref": "PreferredBackupWindow"},
+        "PreferredMaintenanceWindow": {"Ref": "PreferredMaintenanceWindow"},
+        "PubliclyAccessible": "false",
+        "StorageEncrypted": "false",
+        "StorageType": "gp2",
+        "VPCSecurityGroups": [{"Ref": "RDSAccessSecurityGroup"}],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Ref": "AWS::StackName"}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          }
+        ]
+      }
+    },
+    "AlarmRDSCPU": {
+      "Condition": "CreateAlarmsEnabled",
+      "Type": "AWS::CloudWatch::Alarm",
+      "DependsOn": [
+        "RdsMysql"
+      ],
+      "Properties": {
+        "AlarmActions": [{"Ref": "SnsTopicArn"}],
+        "AlarmDescription": "CPU Utilization on RDS Instance is too high",
+        "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "DBInstanceIdentifier",
+            "Value": {"Ref": "RdsMysql"}
+          }
+        ],
+        "EvaluationPeriods": "1",
+        "MetricName": "CPUUtilization",
+        "Namespace": "AWS/RDS",
+        "Period": "300",
+        "Statistic": "Average",
+        "Threshold": "50"
+      }
+    },
+    "AlarmRDSFreeSpace": {
+      "Condition": "CreateAlarmsEnabled",
+      "Type": "AWS::CloudWatch::Alarm",
+      "DependsOn": [
+        "RdsMysql"
+      ],
+      "Properties": {
+        "AlarmActions": [{"Ref": "SnsTopicArn"}],
+        "AlarmDescription": "1Gb left of storage available on RDS Instance",
+        "ComparisonOperator": "LessThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "DBInstanceIdentifier",
+            "Value": {"Ref": "RdsMysql"}
+          }
+        ],
+        "EvaluationPeriods": "1",
+        "MetricName": "FreeStorageSpace",
+        "Namespace": "AWS/RDS",
+        "Period": "300",
+        "Statistic": "Maximum",
+        "Threshold": "1024000000"
+      }
+    }
+  },
+  "Outputs": {
+    "VPCId": {
+      "Description": "VPCId of the newly created VPC",
+      "Value": {
+        "Ref": "VPC"
+      }
+    },
+    "RDSHostname": {
+      "Description": "RDS Hostname",
+      "Value": {
+        "Fn::GetAtt": ["RdsMysql", "Endpoint.Address"]
+      }
+    },
+    "RDSPort": {
+      "Description": "RDS Port",
+      "Value": {"Fn::GetAtt": ["RdsMysql", "Endpoint.Port"] }
+    }
+  },
+  "Metadata" : {
+    "AWS::CloudFormation::Interface" : {
+      "ParameterGroups" : [
+        {
+          "Label" : {"default" : "Ownership"},
+          "Parameters" : [
+            "Owner",
+            "Project",
+            "DeleteAfter"
+          ]
+        },
+        {
+          "Label" : {"default" : "Database Configuration"},
+          "Parameters" : [
+            "MasterUsername",
+            "MasterUserPassword",
+            "BackupRetentionPeriod",
+            "UseMultiAZ",
+            "PreferredBackupWindow",
+            "SnsTopicArn"
+          ]
+        },
+        {
+          "Label" : {"default" : "Instance Settings"},
+          "Parameters" : [
+            "Ec2KeyPair",
+            "AMI",
+            "InstanceType"
+          ]
+        },
+        {
+          "Label" : {"default" : "Network Configuration"},
+          "Parameters" : [
+            "VPC",
+            "PrivateSubnet1",
+            "PrivateSubnet2",
+            "PrivateSubnet3",
+            "InternalAccessSecurityGroup",
+            "NatSecurityGroup"
+          ]
+        }
+      ],
+      "ParameterLabels" : {
+        "Owner" : {"default" : "Team or Individual Owner"},
+        "DeleteAfter" : {"default" : "Delete After Date"},
+        "Ec2KeyPair" : {"default" : "EC2 Keypair"},
+        "InstanceType" : {"default" : "Instance Type"},
+        "PublicSubnet1" : {"default" : "Public Subnet 1"},
+        "PublicSubnet2" : {"default" : "Public Subnet 2"},
+        "PublicSubnet3" : {"default" : "Public Subnet 3"},
+        "PrivateSubnet1" : {"default" : "Public Subnet 1"},
+        "PrivateSubnet2" : {"default" : "Public Subnet 2"},
+        "PrivateSubnet3" : {"default" : "Public Subnet 3"},
+        "PublicNetworkAcl" : {"default" : "Public Network ACL"},
+        "InternalAccessSecurityGroup" : {"default" : "Instance Access Security Group"},
+        "NatSecurityGroup" : {"default" : "NAT Security Group"},
+        "RDSAccessSecurityGroup" : {"default" : "RDS Security Group"},
+        "MinAutoScaleCount" : {"default" : "Minimum Auto Scale Count"},
+        "MaxAutoScaleCount" : {"default" : "Maximum Auto Scale Count"},
+        "R53HostedZoneName" : {"default" : "Route 53 Hosted Zone"},
+        "Route53ElbAlias" : {"default" : "ELB DNS Alias"},
+        "ElbSslCertArn" : {"default" : "ELB SSL Cert ARN"},
+        "ElbStickySessions" : {"default" : "ELB Stickiness"}
+      }
+    }
+  }
+}
