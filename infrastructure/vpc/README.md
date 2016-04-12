@@ -1,4 +1,4 @@
-# VPC Templates
+# VPC Template
 
 ## Purpose
 Create various Virtual Private Clouds.

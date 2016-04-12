@@ -888,7 +888,7 @@
       }
     },
     "PrivateSubnets": {
-      "Description": "Public Subnet IDs Created for VPC",
+      "Description": "Private Subnet IDs Created for VPC",
       "Value": {
         "Fn::Join": [
           "", [

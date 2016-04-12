@@ -276,6 +276,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
