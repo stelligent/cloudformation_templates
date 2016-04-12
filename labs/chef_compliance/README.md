@@ -1,4 +1,4 @@
-# Chef Compliance Lab CloudFormation Templates
+# Chef Compliance Lab CloudFormation Template
 
 ## Purpose
 Chef Compliance Lab Setup that uses a Chef Compliance AMI provided by Chef.
@@ -13,7 +13,7 @@ Look at the VPC CloudFormation output for any needed values for the other templa
 
 1. [VPC](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template)
 2. [NAT Gateway](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat/nat-gateway.template) (Optional)
-3. [Bastion Host](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion/bastion.template) (Optional - WIP if I add tcp22 to CC SG)
+3. [Bastion Host](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion/bastion.template) (Optional)
 4. [Chef Compliance Webapp](https://github.com/stelligent/cloudformation_templates/blob/master/compliance/chef_compliance/chef-compliance-webapp.template)
 5. [Chef Compliance Lab Test Instances](https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance/chef-compliance-lab-test-instances.template)
 
