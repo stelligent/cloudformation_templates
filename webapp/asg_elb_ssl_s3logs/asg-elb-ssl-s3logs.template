@@ -1,0 +1,839 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "MediaWiki Baked AMI with ELB by Levon Becker v20160411-0100",
+  "Parameters": {
+    "Ec2KeyPair": {
+      "Description": "Select Keypair to Assign to EC2 Instances",
+      "Type": "AWS::EC2::KeyPair::KeyName"
+    },
+    "MinAutoScaleCount": {
+      "Description": "Enter Minimum Instance Auto Scale Count.",
+      "Type": "Number",
+      "Default": "2"
+    },
+    "MaxAutoScaleCount": {
+      "Description": "Enter Maximum Instance Auto Scale Count.",
+      "Type": "Number",
+      "Default": "4"
+    },
+    "Owner": {
+      "Description": "Enter Team or Individual Name Responsible for the Stack.",
+      "Type": "String",
+      "Default": "Levon Becker"
+    },
+    "Project": {
+      "Description": "Enter Project Name.",
+      "Type": "String",
+      "Default": "Mediawiki ASG with ELB Creation"
+    },
+    "DeleteAfter": {
+      "Description": "Enter Date It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
+      "Type": "String",
+      "Default": "00/00/201x"
+    },
+    "VPC": {
+      "Description": "Select VPC.",
+      "Type": "AWS::EC2::VPC::Id"
+    },
+    "PublicSubnet1": {
+      "Description": "Public Subnet 1 to Deploy ELB to.",
+      "Type": "AWS::EC2::Subnet::Id"
+    },
+    "PublicSubnet2": {
+      "Description": "Public Subnet 2 to Deploy ELB to.",
+      "Type": "AWS::EC2::Subnet::Id"
+    },
+    "PublicSubnet3": {
+      "Description": "Public Subnet 3 to Deploy ELB to.",
+      "Type": "AWS::EC2::Subnet::Id"
+    },
+    "PrivateSubnet1": {
+      "Description": "Private Subnet 1 to Deploy MediaWike Autoscaling Group to.",
+      "Type": "AWS::EC2::Subnet::Id"
+    },
+    "PrivateSubnet2": {
+      "Description": "Private Subnet 2 to Deploy MediaWike Autoscaling Group to.",
+      "Type": "AWS::EC2::Subnet::Id"
+    },
+    "PrivateSubnet3": {
+      "Description": "Private Subnet 3 to Deploy MediaWike Autoscaling Group to.",
+      "Type": "AWS::EC2::Subnet::Id"
+    },
+    "InternalAccessSecurityGroup": {
+      "Description": "Security Group That Allows Bastion Host Access to Instances.",
+      "Type": "AWS::EC2::SecurityGroup::Id"
+    },
+    "RDSAccessSecurityGroup": {
+      "Description": "Security Group That Instance Access to RDS Instances.",
+      "Type": "AWS::EC2::SecurityGroup::Id"
+    },
+    "NatSecurityGroup": {
+      "Description": "Security Group That Allows Instance Internet Access through NAT.",
+      "Type": "AWS::EC2::SecurityGroup::Id"
+    },
+    "PublicNetworkAcl": {
+      "Description": "Enter Public Network ACL ID.",
+      "Type": "String",
+      "Default": "acl-0000000"
+    },
+    "Route53ElbAlias": {
+      "Description": "DNS Record to Update for the ELB.",
+      "Type": "String",
+      "Default": "www.domain.com"
+    },
+    "R53HostedZoneName": {
+      "Description": "Hosted DNS Name.",
+      "Type": "String",
+      "Default": "domain.com"
+    },
+    "ElbSslCertArn": {
+      "Description": "SSL Certificate ARN for the ELB to use.",
+      "Type": "String",
+      "Default": "arn:aws:iam::0000000000000:server-certificate/www.domain.com"
+    },
+    "ElbStickySessions": {
+      "Description": "Enabled Sticky Sessions on ELB?",
+      "Type": "String",
+      "Default": "true",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "AMI": {
+      "Description": "Enter Baked AMI ID.",
+      "Type": "String",
+      "Default": "ami-00000000"
+    },
+    "InstanceType": {
+      "Description": "Select Instance Type.",
+      "Type": "String",
+      "Default": "t2.small",
+      "AllowedValues": [
+        "t2.micro",
+        "t2.small",
+        "t2.medium",
+        "m1.small",
+        "m1.medium",
+        "m1.large",
+        "m1.xlarge",
+        "m2.xlarge",
+        "m2.2xlarge",
+        "m2.4xlarge",
+        "m3.medium",
+        "m3.large",
+        "m3.xlarge",
+        "m3.2xlarge",
+        "c1.medium",
+        "c1.xlarge",
+        "c3.large",
+        "c3.xlarge",
+        "c3.2xlarge",
+        "c3.4xlarge",
+        "c3.8xlarge",
+        "c4.large",
+        "c4.xlarge",
+        "c4.2xlarge",
+        "c4.4xlarge",
+        "c4.8xlarge",
+        "g2.2xlarge",
+        "r3.large",
+        "r3.xlarge",
+        "r3.2xlarge",
+        "r3.4xlarge",
+        "r3.8xlarge",
+        "i2.xlarge",
+        "i2.2xlarge",
+        "i2.4xlarge",
+        "i2.8xlarge",
+        "d2.xlarge",
+        "d2.2xlarge",
+        "d2.4xlarge",
+        "d2.8xlarge",
+        "hi1.4xlarge",
+        "hs1.8xlarge",
+        "cr1.8xlarge",
+        "cc2.8xlarge",
+        "cg1.4xlarge"
+      ],
+      "ConstraintDescription": "Must be a valid EC2 instance type."
+    },
+    "SnsTopicArn": {
+      "Description": "Enter Notification SNS Topic ARN.",
+      "Type": "String",
+      "Default": "arn:aws:sns:us-west-2:000000000000:cloudwatch-alerts"
+    }
+  },
+  "Mappings": {
+    "bootstrap": {
+      "rhel": {
+        "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
+        "installpackages": "yum install -y curl wget mlocate ca-certificates openssl vim",
+        "remounts3uploads": "umount /var/www/html/mediawiki/s3uploads && mount -a"
+      }
+    }
+  },
+  "Conditions": {
+    "UseStickiness": {"Fn::Equals": [{"Ref": "ElbStickySessions"}, "true" ]}
+  },
+  "Resources": {
+    "IamRole": {
+      "Type"  : "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [{"Effect": "Allow", "Principal": {"Service": ["ec2.amazonaws.com"]}, "Action": ["sts:AssumeRole"]}]
+        },
+        "Path": "/"
+      }
+    },
+    "IamPolicies": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-instance-policy"]]},
+        "PolicyDocument": {
+          "Statement": [{
+            "Effect": "Allow",
+            "Action": [
+              "s3:*",
+              "ec2:Describe*",
+              "elasticloadbalancing:Describe*",
+              "autoscaling:Describe*",
+              "cloudwatch:*",
+              "logs:*",
+              "sns:*"
+            ],
+            "Resource": "*"
+          }]
+        },
+        "Roles": [{"Ref": "IamRole"}]
+      }
+    },
+    "IamInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [{"Ref": "IamRole"}]
+      }
+    },
+    "InternetToElbSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Web to ELB Access",
+        "VpcId": {"Ref": "VPC"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-internet-to-elb"]]}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          }
+        ],
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+    "InstanceToElbSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "ELB to Instance Access in VPC",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-elb-to-instance"]]}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          }
+        ]
+      }
+    },
+    "ELBSecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "DependsOn": "InstanceToElbSecurityGroup",
+      "Properties": {
+        "GroupId": {
+          "Ref": "InstanceToElbSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "80",
+        "ToPort": "80",
+        "SourceSecurityGroupId": {
+          "Ref": "InstanceToElbSecurityGroup"
+        }
+      }
+    },
+    "ElasticLoadBalancer": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "DependsOn": [
+        "S3LoggingBucket",
+        "S3LoggingBucketPolicy",
+        "InstanceToElbSecurityGroup",
+        "InternetToElbSecurityGroup"
+      ],
+      "Properties": {
+          "LBCookieStickinessPolicy": [
+          {"Fn:If": [
+            "UseStickiness",
+            {
+              "CookieExpirationPeriod": "86400",
+              "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-lbcookie"]]}
+            },
+            {}
+          ]}
+         ],
+        "Subnets": [
+          {"Ref": "PublicSubnet1"},
+          {"Ref": "PublicSubnet2"},
+          {"Ref": "PublicSubnet3"}
+        ],
+        "ConnectionDrainingPolicy": {
+          "Enabled": true,
+          "Timeout": 120
+        },
+        "ConnectionSettings": {
+          "IdleTimeout": 90
+        },
+        "CrossZone": "true",
+        "SecurityGroups": [
+          {"Ref": "InstanceToElbSecurityGroup"},
+          {"Ref": "InternetToElbSecurityGroup"}
+        ],
+        "Listeners": [
+          {
+            "LoadBalancerPort": "80",
+            "InstancePort": "80",
+            "Protocol": "HTTP"
+          },
+          {
+            "SSLCertificateId": {"Ref": "ElbSslCertArn"},
+            "LoadBalancerPort": "443",
+            "InstancePort": "80",
+            "Protocol": "HTTPS",
+            "PolicyNames" : [ {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-lbcookie"]]} ]
+          }
+        ],
+        "LoadBalancerName": {"Ref": "AWS::StackName"},
+        "HealthCheck": {
+          "Target": "TCP:80",
+          "HealthyThreshold": "3",
+          "UnhealthyThreshold": "5",
+          "Interval": "30",
+          "Timeout": "5"
+        },
+        "AccessLoggingPolicy": {
+          "S3BucketName": {
+            "Ref": "S3LoggingBucket"
+          },
+          "S3BucketPrefix": "Logs",
+          "Enabled": "true",
+          "EmitInterval": "60"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Ref": "AWS::StackName"}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          }
+        ]
+      }
+    },
+    "ElbDnsCname": {
+      "Type": "AWS::Route53::RecordSet",
+      "DependsOn": "ElasticLoadBalancer",
+      "Properties": {
+        "HostedZoneName": {"Ref": "R53HostedZoneName"},
+        "Comment": "CNAME Redirect to the ELB",
+        "Name": {"Ref" : "Route53ElbAlias"},
+        "Type": "CNAME",
+        "TTL": "300",
+        "ResourceRecords": [
+          {
+            "Fn::GetAtt": [
+              "ElasticLoadBalancer",
+              "DNSName"
+            ]
+          }
+        ]
+      }
+    },
+    "InboundPublicNetworkAclEntry240": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {"Ref": "PublicNetworkAcl"},
+        "RuleNumber": "240",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "80",
+          "To": "80"
+        }
+      }
+    },
+    "InboundPublicNetworkAclEntry245": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {"Ref": "PublicNetworkAcl"},
+        "RuleNumber": "245",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "443",
+          "To": "443"
+        }
+      }
+    },
+    "LaunchConfiguration": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "DependsOn": [
+        "InstanceToElbSecurityGroup",
+        "IamInstanceProfile"
+      ],
+      "Properties": {
+        "AssociatePublicIpAddress": "false",
+        "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
+        "InstanceType": {"Ref": "InstanceType"},
+        "SecurityGroups": [
+          {"Ref": "InstanceToElbSecurityGroup"},
+          {"Ref": "RDSAccessSecurityGroup"},
+          {"Ref": "InternalAccessSecurityGroup"},
+          {"Ref": "NatSecurityGroup"}
+        ],
+        "ImageId": {"Ref": "AMI"},
+        "KeyName": {"Ref": "Ec2KeyPair"},
+        "BlockDeviceMappings" : [
+          {
+            "DeviceName" : "/dev/sda1",
+            "Ebs": {
+              "DeleteOnTermination": "true",
+              "VolumeType": "gp2"
+            }
+          }
+        ],
+        "UserData" : {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "", [
+                "#!/bin/bash\n",
+                {"Fn::FindInMap": ["bootstrap", "rhel", "warmebs"]},
+                "\n",
+                {"Fn::FindInMap": ["bootstrap", "rhel", "installpackages"]},
+                "\n",
+                {"Fn::FindInMap": ["bootstrap", "rhel", "remounts3uploads"]},
+                "\n"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "AutoScalingGroup": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "DependsOn": [
+        "LaunchConfiguration",
+        "ElasticLoadBalancer"
+      ],
+      "Properties": {
+        "LaunchConfigurationName": {
+          "Ref": "LaunchConfiguration"
+        },
+        "MinSize": {"Ref": "MinAutoScaleCount"},
+        "MaxSize": {"Ref": "MaxAutoScaleCount"},
+        "DesiredCapacity": {"Ref": "MinAutoScaleCount"},
+        "HealthCheckType": "EC2",
+        "LoadBalancerNames": [{"Ref": "ElasticLoadBalancer"}],
+        "MetricsCollection": [
+          {
+            "Granularity": "1Minute",
+            "Metrics": [
+              "GroupMinSize",
+              "GroupMaxSize"
+            ]
+          }
+        ],
+        "NotificationConfigurations": [
+          {
+            "TopicARN": {"Ref" : "SnsTopicArn"},
+            "NotificationTypes": [
+              "autoscaling:EC2_INSTANCE_LAUNCH",
+              "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+              "autoscaling:EC2_INSTANCE_TERMINATE",
+              "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+            ]
+          }
+        ],
+        "VPCZoneIdentifier": [
+          {"Ref": "PrivateSubnet1"},
+          {"Ref": "PrivateSubnet2"},
+          {"Ref": "PrivateSubnet3"}
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Ref": "AWS::StackName"},
+            "PropagateAtLaunch": "true"
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"},
+            "PropagateAtLaunch": "true"
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"},
+            "PropagateAtLaunch": "true"
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          }
+        ]
+      }
+    },
+    "cpuhigh": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "DependsOn": [
+        "AutoScalingGroup",
+        "ScaleUpPolicy"
+      ],
+      "Properties": {
+        "AlarmActions": [
+          {"Ref": "ScaleUpPolicy"}
+        ],
+        "AlarmDescription": "Scale up if CPU > 60% average over 10 minutes",
+        "ComparisonOperator": "GreaterThanThreshold",
+        "Dimensions": [
+          {
+            "Name": "AutoScalingGroup",
+            "Value": {"Ref": "AutoScalingGroup"}
+          }
+        ],
+        "EvaluationPeriods": 2,
+        "MetricName": "CPUUtilization",
+        "Namespace": "AWS/EC2",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": "60",
+        "Unit": "Percent"
+      }
+    },
+    "cpulow": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "DependsOn": [
+        "AutoScalingGroup",
+        "ScaleDownPolicy"
+      ],
+      "Properties": {
+        "AlarmActions": [{"Ref": "ScaleDownPolicy"}],
+        "AlarmDescription": "Scale down if CPU <= 30% average over 30 minutes",
+        "ComparisonOperator": "LessThanOrEqualToThreshold",
+        "Dimensions": [
+          {
+            "Name": "AutoScalingGroup",
+            "Value": {"Ref": "AutoScalingGroup"}
+          }
+        ],
+        "EvaluationPeriods": 6,
+        "MetricName": "CPUUtilization",
+        "Namespace": "AWS/EC2",
+        "Period": 300,
+        "Statistic": "Average",
+        "Threshold": "30",
+        "Unit": "Percent"
+      }
+    },
+    "ScaleDownPolicy": {
+      "Type": "AWS::AutoScaling::ScalingPolicy",
+      "DependsOn": [
+        "AutoScalingGroup"
+      ],
+      "Properties": {
+        "AdjustmentType": "ChangeInCapacity",
+        "AutoScalingGroupName": {"Ref": "AutoScalingGroup"},
+        "Cooldown": 1800,
+        "ScalingAdjustment": "-1"
+      }
+    },
+    "ScaleUpPolicy": {
+      "Type": "AWS::AutoScaling::ScalingPolicy",
+      "DependsOn": [
+        "AutoScalingGroup"
+      ],
+      "Properties": {
+        "AdjustmentType": "ChangeInCapacity",
+        "AutoScalingGroupName": {
+          "Ref": "AutoScalingGroup"
+        },
+        "Cooldown": 300,
+        "ScalingAdjustment": "1"
+      }
+    },
+    "S3LoggingBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-logs"]]}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          }
+        ]
+      }
+    },
+    "S3LoggingBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "S3LoggingBucket"
+        },
+        "PolicyDocument": {
+          "Version": "2008-10-17",
+          "Statement": [
+            {
+              "Sid": "ELBAccessLogs20130930",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:s3:::",
+                    {"Ref": "S3LoggingBucket"},
+                    "/",
+                    "Logs",
+                    "/AWSLogs/",
+                    {"Ref": "AWS::AccountId"},
+                    "/*"
+                  ]
+                ]
+              },
+              "Principal": "*",
+              "Action": [
+                "s3:PutObject"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "Owner": {
+      "Description": "Team or Individual that Owns this Formation.",
+      "Value": {"Ref": "Owner"}
+    },
+    "Project": {
+      "Description": "The project name.",
+      "Value": {"Ref": "Project"}
+    },
+    "DeleteAfter": {
+      "Description": "It is ok to delete the Formation after this date.",
+      "Value": {"Ref": "DeleteAfter"}
+    },
+    "KeyPairLoaded": {
+      "Description": "Key Pair used.",
+      "Value": {"Ref": "Ec2KeyPair"}
+    },
+    "VPC": {
+      "Description": "VPC Used.",
+      "Value": {"Ref": "VPC"}
+    },
+    "ElbDNS": {
+      "Description": "Route 53 DNS CName Assigned to ELB.",
+      "Value": {"Ref": "ElbDnsCname"}
+    },
+    "ElbFQDN": {
+      "Description": "FQDN of ELB",
+      "Value": {"Ref": "ElasticLoadBalancer"}
+    },
+    "PublicSubnets": {
+      "Description": "Public Subnets ELB Deployed to.",
+      "Value": {
+        "Fn::Join": [
+          "", [
+            "AZ1: ", {"Ref": "PublicSubnet1"}, ", ",
+            "AZ2: ", {"Ref": "PublicSubnet2"}, ", ",
+            "AZ3: ", {"Ref": "PublicSubnet3"}
+          ]
+        ]
+      }
+    },
+    "PrivateSubnets": {
+      "Description": "Private Subnets Webapp ASG Deployed to.",
+      "Value": {
+        "Fn::Join": [
+          "", [
+            "AZ1: ", {"Ref": "PrivateSubnet1"}, ", ",
+            "AZ2: ", {"Ref": "PrivateSubnet2"}, ", ",
+            "AZ3: ", {"Ref": "PrivateSubnet3"}
+          ]
+        ]
+      }
+    },
+    "IAMRole": {
+      "Description": "IAM Instance Profile Role Created.",
+      "Value": {"Ref": "IamRole"}
+    },
+    "InternetToElbSecurityGroup": {
+      "Description": "Inernet To ELB Access Security Group.",
+      "Value": {"Ref": "InternetToElbSecurityGroup"}
+    },
+    "InstanceToElbSecurityGroup": {
+      "Description": "Instance To ELB Access Security Group.",
+      "Value": {"Ref": "InstanceToElbSecurityGroup"}
+    },
+    "S3LoggingBucket": {
+      "Description": "Logging S3 Bucket.",
+      "Value": {"Ref": "S3LoggingBucket"}
+    },
+    "AutoScalingGroup": {
+      "Description": "Auto Scaling Group.",
+      "Value": {"Ref": "AutoScalingGroup"}
+    },
+    "ElasticLoadBalancer": {
+      "Description": "Elastic Load Balancer.",
+      "Value": {"Ref": "ElasticLoadBalancer"}
+    }
+  },
+  "Metadata" : {
+    "AWS::CloudFormation::Interface" : {
+      "ParameterGroups" : [
+        {
+          "Label" : {"default" : "Ownership"},
+          "Parameters" : [
+            "Owner",
+            "Project",
+            "DeleteAfter"
+          ]
+        },
+        {
+          "Label" : {"default" : "Auto Scale Configuration"},
+          "Parameters" : [
+            "MinAutoScaleCount",
+            "MaxAutoScaleCount",
+            "SnsTopicArn"
+          ]
+        },
+        {
+          "Label" : {"default" : "Instance Settings"},
+          "Parameters" : [
+            "Ec2KeyPair",
+            "AMI",
+            "InstanceType"
+          ]
+        },
+        {
+          "Label" : {"default" : "Network Configuration"},
+          "Parameters" : [
+            "VPC",
+            "PublicSubnet1",
+            "PublicSubnet2",
+            "PublicSubnet3",
+            "PrivateSubnet1",
+            "PrivateSubnet2",
+            "PrivateSubnet3",
+            "InternalAccessSecurityGroup",
+            "NatSecurityGroup",
+            "RDSAccessSecurityGroup",
+            "PublicNetworkAcl"
+          ]
+        },
+        {
+          "Label" : {"default" : "Load Balancer Configuration"},
+          "Parameters" : [
+            "R53HostedZoneName",
+            "Route53ElbAlias",
+            "ElbSslCertArn",
+            "ElbStickySessions"
+          ]
+        }
+      ],
+      "ParameterLabels" : {
+        "Owner" : {"default" : "Team or Individual Owner"},
+        "DeleteAfter" : {"default" : "Delete After Date"},
+        "Ec2KeyPair" : {"default" : "EC2 Keypair"},
+        "InstanceType" : {"default" : "Instance Type"},
+        "PublicSubnet1" : {"default" : "Public Subnet 1"},
+        "PublicSubnet2" : {"default" : "Public Subnet 2"},
+        "PublicSubnet3" : {"default" : "Public Subnet 3"},
+        "PrivateSubnet1" : {"default" : "Public Subnet 1"},
+        "PrivateSubnet2" : {"default" : "Public Subnet 2"},
+        "PrivateSubnet3" : {"default" : "Public Subnet 3"},
+        "PublicNetworkAcl" : {"default" : "Public Network ACL"},
+        "InternalAccessSecurityGroup" : {"default" : "Instance Access Security Group"},
+        "NatSecurityGroup" : {"default" : "NAT Security Group"},
+        "RDSAccessSecurityGroup" : {"default" : "RDS Security Group"},
+        "MinAutoScaleCount" : {"default" : "Minimum Auto Scale Count"},
+        "MaxAutoScaleCount" : {"default" : "Maximum Auto Scale Count"},
+        "R53HostedZoneName" : {"default" : "Route 53 Hosted Zone"},
+        "Route53ElbAlias" : {"default" : "ELB DNS Alias"},
+        "ElbSslCertArn" : {"default" : "ELB SSL Cert ARN"},
+        "ElbStickySessions" : {"default" : "ELB Stickiness"}
+      }
+    }
+  }
+}
