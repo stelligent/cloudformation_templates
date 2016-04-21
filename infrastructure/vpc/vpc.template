@@ -18,7 +18,7 @@
       "Default": "00/00/201x"
     },
     "VPCSubnetCidrBlock": {
-      "Description": "Enter VPC CIDR Block. (i.e. 10.0.0.0/16 = 10.0.0.0-10.0.15.255 is 4094 hosts)",
+      "Description": "Enter VPC CIDR Block. (i.e. 10.0.0.0/16 = 10.0.0.0-10.0.255.255 = 256 Subnets - 65534 hosts)",
       "Type": "String",
       "Default": "10.0.0.0/16",
       "MinLength": "10",
