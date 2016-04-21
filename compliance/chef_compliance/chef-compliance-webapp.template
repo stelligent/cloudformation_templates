@@ -265,11 +265,11 @@
         ]
       }
     },
-    "InboundPublicNetworkAclEntry230": {
+    "InboundPublicNetworkAclEntry250": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "230",
+        "RuleNumber": "250",
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
