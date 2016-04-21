@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Stelligent Chef Compliance Lab by Levon Becker v20160420-1400",
+  "Description": "RHEL, Ubuntu and Windows 2012 Lab Test Instances by Levon Becker v20160421-1000",
   "Parameters": {
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to EC2 Instances",
@@ -38,7 +38,7 @@
       "Type": "AWS::EC2::Subnet::Id"
     },
     "InternalAccessSecurityGroup": {
-      "Description": "Security Group That Allows Chef Compliance Host Access to Instances.",
+      "Description": "Security Group That Allows Instance to Instance Access.",
       "Type": "AWS::EC2::SecurityGroup::Id"
     },
     "NatSecurityGroup": {
@@ -357,6 +357,18 @@
     "DeleteAfter": {
       "Description": "It is ok to delete the Formation after this date",
       "Value": {"Ref": "DeleteAfter"}
+    },
+    "RhelInstancePrivateIp": {
+      "Description": "RHEL Instance Private IP Address.",
+      "Value": {"Fn::GetAtt": ["EC2InstanceRHEL7", "PrivateIp"]}
+    },
+    "UbuntuInstancePrivateIp": {
+      "Description": "RHEL Instance Private IP Address.",
+      "Value": {"Fn::GetAtt": ["EC2InstanceUbuntu14", "PrivateIp"]}
+    },
+    "WindowsInstancePrivateIp": {
+      "Description": "RHEL Instance Private IP Address.",
+      "Value": {"Fn::GetAtt": ["EC2InstanceWin2012", "PrivateIp"]}
     },
     "KeyPairLoaded": {
       "Description": "Key Pair used.",
