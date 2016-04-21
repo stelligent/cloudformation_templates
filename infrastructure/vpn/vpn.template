@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "VPN Connection by Levon Becker v20160420-1430",
+  "Description": "VPN Connection by Levon Becker v20160420-1445",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -69,7 +69,24 @@
       "Type": "AWS::EC2::VPNGateway",
       "Properties": {
         "Type": "ipsec.1",
-        "Tags": [{"Key": "Application", "Value": {"Ref": "AWS::StackName"}}]
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Ref": "AWS::StackName"}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          }
+        ]
       }
     },
     "VPNGatewayAttachment": {
@@ -98,21 +115,52 @@
             "Key": "Project",
             "Value": {"Ref": "Project"}
           },
-          {"Key": "VPN", "Value": {"Fn::Join": ["", ["Gateway to ", {"Ref": "RemoteVpnDeviceIp"}]]}}
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          },
+          {
+            "Key": "VPN",
+            "Value": {"Fn::Join": ["", ["Gateway to ", {"Ref": "RemoteVpnDeviceIp"}]]}
+          }
         ]
       }
     },
     "VPNConnection": {
       "Type": "AWS::EC2::VPNConnection",
+      "DependsOn": ["CustomerGateway", "VPNGateway"],
       "Properties": {
         "Type": "ipsec.1",
         "StaticRoutesOnly": "true",
         "CustomerGatewayId": {"Ref": "CustomerGateway"},
-        "VpnGatewayId": {"Ref": "VPNGateway"}
+        "VpnGatewayId": {"Ref": "VPNGateway"},
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Ref": "AWS::StackName"}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          },
+          {
+            "Key": "VPN",
+            "Value": {"Fn::Join": ["", ["Connection to ", {"Ref": "RemoteNetworkCidr"}]]}
+          }
+        ]
       }
     },
     "VPNConnectionRoute": {
       "Type": "AWS::EC2::VPNConnectionRoute",
+      "DependsOn": "VPNConnection",
       "Properties": {
         "VpnConnectionId": {"Ref": "VPNConnection"},
         "DestinationCidrBlock": {"Ref": "RemoteNetworkCidr"}
@@ -120,6 +168,7 @@
     },
     "VPNGatewayRoutePropagation": {
       "Type": "AWS::EC2::VPNGatewayRoutePropagation",
+      "DependsOn": ["VPNGateway", "VPNConnection"],
       "Properties": {
         "RouteTableIds": [{"Ref": "PrivateRouteTable"}, {"Ref": "PublicRouteTable"}],
         "VpnGatewayId": {"Ref": "VPNGateway"}
@@ -133,7 +182,7 @@
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
-        "CidrBlock": {"Ref": "RemoteVpnDeviceIp"},
+        "CidrBlock": {"Fn::Join": ["", [{"Ref": "RemoteVpnDeviceIp"}, "/32"]]},
         "PortRange": {
           "From": "7224",
           "To": "7224"
@@ -148,7 +197,11 @@
         "Protocol": "-1",
         "RuleAction": "allow",
         "Egress": "false",
-        "CidrBlock": {"Ref": "RemoteNetworkCidr"}
+        "CidrBlock": {"Ref": "RemoteNetworkCidr"},
+        "PortRange": {
+          "From": "0",
+          "To": "65535"
+        }
       }
     }
   },
