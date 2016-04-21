@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "VPN Connection by Levon Becker v20160420-1445",
+  "Description": "(No Fully Tested) Static VPN Connection by Levon Becker v20160421-0900",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -53,15 +53,6 @@
       "Default": "192.168.100.0/24",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
       "ConstraintDescription": "Must be a valid CIDR range of the form x.x.x.x/x."
-    },
-    "RemoteBgpAsn": {
-      "Description": "Enter Remote VPN Device BGP ASN.",
-      "Type": "String",
-      "MinLength": "4",
-      "MaxLength": "5",
-      "Default": "65000",
-      "AllowedPattern": "(\\d{4,5})",
-      "ConstraintDescription": "Must be a valid CIDR range of the form x.x.x.x/x."
     }
   },
   "Resources": {
@@ -100,7 +91,7 @@
       "Type": "AWS::EC2::CustomerGateway",
       "Properties": {
         "Type": "ipsec.1",
-        "BgpAsn": {"Ref": "RemoteBgpAsn"},
+        "BgpAsn": "65000",
         "IpAddress": {"Ref": "RemoteVpnDeviceIp"},
         "Tags": [
           {
