@@ -199,6 +199,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -270,6 +274,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -328,6 +336,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }

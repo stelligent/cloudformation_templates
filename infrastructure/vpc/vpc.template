@@ -141,6 +141,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -164,6 +168,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -187,6 +195,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -210,6 +222,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -229,6 +245,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -255,16 +275,16 @@
             "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-public"]]}
           },
           {
-            "Key": "Network",
-            "Value": "Public"
-          },
-          {
             "Key": "Owner",
             "Value": {"Ref": "Owner"}
           },
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -329,16 +349,16 @@
             "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-private-az1"]]}
           },
           {
-            "Key": "Network",
-            "Value": "Private"
-          },
-          {
             "Key": "Owner",
             "Value": {"Ref": "Owner"}
           },
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -356,16 +376,16 @@
             "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-private-az2"]]}
           },
           {
-            "Key": "Network",
-            "Value": "Private"
-          },
-          {
             "Key": "Owner",
             "Value": {"Ref": "Owner"}
           },
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -393,6 +413,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -408,16 +432,16 @@
             "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-private"]]}
           },
           {
-            "Key": "Network",
-            "Value": "Private"
-          },
-          {
             "Key": "Owner",
             "Value": {"Ref": "Owner"}
           },
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -490,11 +514,7 @@
           {
             "Key": "Name",
             "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-public-acl"]]}
-          },
-          {
-            "Key": "Network",
-            "Value": "Public"
-          },
+          }
           {
             "Key": "Owner",
             "Value": {"Ref": "Owner"}
@@ -502,6 +522,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -653,16 +677,16 @@
             "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-private-acl"]]}
           },
           {
-            "Key": "Network",
-            "Value": "Private"
-          },
-          {
             "Key": "Owner",
             "Value": {"Ref": "Owner"}
           },
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -750,6 +774,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ]
       }
@@ -782,6 +810,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ],
         "SecurityGroupIngress": [
@@ -867,6 +899,10 @@
           {
             "Key": "Project",
             "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ],
         "SecurityGroupIngress": [

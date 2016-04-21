@@ -249,6 +249,10 @@
             "Value": {"Ref": "Project"}
           },
           {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          },
+          {
             "Key": "ChefComplianceVersion",
             "Value": {
               "Fn::FindInMap": [

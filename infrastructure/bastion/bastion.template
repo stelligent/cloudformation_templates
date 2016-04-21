@@ -144,6 +144,18 @@
           {
             "Key": "Name",
             "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-bastion-access"]]}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
           }
         ],
         "SecurityGroupIngress": [
