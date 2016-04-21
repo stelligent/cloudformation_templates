@@ -25,15 +25,15 @@
       "Description": "Select VPC.",
       "Type": "AWS::EC2::VPC::Id"
     },
-    "PrivateSubnet1": {
+    "RHELSubnet": {
       "Description": "Private Subnet to Deploy RHEL 7 Instances.",
       "Type": "AWS::EC2::Subnet::Id"
     },
-    "PrivateSubnet2": {
+    "UbuntuSubnet": {
       "Description": "Private Subnet to Deploy Ubuntu 14 Instances.",
       "Type": "AWS::EC2::Subnet::Id"
     },
-    "PrivateSubnet3": {
+    "WindowsSubnet": {
       "Description": "Private Subnet to Deploy Windows 2012 R2 Instances.",
       "Type": "AWS::EC2::Subnet::Id"
     },
@@ -149,7 +149,7 @@
           "AssociatePublicIpAddress": "false",
           "DeviceIndex": "0",
           "DeleteOnTermination": "true",
-          "SubnetId": {"Ref": "PrivateSubnet1"}
+          "SubnetId": {"Ref": "RHELSubnet"}
         }],
         "KeyName": {"Ref": "Ec2KeyPair"},
         "BlockDeviceMappings": [
@@ -237,7 +237,7 @@
           "AssociatePublicIpAddress": "false",
           "DeviceIndex": "0",
           "DeleteOnTermination": "true",
-          "SubnetId": {"Ref": "PrivateSubnet2"}
+          "SubnetId": {"Ref": "UbuntuSubnet"}
         }],
         "KeyName": {"Ref": "Ec2KeyPair"},
         "BlockDeviceMappings": [
@@ -312,7 +312,7 @@
           "AssociatePublicIpAddress": "false",
           "DeviceIndex": "0",
           "DeleteOnTermination": "true",
-          "SubnetId": {"Ref": "PrivateSubnet3"}
+          "SubnetId": {"Ref": "WindowsSubnet"}
         }],
         "KeyName": {"Ref": "Ec2KeyPair"},
         "BlockDeviceMappings": [
@@ -382,17 +382,17 @@
       "Description": "IAM Instance Profile Role Created.",
       "Value": {"Ref": "IamRole"}
     },
-    "PrivateSubnet1": {
+    "RHELSubnet": {
       "Description": "Private Subnet RHEL Instance Deployed to.",
-      "Value": {"Ref": "PrivateSubnet1"}
+      "Value": {"Ref": "RHELSubnet"}
     },
-    "PrivateSubnet2": {
+    "UbuntuSubnet": {
       "Description": "Private Subnet Ubuntu Instance Deployed to.",
-      "Value": {"Ref": "PrivateSubnet2"}
+      "Value": {"Ref": "UbuntuSubnet"}
     },
-    "PrivateSubnet3": {
+    "WindowsSubnet": {
       "Description": "Private Subnet Windows Instance Deployed to.",
-      "Value": {"Ref": "PrivateSubnet3"}
+      "Value": {"Ref": "WindowsSubnet"}
     }
   },
   "Metadata" : {
@@ -407,23 +407,24 @@
           "Parameters" : [
             "VPC",
             "Ec2KeyPair",
-            "PrivateSubnet1",
-            "PrivateSubnet2",
-            "PrivateSubnet3",
+            "RHELSubnet",
+            "UbuntuSubnet",
+            "WindowsSubnet",
             "InternalAccessSecurityGroup",
-            "RemoteSecurityGroup",
-            "NatSecurityGroup"
+            "NatSecurityGroup",
+            "RemoteSecurityGroup"
           ]
         }
       ],
       "ParameterLabels" : {
         "Owner" : { "default" : "Team or Individual Owner" },
         "DeleteAfter" : { "default" : "Delete After Date" },
-        "PrivateSubnet1" : { "default" : "Private Subnet for RHEL Test Instance" },
-        "PrivateSubnet2" : { "default" : "Private Subnet for Ubuntu Test Instance" },
-        "PrivateSubnet3" : { "default" : "Private Subnet for Windows Test Instance" },
+        "RHELSubnet" : { "default" : "Subnet to Deploy RHEL Instance" },
+        "UbuntuSubnet" : { "default" : "Subnet to Deploy Ubuntu Instance" },
+        "WindowsSubnet" : { "default" : "Subnet to Deploy Windows Instance" },
         "InternalAccessSecurityGroup" : { "default" : "Instance Access Security Group" },
         "NatSecurityGroup" : { "default" : "NAT Access Security Group" },
+        "RemoteSecurityGroup" : { "default" : "Remote Access Security Group" },
         "Ec2KeyPair" : { "default" : "EC2 Access Keypair" }
       }
     }
