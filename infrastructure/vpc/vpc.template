@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "VPC by Levon Becker v20160420-1130",
+  "Description": "VPC by Levon Becker v20160425-1000",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -120,6 +120,41 @@
       "Default": "192.168.100.0/24",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
       "ConstraintDescription": "must be a valid CIDR range of the form x.x.x.x/x."
+    },
+    "AllowHttpToPublicRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow HTTP From Internet to Public Network.",
+      "Type": "Number",
+      "Default": "100"
+    },
+    "AllowHttpsToPublicRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow HTTPS From Internet to Public Network.",
+      "Type": "Number",
+      "Default": "105"
+    },
+    "AllowReturnTrafficToPublicRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow Return Traffic From Internet to Public Network.",
+      "Type": "Number",
+      "Default": "110"
+    },
+    "AllowVpcSubnetsRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow All VPC Subnets Cross Access to Public Network.",
+      "Type": "Number",
+      "Default": "115"
+    },
+    "AllowAllOutboundPublicRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow All Outbound Traffic from the Public Network.",
+      "Type": "Number",
+      "Default": "100"
+    },
+    "AllowAllInboundPrivateRuleNumber": {
+      "Description": "Enter Private Network ACL Rule Number to Allow All Inbound Traffic.",
+      "Type": "Number",
+      "Default": "100"
+    },
+    "AllowAllOutboundPrivateRuleNumber": {
+      "Description": "Enter Private Network ACL Rule Number to Allow All Outbound Traffic.",
+      "Type": "Number",
+      "Default": "100"
     }
   },
   "Resources": {
@@ -514,7 +549,7 @@
           {
             "Key": "Name",
             "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-public-acl"]]}
-          }
+          },
           {
             "Key": "Owner",
             "Value": {"Ref": "Owner"}
@@ -530,12 +565,12 @@
         ]
       }
     },
-    "InboundPublicNetworkAclEntry100": {
+    "InboundPublicNetworkAclAllowHTTP": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "DependsOn": "PublicNetworkAcl",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "100",
+        "RuleNumber": {"Ref": "AllowHttpToPublicRuleNumber"},
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
@@ -546,12 +581,12 @@
         }
       }
     },
-    "InboundPublicNetworkAclEntry105": {
+    "InboundPublicNetworkAclAllowHTTPS": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "DependsOn": "PublicNetworkAcl",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "105",
+        "RuleNumber": {"Ref": "AllowHttpsToPublicRuleNumber"},
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
@@ -562,44 +597,12 @@
         }
       }
     },
-    "InboundPublicNetworkAclEntry110": {
+    "InboundPublicNetworkAclAllowReturnTraffic": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "DependsOn": "PublicNetworkAcl",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "110",
-        "Protocol": "6",
-        "RuleAction": "allow",
-        "Egress": "false",
-        "CidrBlock": "0.0.0.0/0",
-        "PortRange": {
-          "From": "8080",
-          "To": "8080"
-        }
-      }
-    },
-    "InboundPublicNetworkAclEntry115": {
-      "Type": "AWS::EC2::NetworkAclEntry",
-      "DependsOn": "PublicNetworkAcl",
-      "Properties": {
-        "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "115",
-        "Protocol": "6",
-        "RuleAction": "allow",
-        "Egress": "false",
-        "CidrBlock": "0.0.0.0/0",
-        "PortRange": {
-          "From": "8443",
-          "To": "8443"
-        }
-      }
-    },
-    "InboundPublicNetworkAclEntry130": {
-      "Type": "AWS::EC2::NetworkAclEntry",
-      "DependsOn": "PublicNetworkAcl",
-      "Properties": {
-        "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "130",
+        "RuleNumber": {"Ref": "AllowReturnTrafficToPublicRuleNumber"},
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
@@ -610,12 +613,12 @@
         }
       }
     },
-    "InboundPublicNetworkAclEntry135": {
+    "InboundPublicNetworkAclAllowVPCSubnets": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "DependsOn": "PublicNetworkAcl",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "135",
+        "RuleNumber": {"Ref": "AllowVpcSubnetsRuleNumber"},
         "Protocol": "-1",
         "RuleAction": "allow",
         "Egress": "false",
@@ -626,12 +629,12 @@
         }
       }
     },
-    "OutboundPublicNetworkAclEntry": {
+    "OutboundPublicNetworkAclAllowAll": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "DependsOn": "PublicNetworkAcl",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "100",
+        "RuleNumber": {"Ref": "AllowAllOutboundPublicRuleNumber"},
         "Protocol": "-1",
         "RuleAction": "allow",
         "Egress": "true",
@@ -691,12 +694,12 @@
         ]
       }
     },
-    "InboundEphemeralPrivateNetworkAclEntry": {
+    "InboundEphemeralPrivateNetworkAclAllowAll": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "DependsOn": "PrivateNetworkAcl",
       "Properties": {
         "NetworkAclId": {"Ref": "PrivateNetworkAcl"},
-        "RuleNumber": "100",
+        "RuleNumber": {"Ref": "AllowAllInboundPrivateRuleNumber"},
         "Protocol": "-1",
         "RuleAction": "allow",
         "Egress": "false",
@@ -707,12 +710,12 @@
         }
       }
     },
-    "OutboundPrivateNetworkAclEntry": {
+    "OutboundPrivateNetworkAclAllowAll": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "DependsOn": "PrivateNetworkAcl",
       "Properties": {
         "NetworkAclId": {"Ref": "PrivateNetworkAcl"},
-        "RuleNumber": "100",
+        "RuleNumber": {"Ref": "AllowAllOutboundPrivateRuleNumber"},
         "Protocol": "-1",
         "RuleAction": "allow",
         "Egress": "true",
@@ -1013,6 +1016,31 @@
       "Description": "Remote Network or IP that can Access the instances of VPN or Direct Connect.",
       "Value": {"Ref": "RemoteAccessSecurityGroup"}
     },
+    "PublicNetworkACLRuleNumbers": {
+      "Description": "Public Network ACL Rules Numbers Created.",
+      "Value": {
+        "Fn::Join": [
+          "", [
+            "HTTP: ", {"Ref": "AllowHttpToPublicRuleNumber"}, ", ",
+            "HTTPS: ", {"Ref": "AllowHttpsToPublicRuleNumber"}, ", ",
+            "Return Traffic: ", {"Ref": "AllowReturnTrafficToPublicRuleNumber"}, ", ",
+            "VPC Subnets: ", {"Ref": "AllowVpcSubnetsRuleNumber"}, ", ",
+            "Allow All Out: ", {"Ref": "AllowAllOutboundPublicRuleNumber"}
+          ]
+        ]
+      }
+    },
+    "PrivateNetworkACLRuleNumbers": {
+      "Description": "Public Network ACL Rules Numbers Created.",
+      "Value": {
+        "Fn::Join": [
+          "", [
+            "Allow All In: ", {"Ref": "AllowAllInboundPrivateRuleNumber"}, ", ",
+            "Allow All Out: ", {"Ref": "AllowAllOutboundPrivateRuleNumber"}
+          ]
+        ]
+      }
+    },
     "DeleteAfter": {
       "Description": "It is ok to delete this Formation after this date",
       "Value": {"Ref": "DeleteAfter"}
@@ -1043,6 +1071,18 @@
             "AvailabilityZone2",
             "AvailabilityZone3"
           ]
+        },
+        {
+          "Label" : { "default" : "AWS Network ACL Rule Numbers" },
+          "Parameters" : [
+            "AllowHttpToPublicRuleNumber",
+            "AllowHttpsToPublicRuleNumber",
+            "AllowReturnTrafficToPublicRuleNumber",
+            "AllowVpcSubnetsRuleNumber",
+            "AllowAllOutboundPublicRuleNumber",
+            "AllowAllInboundPrivateRuleNumber",
+            "AllowAllOutboundPrivateRuleNumber"
+          ]
         }
       ],
       "ParameterLabels" : {
@@ -1057,7 +1097,14 @@
         "PrivateSubnetCidrBlock3" : { "default" : "Private Subnet 3" },
         "AvailabilityZone1" : { "default" : "Availability Zone 1" },
         "AvailabilityZone2" : { "default" : "Availability Zone 2" },
-        "AvailabilityZone3" : { "default" : "Availability Zone 3" }
+        "AvailabilityZone3" : { "default" : "Availability Zone 3" },
+        "AllowHttpToPublicRuleNumber" : { "default" : "HTTP to Public" },
+        "AllowHttpsToPublicRuleNumber" : { "default" : "HTTPS to Public" },
+        "AllowReturnTrafficToPublicRuleNumber" : { "default" : "Return Traffic to Public" },
+        "AllowVpcSubnetsRuleNumber" : { "default" : "VPC Subnets to Public" },
+        "AllowAllOutboundPublicRuleNumber" : { "default" : "Public Outbound" },
+        "AllowAllInboundPrivateRuleNumber" : { "default" : "Private Inbound" },
+        "AllowAllOutboundPrivateRuleNumber" : { "default" : "Private Outbound" }
       }
     }
   }

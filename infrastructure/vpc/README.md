@@ -24,3 +24,6 @@ Create a VPC with private and public networks.
     * Instance to Instance Access.
 10. Create NAT Instance Access Security Group.
     * This is so a NAT Can come and go while the SG persists for the Instances.
+
+### Diagram
+![alt text](https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/vpc.jpg "VPC CFN Template Diagram")
