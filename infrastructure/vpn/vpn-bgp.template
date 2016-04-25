@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "BGP VPN Connection by Levon Becker v20160421-0900",
+  "Description": "BGP Site-to-Site VPN Connection by Levon Becker v20160425-1400",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -22,7 +22,7 @@
       "Type": "AWS::EC2::VPC::Id"
     },
     "PublicRouteTable": {
-      "Description": "Enter Public Route Table ID.",
+      "Description": "Enter Public Route Table ID. (Skip if Not Including Public)",
       "Type": "String",
       "Default": "rtb-0000000"
     },
@@ -32,7 +32,12 @@
       "Default": "rtb-0000000"
     },
     "PublicNetworkAcl": {
-      "Description": "Enter Public Network ACL ID.",
+      "Description": "Enter Public Network ACL ID. (Skip if Not Including Public)",
+      "Type": "String",
+      "Default": "acl-0000000"
+    },
+    "PrivateNetworkAcl": {
+      "Description": "Enter Private Network ACL ID.",
       "Type": "String",
       "Default": "acl-0000000"
     },
@@ -62,7 +67,30 @@
       "Default": "65000",
       "AllowedPattern": "(\\d{4,5})",
       "ConstraintDescription": "Must be a valid CIDR range of the form x.x.x.x/x."
+    },
+    "IncludePublicSubnets": {
+      "Description": "Select whether to include the Public Subnets in VPN Access or not.",
+      "Type": "String",
+      "Default": "true",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "AllowOfficeNetworktoPublicRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow Office Network. (Skip if Not Including Public)",
+      "Type": "Number",
+      "Default": "230"
+    },
+    "AllowOfficeNetworktoPrivateRuleNumber": {
+      "Description": "Enter Private Network ACL Rule Number to Allow Office Network.",
+      "Type": "Number",
+      "Default": "230"
     }
+  },
+  "Conditions": {
+    "IncludePublic": {"Fn::Equals": [{"Ref": "IncludePublicSubnets"}, "true"]},
+    "ExcludePublic": {"Fn::Equals": [{"Ref": "IncludePublicSubnets"}, "false"]}
   },
   "Resources": {
     "VPNGateway": {
@@ -158,7 +186,8 @@
         ]
       }
     },
-    "VPNGatewayRoutePropagation": {
+    "VPNGatewayRoutePropagationBoth": {
+      "Condition": "IncludePublic",
       "Type": "AWS::EC2::VPNGatewayRoutePropagation",
       "DependsOn": ["VPNGateway", "VPNConnection"],
       "Properties": {
@@ -166,26 +195,36 @@
         "VpnGatewayId": {"Ref": "VPNGateway"}
       }
     },
-    "InboundPublicNetworkAclEntry230": {
+    "VPNGatewayRoutePropagationPrivateOnly": {
+      "Condition": "ExcludePublic",
+      "Type": "AWS::EC2::VPNGatewayRoutePropagation",
+      "DependsOn": ["VPNGateway", "VPNConnection"],
+      "Properties": {
+        "RouteTableIds": [{"Ref": "PrivateRouteTable"}],
+        "VpnGatewayId": {"Ref": "VPNGateway"}
+      }
+    },
+    "InboundPublicNetworkAclEntryOfficeNetwork": {
+      "Condition": "IncludePublic",
       "Type": "AWS::EC2::NetworkAclEntry",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "230",
-        "Protocol": "6",
+        "RuleNumber": {"Ref": "AllowOfficeNetworktoPublicRuleNumber"},
+        "Protocol": "-1",
         "RuleAction": "allow",
         "Egress": "false",
-        "CidrBlock": {"Fn::Join": ["", [{"Ref": "RemoteVpnDeviceIp"}, "/32"]]},
+        "CidrBlock": {"Ref": "RemoteNetworkCidr"},
         "PortRange": {
-          "From": "7224",
-          "To": "7224"
+          "From": "0",
+          "To": "65535"
         }
       }
     },
-    "InboundPublicNetworkAclEntry235": {
+    "InboundPrivateNetworkAclEntryOfficeNetwork": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "Properties": {
-        "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "235",
+        "NetworkAclId": {"Ref": "PrivateNetworkAcl"},
+        "RuleNumber": {"Ref": "AllowOfficeNetworktoPrivateRuleNumber"},
         "Protocol": "-1",
         "RuleAction": "allow",
         "Egress": "false",
@@ -218,6 +257,19 @@
       "Description": "Remote Network CIDR Used.",
       "Value": {"Ref": "RemoteNetworkCidr"}
     },
+    "IncludePublic": {
+      "Description": "Include Public Subnets?",
+      "Value": {"Ref": "IncludePublicSubnets"}
+    },
+    "AllowOfficeToPublicRuleNumber": {
+      "Condition": "IncludePublic",
+      "Description": "Allow Office Network to Public Subnets Rule Number Used.",
+      "Value": {"Ref": "AllowOfficeNetworktoPublicRuleNumber"}
+    },
+    "AllowOfficeToPrivateRuleNumber": {
+      "Description": "Allow Office Network to Private Subnets Rule Number Used.",
+      "Value": {"Ref": "AllowOfficeNetworktoPrivateRuleNumber"}
+    },
     "DeleteAfter": {
       "Description": "It is ok to delete the Formation after this date",
       "Value": {"Ref": "DeleteAfter"}
@@ -242,9 +294,18 @@
           "Label": {"default": "AWS Network Configuration"},
           "Parameters": [
             "VPC",
-            "PublicRouteTable",
             "PrivateRouteTable",
-            "PublicNetworkAcl"
+            "PrivateNetworkAcl",
+            "AllowOfficeNetworktoPrivateRuleNumber"
+          ]
+        },
+        {
+          "Label": {"default": "Include Public Subnet Access (Optional)"},
+          "Parameters": [
+            "IncludePublicSubnets",
+            "PublicRouteTable",
+            "PublicNetworkAcl",
+            "AllowOfficeNetworktoPublicRuleNumber"
           ]
         }
       ],
@@ -253,7 +314,14 @@
         "DeleteAfter": {"default": "Delete After Date"},
         "PublicRouteTable": {"default": "Public Route Table"},
         "PrivateRouteTable": {"default": "Private Route Table"},
-        "PublicNetworkAcl": {"default": "Public Network ACL"}
+        "PublicNetworkAcl": {"default": "Public Network ACL"},
+        "PrivateNetworkAcl": {"default": "Private Network ACL"},
+        "IncludePublicSubnets": {"default": "Include Public Subnets?"},
+        "AllowOfficeNetworktoPublicRuleNumber": {"default": "Public Rule Number"},
+        "AllowOfficeNetworktoPrivateRuleNumber": {"default": "Private Rule Number"},
+        "RemoteVpnDeviceIp": {"default": "VPN Device IP"},
+        "RemoteNetworkCidr": {"default": "Network CIDR Block"},
+        "RemoteBgpAsn": {"default": "VPN Device BGP ASN"}
       }
     }
   }
