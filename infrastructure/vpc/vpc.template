@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "VPC by Levon Becker v20160425-1000",
+  "Description": "VPC by Levon Becker v20160425-1400",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -965,9 +965,9 @@
       "Value": {
         "Fn::Join": [
           "", [
-            "AZ1: ", {"Ref": "PublicSubnetCidrBlock1"}, ", ",
-            "AZ2: ", {"Ref": "PublicSubnetCidrBlock2"}, ", ",
-            "AZ3: ", {"Ref": "PublicSubnetCidrBlock3"}
+            {"Ref": "PublicSubnetCidrBlock1"}, ", ",
+            {"Ref": "PublicSubnetCidrBlock2"}, ", ",
+            {"Ref": "PublicSubnetCidrBlock3"}
           ]
         ]
       }
@@ -977,9 +977,9 @@
       "Value": {
         "Fn::Join": [
           "", [
-            "AZ1: ", {"Ref": "PrivateSubnetCidrBlock1"}, ", ",
-            "AZ2: ", {"Ref": "PrivateSubnetCidrBlock2"}, ", ",
-            "AZ3: ", {"Ref": "PrivateSubnetCidrBlock3"}
+            {"Ref": "PrivateSubnetCidrBlock1"}, ", ",
+            {"Ref": "PrivateSubnetCidrBlock2"}, ", ",
+            {"Ref": "PrivateSubnetCidrBlock3"}
           ]
         ]
       }
@@ -1021,22 +1021,24 @@
       "Value": {
         "Fn::Join": [
           "", [
-            "HTTP: ", {"Ref": "AllowHttpToPublicRuleNumber"}, ", ",
-            "HTTPS: ", {"Ref": "AllowHttpsToPublicRuleNumber"}, ", ",
-            "Return Traffic: ", {"Ref": "AllowReturnTrafficToPublicRuleNumber"}, ", ",
-            "VPC Subnets: ", {"Ref": "AllowVpcSubnetsRuleNumber"}, ", ",
-            "Allow All Out: ", {"Ref": "AllowAllOutboundPublicRuleNumber"}
+            "Inbound (",
+            {"Ref": "AllowHttpToPublicRuleNumber"}, ", ",
+            {"Ref": "AllowHttpsToPublicRuleNumber"}, ", ",
+            {"Ref": "AllowReturnTrafficToPublicRuleNumber"}, ", ",
+            {"Ref": "AllowVpcSubnetsRuleNumber"}, ") ",
+            "Outbound (",
+            {"Ref": "AllowAllOutboundPublicRuleNumber"}, ")"
           ]
         ]
       }
     },
     "PrivateNetworkACLRuleNumbers": {
-      "Description": "Public Network ACL Rules Numbers Created.",
+      "Description": "Private Network ACL Rules Numbers Created.",
       "Value": {
         "Fn::Join": [
           "", [
-            "Allow All In: ", {"Ref": "AllowAllInboundPrivateRuleNumber"}, ", ",
-            "Allow All Out: ", {"Ref": "AllowAllOutboundPrivateRuleNumber"}
+            "Inbound (", {"Ref": "AllowAllInboundPrivateRuleNumber"}, ") ",
+            "Outbound (", {"Ref": "AllowAllOutboundPrivateRuleNumber"}, ")"
           ]
         ]
       }

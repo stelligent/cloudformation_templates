@@ -19,11 +19,12 @@ Create an AWS Virtual Private Cloud with public and private subnet configuration
     1. Attached to the Public Route Table.
 7. Public Network ACL.
 8. Private Network ACL.
-9. Instance Access Security Group.
+9. VPC Endpoint
+10. Instance Access Security Group.
     * Instance to Instance Access.
-10. NAT Instance Access Security Group.
+11. NAT Instance Access Security Group.
     * This is so a NAT Can come and go while the SG persists for the Instances.
-11. Remote Access Security Group.
+12. Remote Access Security Group.
     * This can be used for to allow site-to-site VPN or Direct Connect Networks access to instances.
 
 ## Diagram
