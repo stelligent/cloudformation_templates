@@ -34,6 +34,11 @@
       "Description": "Enter Public Network ACL ID.",
       "Type": "String",
       "Default": "acl-0000000"
+    },
+    "AllowNatRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow Return NAT Traffic.",
+      "Type": "Number",
+      "Default": "200"
     }
   },
   "Resources": {
@@ -60,11 +65,11 @@
         "NatGatewayId": {"Ref": "NatGateway"}
       }
     },
-    "InboundPublicNetworkAclEntry200": {
+    "InboundPublicNetworkAclAllowNat": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "200",
+        "RuleNumber": {"Ref": "AllowNatRuleNumber"},
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
@@ -93,6 +98,16 @@
       "Description": "NAT Elastic IP Address",
       "Value": {"Ref": "NatEIP"}
     },
+    "PublicNetworkACLRuleNumbers": {
+      "Description": "Public Network ACL Rules Number Created.",
+      "Value": {
+        "Fn::Join": [
+          "", [
+            "Inbound (", {"Ref": "AllowNatRuleNumber"}, ")"
+          ]
+        ]
+      }
+    },
     "DeleteAfter": {
       "Description": "It is ok to delete the Formation after this date",
       "Value": {"Ref": "DeleteAfter"}
@@ -111,7 +126,8 @@
             "VPC",
             "PublicSubnet",
             "PrivateRouteTable",
-            "PublicNetworkAcl"
+            "PublicNetworkAcl",
+            "AllowNatRuleNumber"
           ]
         }
       ],
@@ -120,7 +136,8 @@
         "DeleteAfter" : { "default" : "Delete After Date" },
         "PublicSubnet" : { "default" : "Public Subnet" },
         "PrivateRouteTable" : { "default" : "Private Route Table" },
-        "PublicNetworkAcl" : { "default" : "Public Network ACL" }
+        "PublicNetworkAcl" : { "default" : "Public Network ACL" },
+        "AllowNatRuleNumber" : { "default" : "Public Network ACL Rule Number" }
       }
     }
   }
