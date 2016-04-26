@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "RHEL, Ubuntu and Windows 2012 Lab Test Instances by Levon Becker v20160421-1000",
+  "Description": "RHEL, Ubuntu and Windows 2012 Lab Test Instances by Levon Becker v20160425-2000",
   "Parameters": {
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to EC2 Instances",
