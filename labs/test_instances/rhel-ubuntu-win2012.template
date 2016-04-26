@@ -48,6 +48,168 @@
     "RemoteSecurityGroup": {
       "Description": "Remote Network or IP that can Access the instances of VPN or Direct Connect.",
       "Type": "AWS::EC2::SecurityGroup::Id"
+    },
+    "InstanceTypeRHEL7": {
+      "Description": "Select Instance Type for RHEL 7.",
+      "Type": "String",
+      "Default": "t2.micro",
+      "AllowedValues": [
+        "t1.micro",
+        "t2.micro",
+        "t2.small",
+        "t2.medium",
+        "m1.small",
+        "m1.medium",
+        "m1.large",
+        "m1.xlarge",
+        "m2.xlarge",
+        "m2.2xlarge",
+        "m2.4xlarge",
+        "m3.medium",
+        "m3.large",
+        "m3.xlarge",
+        "m3.2xlarge",
+        "c1.medium",
+        "c1.xlarge",
+        "c3.large",
+        "c3.xlarge",
+        "c3.2xlarge",
+        "c3.4xlarge",
+        "c3.8xlarge",
+        "c4.large",
+        "c4.xlarge",
+        "c4.2xlarge",
+        "c4.4xlarge",
+        "c4.8xlarge",
+        "g2.2xlarge",
+        "r3.large",
+        "r3.xlarge",
+        "r3.2xlarge",
+        "r3.4xlarge",
+        "r3.8xlarge",
+        "i2.xlarge",
+        "i2.2xlarge",
+        "i2.4xlarge",
+        "i2.8xlarge",
+        "d2.xlarge",
+        "d2.2xlarge",
+        "d2.4xlarge",
+        "d2.8xlarge",
+        "hi1.4xlarge",
+        "hs1.8xlarge",
+        "cr1.8xlarge",
+        "cc2.8xlarge",
+        "cg1.4xlarge"
+      ],
+      "ConstraintDescription": "Must be a valid EC2 instance type."
+    },
+    "InstanceTypeUbuntu14": {
+      "Description": "Select Instance Type for Ubuntu 14.",
+      "Type": "String",
+      "Default": "t2.micro",
+      "AllowedValues": [
+        "t1.micro",
+        "t2.micro",
+        "t2.small",
+        "t2.medium",
+        "m1.small",
+        "m1.medium",
+        "m1.large",
+        "m1.xlarge",
+        "m2.xlarge",
+        "m2.2xlarge",
+        "m2.4xlarge",
+        "m3.medium",
+        "m3.large",
+        "m3.xlarge",
+        "m3.2xlarge",
+        "c1.medium",
+        "c1.xlarge",
+        "c3.large",
+        "c3.xlarge",
+        "c3.2xlarge",
+        "c3.4xlarge",
+        "c3.8xlarge",
+        "c4.large",
+        "c4.xlarge",
+        "c4.2xlarge",
+        "c4.4xlarge",
+        "c4.8xlarge",
+        "g2.2xlarge",
+        "r3.large",
+        "r3.xlarge",
+        "r3.2xlarge",
+        "r3.4xlarge",
+        "r3.8xlarge",
+        "i2.xlarge",
+        "i2.2xlarge",
+        "i2.4xlarge",
+        "i2.8xlarge",
+        "d2.xlarge",
+        "d2.2xlarge",
+        "d2.4xlarge",
+        "d2.8xlarge",
+        "hi1.4xlarge",
+        "hs1.8xlarge",
+        "cr1.8xlarge",
+        "cc2.8xlarge",
+        "cg1.4xlarge"
+      ],
+      "ConstraintDescription": "Must be a valid EC2 instance type."
+    },
+    "InstanceTypeWin2012": {
+      "Description": "Instance Type for Windows 2012 R2.",
+      "Type": "String",
+      "Default": "t2.medium",
+      "AllowedValues": [
+        "t1.micro",
+        "t2.micro",
+        "t2.small",
+        "t2.medium",
+        "m1.small",
+        "m1.medium",
+        "m1.large",
+        "m1.xlarge",
+        "m2.xlarge",
+        "m2.2xlarge",
+        "m2.4xlarge",
+        "m3.medium",
+        "m3.large",
+        "m3.xlarge",
+        "m3.2xlarge",
+        "c1.medium",
+        "c1.xlarge",
+        "c3.large",
+        "c3.xlarge",
+        "c3.2xlarge",
+        "c3.4xlarge",
+        "c3.8xlarge",
+        "c4.large",
+        "c4.xlarge",
+        "c4.2xlarge",
+        "c4.4xlarge",
+        "c4.8xlarge",
+        "g2.2xlarge",
+        "r3.large",
+        "r3.xlarge",
+        "r3.2xlarge",
+        "r3.4xlarge",
+        "r3.8xlarge",
+        "i2.xlarge",
+        "i2.2xlarge",
+        "i2.4xlarge",
+        "i2.8xlarge",
+        "d2.xlarge",
+        "d2.2xlarge",
+        "d2.4xlarge",
+        "d2.8xlarge",
+        "hi1.4xlarge",
+        "hs1.8xlarge",
+        "cr1.8xlarge",
+        "cc2.8xlarge",
+        "cg1.4xlarge"
+      ],
+      "ConstraintDescription": "Must be a valid EC2 instance type."
     }
   },
   "Mappings": {
@@ -55,18 +217,12 @@
       "us-west-2": {
         "AMIRHEL7": "ami-775e4f16",
         "AMIUbuntu14": "ami-9abea4fb",
-        "AMIWin2012": "ami-1719f677",
-        "InstanceTypeRHEL7": "t2.micro",
-        "InstanceTypeUbuntu14": "t2.micro",
-        "InstanceTypeWin2012": "t2.medium"
+        "AMIWin2012": "ami-1719f677"
       },
       "us-east-1": {
         "AMIRHEL7": "ami-2051294a",
         "AMIUbuntu14": "ami-fce3c696",
-        "AMIWin2012": "ami-3d787d57",
-        "InstanceTypeRHEL7": "t2.micro",
-        "InstanceTypeUbuntu14": "t2.micro",
-        "InstanceTypeWin2012": "t2.medium"
+        "AMIWin2012": "ami-3d787d57"
       }
     },
     "bootstrap": {
@@ -125,13 +281,7 @@
       ],
       "Type": "AWS::EC2::Instance",
       "Properties": {
-        "InstanceType": {
-          "Fn::FindInMap": [
-            "RegionMap",
-            {"Ref": "AWS::Region"},
-            "InstanceTypeRHEL7"
-          ]
-        },
+        "InstanceType": {"Ref": "InstanceTypeRHEL7"},
         "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
         "ImageId": {
           "Fn::FindInMap": [
@@ -213,13 +363,7 @@
       ],
       "Type": "AWS::EC2::Instance",
       "Properties": {
-        "InstanceType": {
-          "Fn::FindInMap": [
-            "RegionMap",
-            {"Ref": "AWS::Region"},
-            "InstanceTypeUbuntu14"
-          ]
-        },
+        "InstanceType": {"Ref": "InstanceTypeUbuntu14"},
         "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
         "ImageId": {
           "Fn::FindInMap": [
@@ -288,13 +432,7 @@
       ],
       "Type": "AWS::EC2::Instance",
       "Properties": {
-        "InstanceType": {
-          "Fn::FindInMap": [
-            "RegionMap",
-            {"Ref": "AWS::Region"},
-            "InstanceTypeWin2012"
-          ]
-        },
+        "InstanceType": {"Ref": "InstanceTypeWin2012"},
         "IamInstanceProfile": {"Ref": "IamInstanceProfile"},
         "ImageId": {
           "Fn::FindInMap": [
@@ -412,20 +550,26 @@
             "WindowsSubnet",
             "InternalAccessSecurityGroup",
             "NatSecurityGroup",
-            "RemoteSecurityGroup"
+            "RemoteSecurityGroup",
+            "InstanceTypeRHEL7",
+            "InstanceTypeUbuntu14",
+            "InstanceTypeWin2012"
           ]
         }
       ],
       "ParameterLabels" : {
         "Owner" : { "default" : "Team or Individual Owner" },
         "DeleteAfter" : { "default" : "Delete After Date" },
-        "RHELSubnet" : { "default" : "Subnet to Deploy RHEL Instance" },
-        "UbuntuSubnet" : { "default" : "Subnet to Deploy Ubuntu Instance" },
-        "WindowsSubnet" : { "default" : "Subnet to Deploy Windows Instance" },
-        "InternalAccessSecurityGroup" : { "default" : "Instance Access Security Group" },
-        "NatSecurityGroup" : { "default" : "NAT Access Security Group" },
-        "RemoteSecurityGroup" : { "default" : "Remote Access Security Group" },
-        "Ec2KeyPair" : { "default" : "EC2 Access Keypair" }
+        "RHELSubnet" : { "default" : "Subnet for RHEL" },
+        "UbuntuSubnet" : { "default" : "Subnet for Ubuntu" },
+        "WindowsSubnet" : { "default" : "Subnet for Windows" },
+        "InternalAccessSecurityGroup" : { "default" : "Instance Security Group" },
+        "NatSecurityGroup" : { "default" : "NAT Security Group" },
+        "RemoteSecurityGroup" : { "default" : "Remote Security Group" },
+        "Ec2KeyPair" : { "default" : "EC2 Access Keypair" },
+        "InstanceTypeRHEL7" : { "default" : "Instance Type for RHEL" },
+        "InstanceTypeUbuntu14" : { "default" : "Instance Type for Ubuntu" },
+        "InstanceTypeWin2012" : { "default" : "Instance Type for Windows" }
       }
     }
   }
