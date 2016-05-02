@@ -41,10 +41,6 @@
       "Description": "Security Group That Allows Instance to Instance Access.",
       "Type": "AWS::EC2::SecurityGroup::Id"
     },
-    "NatSecurityGroup": {
-      "Description": "Security Group That Allows Instance NAT to the Internet in Private Subnets.",
-      "Type": "AWS::EC2::SecurityGroup::Id"
-    },
     "RemoteSecurityGroup": {
       "Description": "Remote Network or IP that can Access the instances of VPN or Direct Connect.",
       "Type": "AWS::EC2::SecurityGroup::Id"
@@ -293,7 +289,6 @@
         "NetworkInterfaces": [{
           "GroupSet": [
             {"Ref": "InternalAccessSecurityGroup"},
-            {"Ref": "NatSecurityGroup"},
             {"Ref": "RemoteSecurityGroup"}
           ],
           "AssociatePublicIpAddress": "false",
@@ -375,7 +370,6 @@
         "NetworkInterfaces": [{
           "GroupSet": [
             {"Ref": "InternalAccessSecurityGroup"},
-            {"Ref": "NatSecurityGroup"},
             {"Ref": "RemoteSecurityGroup"}
           ],
           "AssociatePublicIpAddress": "false",
@@ -444,7 +438,6 @@
         "NetworkInterfaces": [{
           "GroupSet": [
             {"Ref": "InternalAccessSecurityGroup"},
-            {"Ref": "NatSecurityGroup"},
             {"Ref": "RemoteSecurityGroup"}
           ],
           "AssociatePublicIpAddress": "false",
@@ -549,7 +542,6 @@
             "UbuntuSubnet",
             "WindowsSubnet",
             "InternalAccessSecurityGroup",
-            "NatSecurityGroup",
             "RemoteSecurityGroup",
             "InstanceTypeRHEL7",
             "InstanceTypeUbuntu14",
@@ -564,7 +556,6 @@
         "UbuntuSubnet" : { "default" : "Subnet for Ubuntu" },
         "WindowsSubnet" : { "default" : "Subnet for Windows" },
         "InternalAccessSecurityGroup" : { "default" : "Instance Security Group" },
-        "NatSecurityGroup" : { "default" : "NAT Security Group" },
         "RemoteSecurityGroup" : { "default" : "Remote Security Group" },
         "Ec2KeyPair" : { "default" : "EC2 Access Keypair" },
         "InstanceTypeRHEL7" : { "default" : "Instance Type for RHEL" },
