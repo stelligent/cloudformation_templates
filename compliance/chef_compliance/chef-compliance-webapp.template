@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Chef Compliance Webapp Server by Levon Becker v20160420-1400",
+  "Description": "Chef Compliance Webapp Server by Levon Becker v20160502-0830",
   "Parameters": {
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to Chef Compliance EC2 Instance.",
@@ -36,20 +36,6 @@
     "RemoteSecurityGroup": {
       "Description": "Remote Network or IP that can Access the instances of VPN or Direct Connect.",
       "Type": "AWS::EC2::SecurityGroup::Id"
-    },
-    "PublicNetworkAcl": {
-      "Description": "Enter Public Network ACL ID.",
-      "Type": "String",
-      "Default": "acl-0000000"
-    },
-    "SshAccessIP": {
-      "Description": "Source that has SSH access to the Chef Compliance server. (i.e. 50.32.108.38/32)",
-      "Type": "String",
-      "MinLength": "9",
-      "MaxLength": "18",
-      "Default": "0.0.0.0/0",
-      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
-      "ConstraintDescription": "must be a valid CIDR range of the form x.x.x.x/x."
     }
   },
   "Mappings": {
@@ -149,12 +135,6 @@
             "FromPort": "8443",
             "ToPort": "8443",
             "CidrIp": "0.0.0.0/0"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "22",
-            "ToPort": "22",
-            "CidrIp": {"Ref": "SshAccessIP"}
           }
         ],
         "SecurityGroupEgress": [
@@ -230,6 +210,11 @@
                 {"Fn::FindInMap": ["bootstrap", "rhel", "installpackages"]},
                 "\n",
                 {"Fn::FindInMap": ["bootstrap", "rhel", "updatechefcompliance"]},
+                "\n",
+                "echo sleeping and then running Chef Compliance Update again because it can error if upgrading the Chef Client and simply needs to be ran again.",
+                "sleep 20s",
+                "\n",
+                {"Fn::FindInMap": ["bootstrap", "rhel", "updatechefcompliance"]},
                 "\n"
               ]
             ]
@@ -263,21 +248,6 @@
             }
           }
         ]
-      }
-    },
-    "InboundPublicNetworkAclEntry250": {
-      "Type": "AWS::EC2::NetworkAclEntry",
-      "Properties": {
-        "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "250",
-        "Protocol": "6",
-        "RuleAction": "allow",
-        "Egress": "false",
-        "CidrBlock": {"Ref": "SshAccessIP"},
-        "PortRange": {
-          "From": "22",
-          "To": "22"
-        }
       }
     }
   },
@@ -337,9 +307,7 @@
             "Ec2KeyPair",
             "PublicSubnet",
             "InternalAccessSecurityGroup",
-            "RemoteSecurityGroup",
-            "PublicNetworkAcl",
-            "SshAccessIP"
+            "RemoteSecurityGroup"
           ]
         }
       ],
@@ -347,10 +315,8 @@
         "Owner" : { "default" : "Team or Individual Owner" },
         "DeleteAfter" : { "default" : "Delete After Date" },
         "PublicSubnet" : { "default" : "Public Subnet" },
-        "PublicNetworkAcl" : { "default" : "Public Network ACL" },
         "InternalAccessSecurityGroup" : { "default" : "Instance Access SG" },
-        "Ec2KeyPair" : { "default" : "EC2 Access Keypair" },
-        "SshAccessIP" : { "default" : "SSH Access CIDR Block" }
+        "Ec2KeyPair" : { "default" : "EC2 Access Keypair" }
       }
     }
   }
