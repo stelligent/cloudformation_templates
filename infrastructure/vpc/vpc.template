@@ -796,95 +796,6 @@
         }
       }
     },
-    "NatSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "NAT Internet Access",
-        "VpcId": {"Ref": "VPC"},
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-nat-private-to-internet"]]}
-          },
-          {
-            "Key": "Owner",
-            "Value": {"Ref": "Owner"}
-          },
-          {
-            "Key": "Project",
-            "Value": {"Ref": "Project"}
-          },
-          {
-            "Key": "DeleteAfter",
-            "Value": {"Ref": "DeleteAfter"}
-          }
-        ],
-        "SecurityGroupIngress": [
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "80",
-            "ToPort": "80",
-            "CidrIp": {"Ref": "PrivateSubnetCidrBlock1"}
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "443",
-            "ToPort": "443",
-            "CidrIp": {"Ref": "PrivateSubnetCidrBlock1"}
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "80",
-            "ToPort": "80",
-            "CidrIp": {"Ref": "PrivateSubnetCidrBlock2"}
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "443",
-            "ToPort": "443",
-            "CidrIp": {"Ref": "PrivateSubnetCidrBlock2"}
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "80",
-            "ToPort": "80",
-            "CidrIp": {"Ref": "PrivateSubnetCidrBlock3"}
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "443",
-            "ToPort": "443",
-            "CidrIp": {"Ref": "PrivateSubnetCidrBlock3"}
-          },
-          {
-            "IpProtocol": "icmp",
-            "FromPort": "-1",
-            "ToPort": "-1",
-            "CidrIp": {"Ref": "PrivateSubnetCidrBlock3"}
-          }
-        ],
-        "SecurityGroupEgress": [
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "80",
-            "ToPort": "80",
-            "CidrIp": "0.0.0.0/0"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "443",
-            "ToPort": "443",
-            "CidrIp": "0.0.0.0/0"
-          },
-          {
-            "IpProtocol": "icmp",
-            "FromPort": "-1",
-            "ToPort": "-1",
-            "CidrIp": "0.0.0.0/0"
-          }
-        ]
-      }
-    },
     "RemoteAccessSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -1007,10 +918,6 @@
     "InternalAccessSecurityGroup": {
       "Description": "Instance to Instance Access within VPC",
       "Value": {"Ref": "InternalAccessSecurityGroup"}
-    },
-    "NatSecurityGroup": {
-      "Description": "NAT Security Group ID for Instances to have Internet Access",
-      "Value": {"Ref": "NatSecurityGroup"}
     },
     "RemoteAccessSecurityGroup": {
       "Description": "Remote Network or IP that can Access the instances of VPN or Direct Connect.",
