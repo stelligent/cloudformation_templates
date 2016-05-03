@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Chef Compliance Webapp Server by Levon Becker v20160502-0830",
+  "Description": "Lab Chef Compliance Webapp Server by Levon Becker v20160502-0830",
   "Parameters": {
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to Chef Compliance EC2 Instance.",

@@ -1,4 +1,4 @@
-# Chef Compliance CloudFormation Template (WIP)
+# Chef Compliance Lab CloudFormation Template
 
 ## Purpose
 Chef Compliance Webapp Server Setup Template that uses a Chef Compliance AMI provided by Chef.
@@ -24,7 +24,7 @@ Setup the following as needed or desired. Obviously you will need permissions to
 
 ### Chef Compliance Webapp
 
-1. Run [Chef Compliance Webapp](https://github.com/stelligent/cloudformation_templates/blob/master/compliance/chef_compliance/chef-compliance-webapp.template) CloudFormation Template.
+1. Run [Chef Compliance Lab Webapp](https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance/chef-compliance-lab-webapp.template) CloudFormation Template.
 2. Wait 15 minutes for initialization to complete
     1. Part of the bootstrap in the CloudFormation is to upgrade the Chef Compliance and Chef Marketplace packages. Be sure to check the ```/var/log/cloud-init.log``` to see that it upgraded correctly if you notice a problem with the setup wizard.
         1. How to Manually upgrade
