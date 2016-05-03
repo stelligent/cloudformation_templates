@@ -38,7 +38,7 @@
     "AllowNatRuleNumber": {
       "Description": "Enter Public Network ACL Rule Number to Allow Return NAT Traffic.",
       "Type": "Number",
-      "Default": "200"
+      "Default": "120"
     }
   },
   "Resources": {

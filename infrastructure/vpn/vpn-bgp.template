@@ -80,12 +80,12 @@
     "AllowOfficeNetworktoPublicRuleNumber": {
       "Description": "Enter Public Network ACL Rule Number to Allow Office Network. (Skip if Not Including Public)",
       "Type": "Number",
-      "Default": "230"
+      "Default": "125"
     },
     "AllowOfficeNetworktoPrivateRuleNumber": {
       "Description": "Enter Private Network ACL Rule Number to Allow Office Network.",
       "Type": "Number",
-      "Default": "230"
+      "Default": "125"
     }
   },
   "Conditions": {

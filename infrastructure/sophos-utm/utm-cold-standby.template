@@ -1,0 +1,1293 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Scalable UTM cloud formation template",
+  "Parameters": {
+    "Email": {
+      "Default": "",
+      "Description": "UTM admin email",
+      "Type": "String"
+    },
+    "AMI": {
+      "Description": "The UTM AMI with cloud capabilities. With autodetect latest ami is used based on the license type",
+      "Type": "String",
+      "Default": "autodetect"
+    },
+    "LicenseType": {
+      "Description": "Bring your own license or hourly billing licensing type. This parameter has no effect, If the AMI parameter is set to an AMI ID.",
+      "Type": "String",
+      "AllowedValues": [
+        "Hourly",
+        "BYOL"
+      ],
+      "Default": "Hourly"
+    },
+    "Hostname": {
+      "Description": "The hostname field can have a maximum of 64 characters. Hostname can only contain lower and uppercase letters, numbers, dots(.), dashes(-) and needs to begin with a letter or a number.",
+      "Type": "String",
+      "MaxLength": "64",
+      "AllowedPattern": "^[0-9A-Za-z]{1}([A-Za-z0-9.-]*)$",
+      "ConstraintDescription": "Invalid hostname. The hostname field can have a maximum of 64 characters. Hostname can only contain lower- and uppercase letters, numbers, dots(.), dashes(-) and needs to begin with a letter or a number."
+    },
+    "City": {
+      "Description": "City",
+      "Type": "String"
+    },
+    "Country": {
+      "Description": "Country",
+      "Type": "String",
+      "AllowedValues": [
+        "Andorra",
+        "United Arab Emirates",
+        "Afghanistan",
+        "Antigua and Barbuda",
+        "Anguilla",
+        "Albania",
+        "Armenia",
+        "Netherlands Antilles",
+        "Angola",
+        "Antarctica",
+        "Argentina",
+        "American Samoa",
+        "Austria",
+        "Australia",
+        "Aland Islands",
+        "Aruba",
+        "Azerbaidjan",
+        "Bosnia and Herzegovina",
+        "Barbados",
+        "Bangladesh",
+        "Belgium",
+        "Burkina Faso",
+        "Bulgaria",
+        "Bahrain",
+        "Burundi",
+        "Benin",
+        "Saint Barthelemey",
+        "Bermuda",
+        "Brunei Darussalam",
+        "Bolivia",
+        "Brazil",
+        "Bahamas",
+        "Bhutan",
+        "Bouvet Island",
+        "Botswana",
+        "Belarus",
+        "Belize",
+        "Canada",
+        "Cocos Islands",
+        "Congo, Democratic Rebpulic of the",
+        "Central African Republic",
+        "Congo",
+        "Switzerland",
+        "Ivory Coast",
+        "Cook Islands",
+        "Chile",
+        "Cameroon",
+        "China",
+        "Colombia",
+        "Costa Rica",
+        "Cuba",
+        "Cape Verde",
+        "Christmas Island",
+        "Cyprus",
+        "Czech Republic",
+        "Germany",
+        "Djibouti",
+        "Denmark",
+        "Dominica",
+        "Dominican Republic",
+        "Algeria",
+        "Ecuador",
+        "Estonia",
+        "Egypt",
+        "Western Sahara",
+        "Eritrea",
+        "Spain",
+        "Ethiopia",
+        "Finland",
+        "Fiji",
+        "Falkland Islands",
+        "Micronesia",
+        "Faroe Islands",
+        "France",
+        "Gabon",
+        "Great Britain",
+        "Grenada",
+        "Georgia",
+        "French Guyana",
+        "Guernsey",
+        "Ghana",
+        "Gibraltar",
+        "Greenland",
+        " Gambia",
+        "Guinea",
+        "Guadeloupe",
+        "Equatorial Guinea",
+        "Greece",
+        "S. Georgia & S. Sandwich Isls.",
+        "Guatemala",
+        "Guam (USA)",
+        "Guinea Bissau",
+        "Guyana",
+        "Hong Kong",
+        "Heard and McDonald Islands",
+        "Honduras",
+        "Croatia",
+        "Haiti",
+        "Hungary",
+        "Indonesia",
+        "Ireland",
+        "Israel",
+        "Isle of Man",
+        "India",
+        "British Indian Ocean Territory",
+        "Iraq",
+        "Iran",
+        "Iceland",
+        "Italy",
+        "Jersey",
+        "Jamaica",
+        "Jordan",
+        "Japan",
+        "Kenya",
+        "Kyrgyz Republic (Kyrgyzstan)",
+        "Cambodia, Kingdom of",
+        "Kiribati",
+        "Comoros",
+        "Saint Kitts & Nevis Anguilla",
+        "North Korea",
+        "South Korea",
+        "Kuwait",
+        "Cayman Islands",
+        "Kazakhstan",
+        "Laos",
+        "Lebanon",
+        "Saint Lucia",
+        "Liechtenstein",
+        "Sri Lanka",
+        "Liberia",
+        "Lesotho",
+        "Lithuania",
+        "Luxembourg",
+        "Latvia",
+        "Libya",
+        "Morocco",
+        "Monaco",
+        "Moldavia",
+        "Montenegro",
+        "Saint Martin (French)",
+        "Madagascar",
+        "Marshall Islands",
+        "Macedonia",
+        "Mali",
+        "Myanmar",
+        "Mongolia",
+        "Macau",
+        "Northern Mariana Islands",
+        "Martinique (French)",
+        "Mauritania",
+        "Montserrat",
+        "Malta",
+        "Mauritius",
+        "Maldives",
+        "Malawi",
+        "Mexico",
+        "Malaysia",
+        "Mozambique",
+        "Namibia",
+        "New Caledonia (French)",
+        "Niger",
+        "Norfolk Island",
+        "Nigeria",
+        "Nicaragua",
+        "Netherlands",
+        "Norway",
+        "Nepal",
+        "Nauru",
+        "Niue",
+        "New Zealand",
+        "Oman",
+        "Panama",
+        "Peru",
+        "Polynesia (French)",
+        "Papua New Guinea",
+        "Philippines",
+        "Pakistan",
+        "Poland",
+        "Saint Pierre and Miquelon",
+        "Pitcairn Island",
+        "Puerto Rico",
+        "Palestinian Territory (Occupied)",
+        "Portugal",
+        "Palau",
+        "Paraguay",
+        "Qatar",
+        "Reunion (French)",
+        "Romania",
+        "Serbia",
+        "Russian Federation",
+        "Rwanda",
+        "Saudi Arabia",
+        "Solomon Islands",
+        "Seychelles",
+        "Sudan",
+        "Sweden",
+        "Singapore",
+        "Saint Helena",
+        "Slovenia",
+        "Svalbard Jan Mayen Islands",
+        "Slovak Republic",
+        "Sierra Leone",
+        "San Marino",
+        "Senegal",
+        "Somalia",
+        "Suriname",
+        "Saint Tome and Principe",
+        "El Salvador",
+        "Syria",
+        "Swaziland",
+        "Turks and Caicos Islands",
+        "Chad",
+        "French Southern Territories",
+        "Togo",
+        "Thailand",
+        "Tadjikistan",
+        "Tokelau",
+        "Timor-Leste",
+        "Turkmenistan",
+        "Tunisia",
+        "Tonga",
+        "Turkey",
+        "Trinidad and Tobago",
+        "Tuvalu",
+        "Taiwan",
+        "Tanzania",
+        "Ukraine",
+        "Uganda",
+        "United Kingdom",
+        "USA Minor Outlying Islands",
+        "United States",
+        "Uruguay",
+        "Uzbekistan",
+        "Holy See (Vatican City State)",
+        "Saint Vincent & Grenadines",
+        "Venezuela",
+        "Virgin Islands (British)",
+        "Virgin Islands (USA)",
+        "Vietnam",
+        "Vanuatu",
+        "Wallis and Futuna Islands",
+        "Samoa",
+        "Yemen",
+        "Mayotte",
+        "South Africa",
+        "Zambia",
+        "Zimbabwe"
+      ]
+    },
+    "AdminPassword": {
+      "Description": "UTM admin password",
+      "Type": "String",
+      "NoEcho": "True"
+    },
+    "Organization": {
+      "Description": "Name of your Organization",
+      "Type": "String"
+    },
+    "KeyName": {
+      "Description": "Name of an existing EC2 KeyPair to enable SSH access.",
+      "Type": "AWS::EC2::KeyPair::KeyName",
+      "Default": ""
+    },
+    "NetworkPrefix": {
+      "Description": "Please provide an available /16 Cidr Block to be used by the VPC. Please provide only the first two octets. For example for the network 10.6.0.0/16, you should provide 10.6",
+      "Type": "String",
+      "Default": "10.15"
+    },
+    "AvailabilityZone1": {
+      "Description": "Availability Zone 1",
+      "Type": "AWS::EC2::AvailabilityZone::Name"
+    },
+    "AvailabilityZone2": {
+      "Description": "Availability Zone 2",
+      "Type": "AWS::EC2::AvailabilityZone::Name"
+    },
+    "TrustedNetwork": {
+      "Description": "Trusted network. Only connections from this network are allowed to ports 22 and 8080. E.g 92.198.130.0/24",
+      "Type": "String"
+    },
+    "ExistingS3Bucket": {
+      "Description": "Optional. The S3 Bucket to store and restore backups. If left empty a new bucket will be created automatically.",
+      "Type": "String",
+      "Default": ""
+    },
+    "ExistingElasticIP": {
+      "Description": "Optional. The Elastic IP to assign in the UTM instance. If left empty a new Elastic IP will be allocated automatically.",
+      "Type": "String",
+      "Default": ""
+    },
+    "LicensePool": {
+      "Description": "Optional. S3 bucket where the licenses are stored",
+      "Type": "String",
+      "Default": ""
+    }
+  },
+  "Mappings": {
+    "RegionMap": {
+      "eu-west-1": {
+        "BYOL": "ami-b68dddc1",
+        "Hourly": "ami-e21d5395"
+      },
+      "ap-southeast-1": {
+        "BYOL": "ami-a22427f0",
+        "Hourly": "ami-b02427e2"
+      },
+      "ap-southeast-2": {
+        "BYOL": "ami-dfcc8be5",
+        "Hourly": "ami-ebcc8bd1"
+      },
+      "eu-central-1": {
+        "BYOL": "ami-ecbe84f1",
+        "Hourly": "ami-06bf851b"
+      },
+      "ap-northeast-1": {
+        "BYOL": "ami-d2369dd2",
+        "Hourly": "ami-d6379cd6"
+      },
+      "us-east-1": {
+        "BYOL": "ami-6da27506",
+        "Hourly": "ami-6fa27504"
+      },
+      "sa-east-1": {
+        "BYOL": "ami-f93cb0e4",
+        "Hourly": "ami-ed3cb0f0"
+      },
+      "us-west-1": {
+        "BYOL": "ami-6f40b32b",
+        "Hourly": "ami-5140b315"
+      },
+      "us-west-2": {
+        "BYOL": "ami-43777573",
+        "Hourly": "ami-5f77756f"
+      }
+    }
+  },
+  "Conditions": {
+    "UseRegionMap": {
+      "Fn::Equals": [
+        {
+          "Ref": "AMI"
+        },
+        "autodetect"
+      ]
+    },
+    "CreateS3Bucket": {
+      "Fn::Equals": [
+        {
+          "Ref": "ExistingS3Bucket"
+        },
+        ""
+      ]
+    },
+    "AllocateElasticIP": {
+      "Fn::Equals": [
+        {
+          "Ref": "ExistingElasticIP"
+        },
+        ""
+      ]
+    }
+  },
+  "Resources": {
+    "VPC": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "EnableDnsSupport": "true",
+        "EnableDnsHostnames": "true",
+        "CidrBlock": {
+          "Fn::Join": [
+            ".",
+            [
+              {
+                "Ref": "NetworkPrefix"
+              },
+              "0.0/16"
+            ]
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackId"
+            }
+          }
+        ]
+      }
+    },
+    "Subnet1": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "CidrBlock": {
+          "Fn::Join": [
+            ".",
+            [
+              {
+                "Ref": "NetworkPrefix"
+              },
+              "1.0/24"
+            ]
+          ]
+        },
+        "AvailabilityZone": {
+          "Ref": "AvailabilityZone1"
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackId"
+            }
+          }
+        ]
+      }
+    },
+    "Subnet2": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "CidrBlock": {
+          "Fn::Join": [
+            ".",
+            [
+              {
+                "Ref": "NetworkPrefix"
+              },
+              "2.0/24"
+            ]
+          ]
+        },
+        "AvailabilityZone": {
+          "Ref": "AvailabilityZone2"
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackId"
+            }
+          }
+        ]
+      }
+    },
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackId"
+            }
+          },
+          {
+            "Key": "Network",
+            "Value": "Public"
+          }
+        ]
+      }
+    },
+    "AttachGateway": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "InternetGatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "RouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackId"
+            }
+          },
+          {
+            "Key": "Network",
+            "Value": "Public"
+          }
+        ]
+      }
+    },
+    "PublicNetworkAcl": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Application",
+            "Value": {
+              "Ref": "AWS::StackId"
+            }
+          },
+          {
+            "Key": "Network",
+            "Value": "Public"
+          }
+        ]
+      }
+    },
+    "InboundHTTPPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "100",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "80",
+          "To": "80"
+        }
+      }
+    },
+    "InboundDynamicPortsPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "400",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "1024",
+          "To": "65535"
+        }
+      }
+    },
+    "InboundSSHPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "405",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "22",
+          "To": "22"
+        }
+      }
+    },
+    "InboundRedUDPPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "410",
+        "Protocol": "17",
+        "RuleAction": "allow",
+        "Egress": "false",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "3410",
+          "To": "3410"
+        }
+      }
+    },
+    "OutboundSSHPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "105",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "true",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "22",
+          "To": "22"
+        }
+      }
+    },
+    "OutboundHTTPPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "205",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "true",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "80",
+          "To": "80"
+        }
+      }
+    },
+    "OutBoundDynamicPortPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "305",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "true",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "1024",
+          "To": "65535"
+        }
+      }
+    },
+    "OutboundHTTPSPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "405",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "true",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "443",
+          "To": "443"
+        }
+      }
+    },
+    "OutboundRedPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "406",
+        "Protocol": "6",
+        "RuleAction": "allow",
+        "Egress": "true",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "3000",
+          "To": "3000"
+        }
+      }
+    },
+    "OutboundRedUDPPublicNetworkAclEntry": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        },
+        "RuleNumber": "407",
+        "Protocol": "17",
+        "RuleAction": "allow",
+        "Egress": "true",
+        "CidrBlock": "0.0.0.0/0",
+        "PortRange": {
+          "From": "3410",
+          "To": "3410"
+        }
+      }
+    },
+    "Route": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "AttachGateway",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "RouteTable"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "Subnet1RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "Subnet1"
+        },
+        "RouteTableId": {
+          "Ref": "RouteTable"
+        }
+      }
+    },
+    "Subnet2RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "Subnet2"
+        },
+        "RouteTableId": {
+          "Ref": "RouteTable"
+        }
+      }
+    },
+    "Subnet1NetworkAclAssociation": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "Subnet1"
+        },
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        }
+      }
+    },
+    "Subnet2NetworkAclAssociation": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "SubnetId": {
+          "Ref": "Subnet2"
+        },
+        "NetworkAclId": {
+          "Ref": "PublicNetworkAcl"
+        }
+      }
+    },
+    "IPAddress": {
+      "Type": "AWS::EC2::EIP",
+      "DependsOn": "AttachGateway",
+      "Condition": "AllocateElasticIP",
+      "Properties": {
+        "Domain": "vpc"
+      }
+    },
+    "S3Bucket": {
+      "Type": "AWS::S3::Bucket",
+      "Condition": "CreateS3Bucket",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "Prefix": "confd_backup",
+              "ExpirationInDays": "3",
+              "Status": "Enabled"
+            },
+            {
+              "Prefix": "postgres_basebackup",
+              "ExpirationInDays": "3",
+              "Status": "Enabled"
+            },
+            {
+              "Prefix": "postgres_wal",
+              "ExpirationInDays": "3",
+              "Status": "Enabled"
+            }
+          ]
+        }
+      }
+    },
+    "UTMRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "ec2.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "UTMPolicy",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "iam:PassRole",
+                  "Resource": "*"
+                },
+                {
+                  "Effect": "Allow",
+                  "NotAction": "iam:*",
+                  "Resource": "*"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": "cloudformation:UpdateStack",
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "UTMInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [
+          {
+            "Ref": "UTMRole"
+          }
+        ]
+      }
+    },
+    "UTMSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Identifying security group",
+        "VpcId": {
+          "Ref": "VPC"
+        }
+      }
+    },
+    "TrustedNetworkGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Enable TCP access from trusted network",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "0",
+            "ToPort": "65535",
+            "CidrIp": {
+              "Ref": "TrustedNetwork"
+            }
+          }
+        ],
+        "VpcId": {
+          "Ref": "VPC"
+        }
+      }
+    },
+    "UntrustedGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Untrusted network restricted from accessing port 22 and 8080.",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "12",
+            "ToPort": "21",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "23",
+            "ToPort": "8079",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "8081",
+            "ToPort": "65535",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "3410",
+            "ToPort": "3410",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "VpcId": {
+          "Ref": "VPC"
+        }
+      }
+    },
+    "UTMScalingGroup": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "UpdatePolicy": {
+        "AutoScalingRollingUpdate": {
+          "MinInstancesInService": "1",
+          "MaxBatchSize": "1",
+          "PauseTime": "PT5M"
+        }
+      },
+      "Properties": {
+        "DesiredCapacity": "1",
+        "MaxSize": "2",
+        "MinSize": "0",
+        "TerminationPolicies": [
+          "NewestInstance",
+          "Default"
+        ],
+        "VPCZoneIdentifier": [
+          {
+            "Ref": "Subnet1"
+          },
+          {
+            "Ref": "Subnet2"
+          }
+        ],
+        "AvailabilityZones": [
+          {
+            "Ref": "AvailabilityZone1"
+          },
+          {
+            "Ref": "AvailabilityZone2"
+          }
+        ],
+        "LaunchConfigurationName": {
+          "Ref": "UTMLaunchConfiguration"
+        },
+        "NotificationConfiguration": {
+          "TopicARN": {
+            "Ref": "UnhealthyTopic"
+          },
+          "NotificationTypes": [
+            "autoscaling:EC2_INSTANCE_LAUNCH",
+            "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+            "autoscaling:EC2_INSTANCE_TERMINATE",
+            "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "HA-UTM",
+            "PropagateAtLaunch": "true"
+          }
+        ]
+      }
+    },
+    "UTMLaunchConfiguration": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Properties": {
+        "AssociatePublicIpAddress": true,
+        "IamInstanceProfile": {
+          "Ref": "UTMInstanceProfile"
+        },
+        "ImageId": {
+          "Fn::If": [
+            "UseRegionMap",
+            {
+              "Fn::FindInMap": [
+                "RegionMap",
+                {
+                  "Ref": "AWS::Region"
+                },
+                {
+                  "Ref": "LicenseType"
+                }
+              ]
+            },
+            {
+              "Ref": "AMI"
+            }
+          ]
+        },
+        "InstanceType": "m3.medium",
+        "KeyName": {
+          "Ref": "KeyName"
+        },
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/sda",
+            "Ebs": {
+              "VolumeSize": "100"
+            }
+          }
+        ],
+        "SecurityGroups": [
+          {
+            "Ref": "UTMSecurityGroup"
+          },
+          {
+            "Ref": "TrustedNetworkGroup"
+          },
+          {
+            "Ref": "UntrustedGroup"
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash\n",
+                "date +'UserData start %c' > /tmp/user_data.log\n",
+                "echo 'version: \"0.1.0\"' >> /etc/cloud/user_data.yml\n",
+                "echo 'instance_role: \"ha\"' >> /etc/cloud/user_data.yml\n",
+                "echo 'deployment_type: \"ha_standalone\"' >> /etc/cloud/user_data.yml\n",
+                "echo 'license_pool: \"",
+                {
+                  "Ref": "LicensePool"
+                },
+                "\"' >> /etc/cloud/user_data.yml\n",
+                "echo 'region: \"",
+                {
+                  "Ref": "AWS::Region"
+                },
+                "\"' >> /etc/cloud/user_data.yml\n",
+                "cc=`/usr/local/bin/confd-client.plx country_name_to_code \"",
+                {
+                  "Ref": "Country"
+                },
+                "\"`\n",
+                "echo \"{ hostname => '",
+                {
+                  "Ref": "Hostname"
+                },
+                "', organization => '",
+                {
+                  "Ref": "Organization"
+                },
+                "', city => '",
+                {
+                  "Ref": "City"
+                },
+                "', country => '$cc', email => '",
+                {
+                  "Ref": "Email"
+                },
+                "', password => '",
+                {
+                  "Ref": "AdminPassword"
+                },
+                "' }\" > /var/confd/var/storage/setup.ph\n",
+                "/etc/init.d/confd restart\n",
+                "sleep 5\n",
+                "echo 'elastic_ip: \"",
+                {
+                  "Fn::If": [
+                    "AllocateElasticIP",
+                    {
+                      "Ref": "IPAddress"
+                    },
+                    {
+                      "Ref": "ExistingElasticIP"
+                    }
+                  ]
+                },
+                "\"' >> /etc/cloud/user_data.yml\n",
+                "echo 's3_bucket: \"",
+                {
+                  "Fn::If": [
+                    "CreateS3Bucket",
+                    {
+                      "Ref": "S3Bucket"
+                    },
+                    {
+                      "Ref": "ExistingS3Bucket"
+                    }
+                  ]
+                },
+                "\"' >> /etc/cloud/user_data.yml\n",
+                "echo 'stack_name: \"",
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "\"' >> /etc/cloud/user_data.yml\n",
+                "date +'UserData confd config start %c' >> /tmp/user_data.log\n",
+                "echo '{' > /tmp/user_data.config\n",
+                "echo '\"cloudwatch\" => { \"status\" => 1 },' >> /tmp/user_data.config\n",
+                "echo '\"confd\" => { \"backup\" => 1, \"backup_interval\" => 300, \"restore\" => 1, \"restore_done\" => 0 },' >> /tmp/user_data.config\n",
+                "echo '\"instance_role\" => \"ha_standalone\",' >> /tmp/user_data.config\n",
+                "echo '\"postgres\" => { \"archive_timeout\" => 300, \"backup\" => 1, \"base_backup_interval\" => 3600, \"restore\" => 1 },' >> /tmp/user_data.config\n",
+                "echo '\"syslog\" => { \"backup\" => 1, \"restore\" => 1, \"restore_period\" => 8 },' >> /tmp/user_data.config\n",
+                "echo '\"s3_bucket\" => \"",
+                {
+                  "Fn::If": [
+                    "CreateS3Bucket",
+                    {
+                      "Ref": "S3Bucket"
+                    },
+                    {
+                      "Ref": "ExistingS3Bucket"
+                    }
+                  ]
+                },
+                "\",' >> /tmp/user_data.config\n",
+                "echo '\"stack_name\" => \"",
+                {
+                  "Ref": "AWS::StackName"
+                },
+                "\",' >> /tmp/user_data.config\n",
+                "echo '\"elastic_ip\" => \"",
+                {
+                  "Fn::If": [
+                    "AllocateElasticIP",
+                    {
+                      "Ref": "IPAddress"
+                    },
+                    {
+                      "Ref": "ExistingElasticIP"
+                    }
+                  ]
+                },
+                "\",' >> /tmp/user_data.config\n",
+                "echo '\"trusted_network\" => \"",
+                {
+                  "Ref": "TrustedNetwork"
+                },
+                "\"' >> /tmp/user_data.config\n",
+                "echo '}' >> /tmp/user_data.config\n",
+                "/usr/local/bin/confd-client.plx -noquote -stdin set \\'ha\\' \\'aws\\' < /tmp/user_data.config >> /tmp/user_data.log\n",
+                "date +'UserData confd config end %c' >> /tmp/user_data.log\n",
+                "date +'UserData ha aws start %c' >> /tmp/user_data.log\n",
+                "/etc/init.d/ha_aws start\n",
+                "date +'UserData awslogs agent setup start %c' >> /tmp/user_data.log\n",
+                "/usr/local/bin/awslogs-agent-setup.py -n -r ",
+                {
+                  "Ref": "AWS::Region"
+                },
+                "  -c /etc/cloud/awslogs.conf >> /tmp/user_data.log\n",
+                "date +'UserData awslogs agent setup end %c' >> /tmp/user_data.log\n",
+                "/usr/local/bin/confd-client.plx trigger ha_aws\n",
+                "exit 0\n"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "IngressTrafficMinimal": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "AlarmDescription": "Terminate if the incoming traffic is suspiciously low",
+        "MetricName": "NetworkIn",
+        "Namespace": "AWS/EC2",
+        "Statistic": "Sum",
+        "Period": "60",
+        "EvaluationPeriods": "2",
+        "Threshold": "100",
+        "AlarmActions": [
+          {
+            "Ref": "UnhealthyTopic"
+          }
+        ],
+        "Dimensions": [
+          {
+            "Name": "AutoScalingGroupName",
+            "Value": {
+              "Ref": "UTMScalingGroup"
+            }
+          }
+        ],
+        "ComparisonOperator": "LessThanThreshold"
+      }
+    },
+    "EgressTrafficMinimal": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "AlarmDescription": "Terminate if the outgoing traffic is suspiciously low",
+        "MetricName": "NetworkOut",
+        "Namespace": "AWS/EC2",
+        "Statistic": "Sum",
+        "Period": "60",
+        "EvaluationPeriods": "2",
+        "Threshold": "100",
+        "AlarmActions": [
+          {
+            "Ref": "UnhealthyTopic"
+          }
+        ],
+        "Dimensions": [
+          {
+            "Name": "AutoScalingGroupName",
+            "Value": {
+              "Ref": "UTMScalingGroup"
+            }
+          }
+        ],
+        "ComparisonOperator": "LessThanThreshold"
+      }
+    },
+    "UnhealthyTopic": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "Subscription": [
+          {
+            "Endpoint": {
+              "Ref": "Email"
+            },
+            "Protocol": "email"
+          }
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "PublicIPAddress": {
+      "Value": {
+        "Fn::If": [
+          "AllocateElasticIP",
+          {
+            "Ref": "IPAddress"
+          },
+          {
+            "Ref": "ExistingElasticIP"
+          }
+        ]
+      },
+      "Description": "Use this IP to connect and to forward traffic to the UTM."
+    },
+    "ScalingGroup": {
+      "Value": {
+        "Ref": "UTMScalingGroup"
+      },
+      "Description": "The HA Scaling group."
+    },
+    "S3Bucket": {
+      "Value": {
+        "Fn::If": [
+          "CreateS3Bucket",
+          {
+            "Ref": "S3Bucket"
+          },
+          {
+            "Ref": "ExistingS3Bucket"
+          }
+        ]
+      },
+      "Description": "The S3 Bucket."
+    },
+    "VPCID": {
+      "Value": {
+        "Ref": "VPC"
+      },
+      "Description": "The VPC of the Deployment"
+    }
+  }
+}
