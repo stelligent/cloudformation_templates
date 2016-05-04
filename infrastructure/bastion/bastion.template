@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Bastion Host by Levon Becker v20160504-1330",
+  "Description": "Bastion Host by Levon Becker v20160504-1500",
   "Parameters": {
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to EC2 Instances",
@@ -38,7 +38,7 @@
       "Type": "String",
       "Default": "acl-0000000"
     },
-    "BastionOS": {
+    "OsType": {
       "Description": "Select OS Type for Bastion Host.",
       "Type": "String",
       "Default": "rhel",
@@ -66,6 +66,67 @@
       "Description": "Enter Public Network ACL Rule Number to Allow SSH/RDP Access to EIP from Network Access IP.",
       "Type": "Number",
       "Default": "205"
+    },
+    "InstanceType": {
+      "Description": "Select Instance Type.",
+      "Type": "String",
+      "Default": "t2.small",
+      "AllowedValues": [
+        "t2.nano",
+        "t2.micro",
+        "t2.small",
+        "t2.medium",
+        "t2.large",
+        "m1.small",
+        "m1.medium",
+        "m1.large",
+        "m1.xlarge",
+        "m2.xlarge",
+        "m2.2xlarge",
+        "m2.4xlarge",
+        "m3.medium",
+        "m3.large",
+        "m3.xlarge",
+        "m3.2xlarge",
+        "m4.large",
+        "m4.xlarge",
+        "m4.2xlarge",
+        "m4.4xlarge",
+        "m4.10xlarge",
+        "c1.medium",
+        "c1.xlarge",
+        "c3.large",
+        "c3.xlarge",
+        "c3.2xlarge",
+        "c3.4xlarge",
+        "c3.8xlarge",
+        "c4.large",
+        "c4.xlarge",
+        "c4.2xlarge",
+        "c4.4xlarge",
+        "c4.8xlarge",
+        "g2.2xlarge",
+        "g2.8xlarge",
+        "r3.large",
+        "r3.xlarge",
+        "r3.2xlarge",
+        "r3.4xlarge",
+        "r3.8xlarge",
+        "i2.xlarge",
+        "i2.2xlarge",
+        "i2.4xlarge",
+        "i2.8xlarge",
+        "d2.xlarge",
+        "d2.2xlarge",
+        "d2.4xlarge",
+        "d2.8xlarge",
+        "hi1.4xlarge",
+        "hs1.8xlarge",
+        "cr1.8xlarge",
+        "cc2.8xlarge",
+        "cg1.4xlarge"
+      ],
+      "ConstraintDescription": "Must be a valid EC2 instance type."
     }
   },
   "Mappings": {
@@ -73,18 +134,12 @@
       "us-west-2": {
         "AMIRHEL7": "ami-775e4f16",
         "AMIUbuntu14": "ami-9abea4fb",
-        "AMIWin2012": "ami-1719f677",
-        "InstanceTypeRHEL7": "t2.micro",
-        "InstanceTypeUbuntu14": "t2.micro",
-        "InstanceTypeWin2012": "t2.medium"
+        "AMIWin2012": "ami-1719f677"
       },
       "us-east-1": {
         "AMIRHEL7": "ami-2051294a",
         "AMIUbuntu14": "ami-fce3c696",
-        "AMIWin2012": "ami-3d787d57",
-        "InstanceTypeRHEL7": "t2.micro",
-        "InstanceTypeUbuntu14": "t2.micro",
-        "InstanceTypeWin2012": "t2.medium"
+        "AMIWin2012": "ami-3d787d57"
       }
     },
     "bootstrap": {
@@ -103,14 +158,14 @@
     }
   },
   "Conditions": {
-    "RHELHost": { "Fn::Equals": [{"Ref": "BastionOS"}, "rhel"]},
-    "UbuntuHost": { "Fn::Equals": [{"Ref": "BastionOS"}, "ubuntu"]},
+    "RHELHost": { "Fn::Equals": [{"Ref": "OsType"}, "rhel"]},
+    "UbuntuHost": { "Fn::Equals": [{"Ref": "OsType"}, "ubuntu"]},
     "LinuxHost": { "Fn::Or": [
-        {"Fn::Equals": [{"Ref": "BastionOS"}, "rhel"]},
-        {"Fn::Equals": [{"Ref": "BastionOS"}, "ubuntu"]}
+        {"Fn::Equals": [{"Ref": "OsType"}, "rhel"]},
+        {"Fn::Equals": [{"Ref": "OsType"}, "ubuntu"]}
       ]
     },
-    "WindowsHost": { "Fn::Equals": [ { "Ref": "BastionOS" }, "windows" ] }
+    "WindowsHost": { "Fn::Equals": [ { "Ref": "OsType" }, "windows" ] }
   },
   "Resources": {
     "IamRole": {
@@ -220,21 +275,7 @@
           ]
         },
         "InstanceInitiatedShutdownBehavior": "stop",
-        "InstanceType": {
-          "Fn::If": [
-            "RHELHost",
-            {"Fn::FindInMap": ["RegionMap",  {"Ref": "AWS::Region"}, "InstanceTypeRHEL7"]},
-            {"Fn::If": [
-              "UbuntuHost",
-              {"Fn::FindInMap": ["RegionMap",  {"Ref": "AWS::Region"}, "InstanceTypeUbuntu14"]},
-              {"Fn::If": [
-                "WindowsHost",
-                {"Fn::FindInMap": ["RegionMap",  {"Ref": "AWS::Region"}, "InstanceTypeWin2012"]},
-                "unknown"
-              ]}
-            ]}
-          ]
-        },
+        "InstanceType": {"Ref": "InstanceType"},
         "KeyName": {"Ref": "Ec2KeyPair"},
         "Monitoring": "true",
         "SecurityGroupIds": [
@@ -379,9 +420,13 @@
       "Description": "It is ok to delete the Formation after this date",
       "Value": {"Ref": "DeleteAfter"}
     },
-    "BastionOS": {
-      "Description": "Bastion OS Type.",
-      "Value": {"Ref": "BastionOS"}
+    "OsType": {
+      "Description": "OS Type.",
+      "Value": {"Ref": "OsType"}
+    },
+    "InstanceType": {
+      "Description": "Instance Type.",
+      "Value": {"Ref": "InstanceType"}
     },
     "KeyPairLoaded": {
       "Description": "Key Pair used.",
@@ -421,7 +466,11 @@
         },
         {
           "Label" : { "default" : "Instance Settings" },
-          "Parameters" : [ "Ec2KeyPair", "BastionOS" ]
+          "Parameters" : [
+            "Ec2KeyPair",
+            "OsType",
+            "InstanceType"
+          ]
         },
         {
           "Label" : { "default" : "Network Configuration" },
@@ -448,9 +497,10 @@
         "PublicNetworkAcl" : { "default" : "Public Network ACL" },
         "InternalAccessSecurityGroup" : { "default" : "Instance Access Security Group" },
         "NetworkAccessIP" : { "default" : "Network IP to Access Bastion Host" },
-        "BastionOS" : { "default" : "Bastion OS" },
+        "OsType" : { "default" : "OS Type" },
         "AllowSshRdpToBastionRuleNumber" : { "default" : "Remote to Public SSH/RDP" },
-        "AllowIcmpToBastionRuleNumber" : { "default" : "Remote to Public ICMP" }
+        "AllowIcmpToBastionRuleNumber" : { "default" : "Remote to Public ICMP" },
+        "InstanceType" : { "default" : "Instance Type" }
       }
     }
   }
