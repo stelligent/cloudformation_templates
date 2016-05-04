@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Bastion Host by Levon Becker v20160405-1130",
+  "Description": "Bastion Host by Levon Becker v20160504-1330",
   "Parameters": {
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to EC2 Instances",
@@ -56,6 +56,16 @@
       "Default": "0.0.0.0/0",
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
       "ConstraintDescription": "must be a valid CIDR range of the form x.x.x.x/x."
+    },
+    "AllowSshRdpToBastionRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow SSH/RDP Access to EIP from Network Access IP.",
+      "Type": "Number",
+      "Default": "200"
+    },
+    "AllowIcmpToBastionRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow SSH/RDP Access to EIP from Network Access IP.",
+      "Type": "Number",
+      "Default": "205"
     }
   },
   "Mappings": {
@@ -80,6 +90,7 @@
     "bootstrap": {
       "rhel": {
         "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
+        "yumupdatenokernel": "yum update -y --exclude=kernel*",
         "installpackages": "yum install -y curl wget mlocate ca-certificates openssl vim",
         "installchefdk": "yum install -y https://packages.chef.io/stable/el/7/chefdk-0.12.0-1.el7.x86_64.rpm",
         "installbastionpackages": "yum install -y git wireshark nmap mysql"
@@ -92,8 +103,13 @@
     }
   },
   "Conditions": {
-    "RHELHost": { "Fn::Equals": [ { "Ref": "BastionOS" }, "rhel" ] },
-    "UbuntuHost": { "Fn::Equals": [ { "Ref": "BastionOS" }, "ubuntu" ] },
+    "RHELHost": { "Fn::Equals": [{"Ref": "BastionOS"}, "rhel"]},
+    "UbuntuHost": { "Fn::Equals": [{"Ref": "BastionOS"}, "ubuntu"]},
+    "LinuxHost": { "Fn::Or": [
+        {"Fn::Equals": [{"Ref": "BastionOS"}, "rhel"]},
+        {"Fn::Equals": [{"Ref": "BastionOS"}, "ubuntu"]}
+      ]
+    },
     "WindowsHost": { "Fn::Equals": [ { "Ref": "BastionOS" }, "windows" ] }
   },
   "Resources": {
@@ -161,8 +177,8 @@
         "SecurityGroupIngress": [
           {
             "IpProtocol": "tcp",
-            "FromPort": "22",
-            "ToPort": "22",
+            "FromPort": {"Fn::If": ["LinuxHost", "22", "3389"]},
+            "ToPort": {"Fn::If": ["LinuxHost", "22", "3389"]},
             "CidrIp": {"Ref": "NetworkAccessIP"}
           },
           {
@@ -180,7 +196,7 @@
         ]
       }
     },
-    "BastionInstance": {
+    "EC2Instance": {
       "Type": "AWS::EC2::Instance",
       "DependsOn": [
         "BastionSecurityGroup",
@@ -244,6 +260,8 @@
                     "#!/bin/bash\n",
                     {"Fn::FindInMap": ["bootstrap", "rhel", "warmebs"]},
                     "\n",
+                    {"Fn::FindInMap": ["bootstrap", "rhel", "yumupdatenokernel"]},
+                    "\n",
                     {"Fn::FindInMap": ["bootstrap", "rhel", "installpackages"]},
                     "\n",
                     {"Fn::FindInMap": ["bootstrap", "rhel", "installbastionpackages"]},
@@ -296,76 +314,43 @@
         ]
       }
     },
-    "BastionEIP": {
+    "EIP": {
       "Type": "AWS::EC2::EIP",
       "Properties": {
         "Domain" : "vpc"
       }
     },
-    "BastionEIPAssociation": {
+    "EIPAssociation": {
       "Type": "AWS::EC2::EIPAssociation",
       "DependsOn": [
-        "BastionInstance",
-        "BastionEIP"
+        "EC2Instance",
+        "EIP"
       ],
       "Properties": {
-        "InstanceId": {"Ref": "BastionInstance"},
-        "AllocationId": { "Fn::GetAtt" : [ "BastionEIP", "AllocationId" ]}
+        "InstanceId": {"Ref": "EC2Instance"},
+        "AllocationId": { "Fn::GetAtt" : [ "EIP", "AllocationId" ]}
       }
     },
-    "InboundPublicNetworkAclEntry220": {
-      "Condition": "RHELHost",
+    "InboundPublicNetworkAclEntrySshRdp": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "220",
+        "RuleNumber": {"Ref": "AllowSshRdpToBastionRuleNumber"},
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
         "CidrBlock": {"Ref": "NetworkAccessIP"},
         "PortRange": {
-          "From": "22",
-          "To": "22"
+          "From": {"Fn::If": ["LinuxHost", "22", "3389"]},
+          "To": {"Fn::If": ["LinuxHost", "22", "3389"]}
         }
       }
     },
-    "InboundPublicNetworkAclEntry221": {
-      "Condition": "UbuntuHost",
+    "InboundPublicNetworkAclEntryIcmp": {
       "Type": "AWS::EC2::NetworkAclEntry",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "221",
-        "Protocol": "6",
-        "RuleAction": "allow",
-        "Egress": "false",
-        "CidrBlock": {"Ref": "NetworkAccessIP"},
-        "PortRange": {
-          "From": "22",
-          "To": "22"
-        }
-      }
-    },
-    "InboundPublicNetworkAclEntry222": {
-      "Condition": "WindowsHost",
-      "Type": "AWS::EC2::NetworkAclEntry",
-      "Properties": {
-        "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "222",
-        "Protocol": "6",
-        "RuleAction": "allow",
-        "Egress": "false",
-        "CidrBlock": {"Ref": "NetworkAccessIP"},
-        "PortRange": {
-          "From": "3389",
-          "To": "3389"
-        }
-      }
-    },
-    "InboundPublicNetworkAclEntry225": {
-      "Type": "AWS::EC2::NetworkAclEntry",
-      "Properties": {
-        "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "225",
+        "RuleNumber": {"Ref": "AllowIcmpToBastionRuleNumber"},
         "Protocol": "1",
         "RuleAction": "allow",
         "Egress": "false",
@@ -394,17 +379,21 @@
       "Description": "It is ok to delete the Formation after this date",
       "Value": {"Ref": "DeleteAfter"}
     },
+    "BastionOS": {
+      "Description": "Bastion OS Type.",
+      "Value": {"Ref": "BastionOS"}
+    },
     "KeyPairLoaded": {
       "Description": "Key Pair used.",
       "Value": {"Ref": "Ec2KeyPair"}
     },
-    "VPC": {
-      "Description": "VPC Used",
-      "Value": {"Ref": "VPC"}
+    "PublicDns": {
+      "Description": "Bastion Public DNS Name",
+      "Value": {"Fn::GetAtt": ["EC2Instance", "PublicDnsName"]}
     },
-    "BastionEIP": {
+    "EIP": {
       "Description": "Bastion External IP Address",
-      "Value": {"Ref": "BastionEIP"}
+      "Value": {"Ref": "EIP"}
     },
     "BastionSecurityGroup": {
       "Description": "Bastion Security Group to Allow Remote Access",
@@ -413,6 +402,10 @@
     "IAMRole": {
       "Description": "IAM Instance Profile Role Created.",
       "Value": {"Ref": "IamRole"}
+    },
+    "VPC": {
+      "Description": "VPC Used",
+      "Value": {"Ref": "VPC"}
     },
     "DeployedToSubnet": {
       "Description": "Public Subnet the Bastion Host was Deployed on.",
@@ -439,6 +432,13 @@
             "PublicNetworkAcl",
             "NetworkAccessIP"
           ]
+        },
+        {
+          "Label" : { "default" : "Network ACL Rule Numbers" },
+          "Parameters" : [
+            "AllowSshRdpToBastionRuleNumber",
+            "AllowIcmpToBastionRuleNumber"
+          ]
         }
       ],
       "ParameterLabels" : {
@@ -448,7 +448,9 @@
         "PublicNetworkAcl" : { "default" : "Public Network ACL" },
         "InternalAccessSecurityGroup" : { "default" : "Instance Access Security Group" },
         "NetworkAccessIP" : { "default" : "Network IP to Access Bastion Host" },
-        "BastionOS" : { "default" : "Bastion OS" }
+        "BastionOS" : { "default" : "Bastion OS" },
+        "AllowSshRdpToBastionRuleNumber" : { "default" : "Remote to Public SSH/RDP" },
+        "AllowIcmpToBastionRuleNumber" : { "default" : "Remote to Public ICMP" }
       }
     }
   }
