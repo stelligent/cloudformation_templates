@@ -32,15 +32,14 @@ So, be sure to examine the **Outputs** tab after creating the stack.
          Private Network ACLs, Internet Gateway attached to Public Subnets,
          Instance to Instance Security Group and Remote Access Security Group.
       </td>
-      <td nowrap>
-        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc/vpc.template"><img srg="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/vpc-200x200.png"></a>
+      <td nowrap width="144">
+        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc/vpc.template"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/vpc-200x200.jpg" width:100% alt="View in Designer"></a>
       </td>
-      <td nowrap>
-      us-west-2</br>
+      <td nowrap width="144">
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc/vpc.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
-      </br></br>
-      us-east-1</br>
+        <p>us-west-2</p>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc/vpc.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
+        <p>us-east-1</p>
       </td>
     </tr>
     <tr>
@@ -49,14 +48,13 @@ So, be sure to examine the **Outputs** tab after creating the stack.
         Creates a NAT Gateway on an existing VPC with Public (IGW) and Private subnets. Private route table is updated to route traffic to the NAT gateway a Public subnet that has an Internet Gateway Attached.
       </td>
       <td nowrap>
-        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat/nat-gateway.template">us-west-2</a>
+        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat/nat-gateway.template"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/nat-gateway-200x200.jpg" width:100% alt="View in Designer"></a>
       </td>
       <td nowrap>
-      us-west-2</br>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat/nat-gateway.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
-      </br></br>
-      us-east-1</br>
+        <p>us-west-2</p>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat/nat-gateway.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
+        <p>us-east-1</p>
       </td>
     </tr>
     <tr>
@@ -65,14 +63,13 @@ So, be sure to examine the **Outputs** tab after creating the stack.
         Creates a single Bastion host on a Public subnet in an existing VPC. Select from either a RHEL, Ubuntu or Windows OS.
       </td>
       <td nowrap>
-        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion/bastion.template">us-west-2</a>
+        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion/bastion.template"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/bastion-200x200.jpg" width:100% alt="View in Designer"></a>
       </td>
       <td nowrap>
-      us-west-2</br>
-        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion/bastion.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
-      </br></br>
-      us-east-1</br>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion/bastion.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png" width:144 alt="us-west-2"></a>
+        <p>us-west-2</p>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion/bastion.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
+        <p>us-east-1</p>
       </td>
     </tr>
     <tr>
@@ -87,14 +84,13 @@ So, be sure to examine the **Outputs** tab after creating the stack.
          This assumes that the Private Network ACL allows all outbound. Lastly, the Private Network ACL inbound is updated to allow the remote network block specified.
       </td>
       <td>
-        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn/vpn-bgp.template">us-west-2</a>
+        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn/vpn-bgp.template"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/vpn-bgp-200x200.jpg" width:100% alt="View in Designer"></a>
       </td>
       <td>
-      us-west-2</br>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn/vpn-bgp.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
-      </br></br>
-      us-east-1</br>
+        <p>us-west-2</p>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn/vpn-bgp.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
+        <p>us-east-1</p>
       </td>
     </tr>
   </tbody>
@@ -116,15 +112,14 @@ So, be sure to examine the **Outputs** tab after creating the stack.
         Creates a Chef Complianc Web server in a Public Subnet with Internet Gatewayy attached on an existing VPC.
          It then attaches an EIP and finally adds the instance to an existing instance-to-instance security group.
       </td>
-      <td nowrap>
-        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/chef_compliance/chef-compliance.template">us-west-2
+      <td nowrap width="144">
+        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/chef_compliance/chef-compliance.template"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/chef-compliance-lab-200x200.jpg" width:100% alt="View in Designer"></a>
       </td>
-      <td nowrap>
-      us-west-2</br>
+      <td nowrap width="144">
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/chef_compliance/chef-compliance.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
-      </br></br>
-      us-east-1</br>
+        <p>us-west-2</p>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/chef_compliance/chef-compliance.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
+        <p>us-east-1</p>
       </td>
     </tr>
     <tr>
@@ -133,14 +128,13 @@ So, be sure to examine the **Outputs** tab after creating the stack.
         Creates three test instances in an existing VPC. Each instance is a different operating system. They are; Red Hat Enterprise Linux 7, Ubuntu 14 and Windows 2012 R2.
       </td>
       <td nowrap>
-        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/test_instances/rhel-ubuntu-win2012.template">us-west-2
+        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/test_instances/rhel-ubuntu-win2012.template"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/test-instances-200x200.jpg" width:100% alt="View in Designer"></a>
       </td>
       <td nowrap>
-      us-west-2</br>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/test_instances/rhel-ubuntu-win2012.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
-      </br></br>
-      us-east-1</br>
+        <p>us-west-2</p>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/test_instances/rhel-ubuntu-win2012.template"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
+        <p>us-east-1</p>
       </td>
     </tr>
   </tbody>
