@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "MediaWiki Baked AMI with ELB by Levon Becker v20160411-0100",
+  "Description": "Webapp ASG, Baked AMI, ELB, R53 and Optional SSL by Levon Becker v20160504-0100",
   "Parameters": {
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to EC2 Instances",
@@ -24,7 +24,7 @@
     "Project": {
       "Description": "Enter Project Name.",
       "Type": "String",
-      "Default": "Mediawiki ASG with ELB Creation"
+      "Default": "Webapp ASG with ELB Creation"
     },
     "DeleteAfter": {
       "Description": "Enter Date It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
@@ -48,15 +48,15 @@
       "Type": "AWS::EC2::Subnet::Id"
     },
     "PrivateSubnet1": {
-      "Description": "Private Subnet 1 to Deploy MediaWike Autoscaling Group to.",
+      "Description": "Private Subnet 1 to Deploy Webapp Autoscaling Group to.",
       "Type": "AWS::EC2::Subnet::Id"
     },
     "PrivateSubnet2": {
-      "Description": "Private Subnet 2 to Deploy MediaWike Autoscaling Group to.",
+      "Description": "Private Subnet 2 to Deploy Webapp Autoscaling Group to.",
       "Type": "AWS::EC2::Subnet::Id"
     },
     "PrivateSubnet3": {
-      "Description": "Private Subnet 3 to Deploy MediaWike Autoscaling Group to.",
+      "Description": "Private Subnet 3 to Deploy Webapp Autoscaling Group to.",
       "Type": "AWS::EC2::Subnet::Id"
     },
     "InternalAccessSecurityGroup": {
@@ -67,8 +67,8 @@
       "Description": "Security Group That Instance Access to RDS Instances.",
       "Type": "AWS::EC2::SecurityGroup::Id"
     },
-    "NatSecurityGroup": {
-      "Description": "Security Group That Allows Instance Internet Access through NAT.",
+    "RemoteSecurityGroup": {
+      "Description": "Remote Network or IP that can Access the instances of VPN or Direct Connect.",
       "Type": "AWS::EC2::SecurityGroup::Id"
     },
     "PublicNetworkAcl": {
@@ -77,24 +77,80 @@
       "Default": "acl-0000000"
     },
     "Route53ElbAlias": {
-      "Description": "DNS Record to Update for the ELB.",
+      "Description": "DNS Record to Update for the ELB. (Skip if Not Configuring Route 53)",
       "Type": "String",
       "Default": "www.domain.com"
     },
     "R53HostedZoneName": {
-      "Description": "Hosted DNS Name.",
+      "Description": "Hosted DNS Name. (Skip if Not Configuring Route 53)",
       "Type": "String",
       "Default": "domain.com"
     },
     "ElbSslCertArn": {
-      "Description": "SSL Certificate ARN for the ELB to use.",
+      "Description": "SSL Certificate ARN for the ELB to use. (Skip if Not Using SSL)",
       "Type": "String",
       "Default": "arn:aws:iam::0000000000000:server-certificate/www.domain.com"
+    },
+    "ElbHttpListeningPort": {
+      "Description": "Enter HTTP Listening Port for ELB.",
+      "Type": "Number",
+      "Default": "80"
+    },
+    "ElbHttpsListeningPort": {
+      "Description": "Enter HTTPS Listening Port for ELB. (Skip if Not Using SSL)",
+      "Type": "Number",
+      "Default": "443"
+    },
+    "InstanceHttpListeningPort": {
+      "Description": "Enter HTTP Listening Port for Instance.",
+      "Type": "Number",
+      "Default": "80"
+    },
+    "ConfigureDns": {
+      "Description": "Configure Route 53 DNS to ELB? Be sure record doesn't already exist.",
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
     },
     "ElbStickySessions": {
       "Description": "Enabled Sticky Sessions on ELB?",
       "Type": "String",
-      "Default": "true",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "CookieExpirationPeriod": {
+      "Description": "Enter ELB Sticky Session Cookie Timeout in seconds. (Skip if Not using Sticky Sessions)",
+      "Type": "Number",
+      "Default": "43200"
+    },
+    "UseSsl": {
+      "Description": "Use SSL/TLS?",
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "ListenOnBothPorts": {
+      "Description": "Listen on Both HTTP and HTTPS on the ELB? (Skip if Not Using SSL)",
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "SetupS3Logging": {
+      "Description": "Select whether or not to setup S3 Bucket Logging.",
+      "Type": "String",
+      "Default": "false",
       "AllowedValues": [
         "true",
         "false"
@@ -108,11 +164,13 @@
     "InstanceType": {
       "Description": "Select Instance Type.",
       "Type": "String",
-      "Default": "t2.small",
+      "Default": "m3.medium",
       "AllowedValues": [
+        "t2.nano",
         "t2.micro",
         "t2.small",
         "t2.medium",
+        "t2.large",
         "m1.small",
         "m1.medium",
         "m1.large",
@@ -124,6 +182,11 @@
         "m3.large",
         "m3.xlarge",
         "m3.2xlarge",
+        "m4.large",
+        "m4.xlarge",
+        "m4.2xlarge",
+        "m4.4xlarge",
+        "m4.10xlarge",
         "c1.medium",
         "c1.xlarge",
         "c3.large",
@@ -137,6 +200,7 @@
         "c4.4xlarge",
         "c4.8xlarge",
         "g2.2xlarge",
+        "g2.8xlarge",
         "r3.large",
         "r3.xlarge",
         "r3.2xlarge",
@@ -158,23 +222,61 @@
       ],
       "ConstraintDescription": "Must be a valid EC2 instance type."
     },
-    "SnsTopicArn": {
-      "Description": "Enter Notification SNS Topic ARN.",
+    "OsType": {
+      "Description": "Select OS Type of the AMI.",
       "Type": "String",
-      "Default": "arn:aws:sns:us-west-2:000000000000:cloudwatch-alerts"
+      "Default": "rhel",
+      "AllowedValues": [
+        "rhel",
+        "ubuntu",
+        "windows"
+      ]
+    },
+    "AsgSnsTopicArn": {
+      "Description": "Enter Notification SNS Topic ARN for Autoscaling Group.",
+      "Type": "String",
+      "Default": "arn:aws:sns:us-west-2:000000000000:asg-alerts"
+    },
+    "AllowHttpToElbRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow HTTP From Internet to ELB.",
+      "Type": "Number",
+      "Default": "300"
+    },
+    "AllowHttpsToElbRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow HTTPS From Internet to ELB. (Skip if Not Using SSL)",
+      "Type": "Number",
+      "Default": "305"
     }
   },
   "Mappings": {
     "bootstrap": {
       "rhel": {
         "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
-        "installpackages": "yum install -y curl wget mlocate ca-certificates openssl vim",
-        "remounts3uploads": "umount /var/www/html/mediawiki/s3uploads && mount -a"
+        "yumupdatenokernel": "yum update -y --exclude=kernel*",
+        "installpackages": "yum install -y curl wget mlocate ca-certificates openssl vim"
+      },
+      "ubuntu": {
+        "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
+        "aptgetupgradenokernel": "apt-mark hold linux-image-generic linux-headers-generic && apt-get update && sleep 1 && apt-get upgrade -y && apt-mark unhold linux-image-generic linux-headers-generic",
+        "installpackages": "apt-get update && sleep 1 && apt-get install -y curl wget vim ca-certificates openssl htop"
       }
     }
   },
   "Conditions": {
-    "UseStickiness": {"Fn::Equals": [{"Ref": "ElbStickySessions"}, "true" ]}
+    "ConfigureStickiness": {"Fn::Equals": [{"Ref": "ElbStickySessions"}, "true" ]},
+    "EnableSsl": {"Fn::Equals": [{"Ref": "UseSsl"}, "true" ]},
+    "DisableSsl": {"Fn::Equals": [{"Ref": "UseSsl"}, "false" ]},
+    "UseBothPorts": {"Fn::Equals": [{"Ref": "ListenOnBothPorts"}, "true" ]},
+    "ConfigureRoute53": {"Fn::Equals": [{"Ref": "ConfigureDns"}, "true" ]},
+    "ConfigureS3Logging": {"Fn::Equals": [{"Ref": "SetupS3Logging"}, "true" ]},
+    "RHELHost": { "Fn::Equals": [{"Ref": "OsType"}, "rhel"]},
+    "UbuntuHost": { "Fn::Equals": [{"Ref": "OsType"}, "ubuntu"]},
+    "LinuxHost": { "Fn::Or": [
+      {"Fn::Equals": [{"Ref": "OsType"}, "rhel"]},
+      {"Fn::Equals": [{"Ref": "OsType"}, "ubuntu"]}
+    ]
+    },
+    "WindowsHost": { "Fn::Equals": [ { "Ref": "OsType" }, "windows" ] }
   },
   "Resources": {
     "IamRole": {
@@ -238,20 +340,59 @@
             "Value": {"Ref": "DeleteAfter"}
           }
         ],
-        "SecurityGroupIngress": [
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "80",
-            "ToPort": "80",
-            "CidrIp": "0.0.0.0/0"
-          },
-          {
-            "IpProtocol": "tcp",
-            "FromPort": "443",
-            "ToPort": "443",
-            "CidrIp": "0.0.0.0/0"
-          }
-        ],
+        "SecurityGroupIngress": {
+          "Fn::If": [
+            "DisableSsl",
+            [
+              {
+                "IpProtocol": "tcp",
+                "FromPort": {"Ref": "ElbHttpListeningPort"},
+                "ToPort": {"Ref": "ElbHttpListeningPort"},
+                "CidrIp": "0.0.0.0/0"
+              }
+            ],
+            {
+              "Fn::If": [
+              "EnableSsl",
+              [
+                {
+                "IpProtocol": "tcp",
+                "FromPort": {"Ref": "ElbHttpsListeningPort"},
+                "ToPort": {"Ref": "ElbHttpsListeningPort"},
+                "CidrIp": "0.0.0.0/0"
+                }
+              ],
+              {
+                "Fn::If": [
+                  "UseBothPorts",
+                  [
+                    {
+                      "IpProtocol": "tcp",
+                      "FromPort": {"Ref": "ElbHttpListeningPort"},
+                      "ToPort": {"Ref": "ElbHttpListeningPort"},
+                      "CidrIp": "0.0.0.0/0"
+                    },
+                    {
+                      "IpProtocol": "tcp",
+                      "FromPort": {"Ref": "ElbHttpsListeningPort"},
+                      "ToPort": {"Ref": "ElbHttpsListeningPort"},
+                      "CidrIp": "0.0.0.0/0"
+                    }
+                  ],
+                  [
+                    {
+                      "IpProtocol": "tcp",
+                      "FromPort": {"Ref": "ElbHttpListeningPort"},
+                      "ToPort": {"Ref": "ElbHttpListeningPort"},
+                      "CidrIp": "0.0.0.0/0"
+                    }
+                  ]
+                ]
+              }
+              ]
+            }
+          ]
+        },
         "SecurityGroupEgress": [
           {
             "IpProtocol": "-1",
@@ -284,22 +425,21 @@
             "Key": "DeleteAfter",
             "Value": {"Ref": "DeleteAfter"}
           }
+        ],
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": {"Ref": "InstanceHttpListeningPort"},
+            "ToPort": {"Ref": "InstanceHttpListeningPort"},
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "-1",
+            "CidrIp": "0.0.0.0/0"
+          }
         ]
-      }
-    },
-    "ELBSecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "DependsOn": "InstanceToElbSecurityGroup",
-      "Properties": {
-        "GroupId": {
-          "Ref": "InstanceToElbSecurityGroup"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "80",
-        "ToPort": "80",
-        "SourceSecurityGroupId": {
-          "Ref": "InstanceToElbSecurityGroup"
-        }
       }
     },
     "ElasticLoadBalancer": {
@@ -313,10 +453,10 @@
       "Properties": {
           "LBCookieStickinessPolicy": [
           {"Fn:If": [
-            "UseStickiness",
+            "ConfigureStickiness",
             {
-              "CookieExpirationPeriod": "86400",
-              "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-lbcookie"]]}
+              "CookieExpirationPeriod": {"Ref": "CookieExpirationPeriod"},
+              "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-elbcookie"]]}
             },
             {}
           ]}
@@ -338,29 +478,68 @@
           {"Ref": "InstanceToElbSecurityGroup"},
           {"Ref": "InternetToElbSecurityGroup"}
         ],
-        "Listeners": [
-          {
-            "LoadBalancerPort": "80",
-            "InstancePort": "80",
-            "Protocol": "HTTP"
-          },
-          {
-            "SSLCertificateId": {"Ref": "ElbSslCertArn"},
-            "LoadBalancerPort": "443",
-            "InstancePort": "80",
-            "Protocol": "HTTPS",
-            "PolicyNames" : [ {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-lbcookie"]]} ]
-          }
-        ],
+        "Listeners": {
+          "Fn::If": [
+            "DisableSsl",
+            [
+              {
+                "LoadBalancerPort": {"Ref": "ElbHttpListeningPort"},
+                "InstancePort": {"Ref": "InstanceHttpListeningPort"},
+                "Protocol": "HTTP"
+              }
+            ],
+            {
+              "Fn::If": [
+                "EnableSsl",
+                [
+                  {
+                    "SSLCertificateId": {"Ref": "ElbSslCertArn"},
+                    "LoadBalancerPort": {"Ref": "ElbHttpsListeningPort"},
+                    "InstancePort": {"Ref": "InstanceHttpListeningPort"},
+                    "Protocol": "HTTPS",
+                    "PolicyNames" : [ {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-elbcookie"]]} ]
+                  }
+                ],
+                {
+                  "Fn::If": [
+                    "UseBothPorts",
+                    [
+                      {
+                        "LoadBalancerPort": {"Ref": "ElbHttpListeningPort"},
+                        "InstancePort": {"Ref": "InstanceHttpListeningPort"},
+                        "Protocol": "HTTP"
+                      },
+                      {
+                        "SSLCertificateId": {"Ref": "ElbSslCertArn"},
+                        "LoadBalancerPort": {"Ref": "ElbHttpsListeningPort"},
+                        "InstancePort": {"Ref": "InstanceHttpListeningPort"},
+                        "Protocol": "HTTPS",
+                        "PolicyNames" : [ {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-elbcookie"]]} ]
+                      }
+                    ],
+                    [
+                      {
+                        "LoadBalancerPort": {"Ref": "ElbHttpListeningPort"},
+                        "InstancePort": {"Ref": "InstanceHttpListeningPort"},
+                        "Protocol": "HTTP"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            }
+          ]
+        },
         "LoadBalancerName": {"Ref": "AWS::StackName"},
         "HealthCheck": {
-          "Target": "TCP:80",
+          "Target": {"Fn::Join": ["", "TCP:", {"Ref": "InstanceHttpListeningPort"}]},
           "HealthyThreshold": "3",
           "UnhealthyThreshold": "5",
           "Interval": "30",
           "Timeout": "5"
         },
         "AccessLoggingPolicy": {
+          "Condition": "ConfigureS3Logging",
           "S3BucketName": {
             "Ref": "S3LoggingBucket"
           },
@@ -389,6 +568,7 @@
       }
     },
     "ElbDnsCname": {
+      "Condition": "ConfigureRoute53",
       "Type": "AWS::Route53::RecordSet",
       "DependsOn": "ElasticLoadBalancer",
       "Properties": {
@@ -407,33 +587,35 @@
         ]
       }
     },
-    "InboundPublicNetworkAclEntry240": {
+    "InboundPublicNetworkAclEntryHttpToElb": {
+      "Condition": {"Fn::Or": ["DisableSsl", "UseBothPorts"]},
       "Type": "AWS::EC2::NetworkAclEntry",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "240",
+        "RuleNumber": {"Ref": "AllowHttpToElbRuleNumber"},
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
         "CidrBlock": "0.0.0.0/0",
         "PortRange": {
-          "From": "80",
-          "To": "80"
+          "From": {"Ref": "ElbHttpListeningPort"},
+          "To": {"Ref": "ElbHttpListeningPort"}
         }
       }
     },
-    "InboundPublicNetworkAclEntry245": {
+    "InboundPublicNetworkAclEntryHttpsToElb": {
+      "Condition": "EnableSsl",
       "Type": "AWS::EC2::NetworkAclEntry",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
-        "RuleNumber": "245",
+        "RuleNumber": {"Ref": "AllowHttpsToElbRuleNumber"},
         "Protocol": "6",
         "RuleAction": "allow",
         "Egress": "false",
         "CidrBlock": "0.0.0.0/0",
         "PortRange": {
-          "From": "443",
-          "To": "443"
+          "From": {"Ref": "ElbHttpsListeningPort"},
+          "To": {"Ref": "ElbHttpsListeningPort"}
         }
       }
     },
@@ -451,7 +633,7 @@
           {"Ref": "InstanceToElbSecurityGroup"},
           {"Ref": "RDSAccessSecurityGroup"},
           {"Ref": "InternalAccessSecurityGroup"},
-          {"Ref": "NatSecurityGroup"}
+          {"Ref": "RemoteSecurityGroup"}
         ],
         "ImageId": {"Ref": "AMI"},
         "KeyName": {"Ref": "Ec2KeyPair"},
@@ -465,19 +647,50 @@
           }
         ],
         "UserData" : {
-          "Fn::Base64": {
-            "Fn::Join": [
-              "", [
-                "#!/bin/bash\n",
-                {"Fn::FindInMap": ["bootstrap", "rhel", "warmebs"]},
-                "\n",
-                {"Fn::FindInMap": ["bootstrap", "rhel", "installpackages"]},
-                "\n",
-                {"Fn::FindInMap": ["bootstrap", "rhel", "remounts3uploads"]},
-                "\n"
+          "Fn::If": [
+            "RHELHost",
+            {
+              "Fn::Base64": {
+                "Fn::Join": [
+                  "", [
+                    "#!/bin/bash\n",
+                    {"Fn::FindInMap": ["bootstrap", "rhel", "warmebs"]},
+                    "\n",
+                    {"Fn::FindInMap": ["bootstrap", "rhel", "yumupdatenokernel"]},
+                    "\n",
+                    {"Fn::FindInMap": ["bootstrap", "rhel", "installpackages"]},
+                    "\n"
+                  ]
+                ]
+              }
+            },
+            {
+              "Fn::If": [
+                "UbuntuHost",
+                {
+                  "Fn::Base64": {
+                    "Fn::Join": [
+                      "", [
+                        "#!/bin/bash\n",
+                        {"Fn::FindInMap": ["bootstrap", "ubuntu", "warmebs"]},
+                        "\n",
+                        {"Fn::FindInMap": ["bootstrap", "ubuntu", "aptgetupgradenokernel"]},
+                        "\n",
+                        {"Fn::FindInMap": ["bootstrap", "ubuntu", "installpackages"]},
+                        "\n"
+                      ]
+                    ]
+                  }
+                },
+                {
+                  "Fn::If": [
+                    "WindowsHost",
+                    {"Fn::Base64": "# PowerShell Goes Here"}
+                  ]
+                }
               ]
-            ]
-          }
+            }
+          ]
         }
       }
     },
@@ -507,7 +720,7 @@
         ],
         "NotificationConfigurations": [
           {
-            "TopicARN": {"Ref" : "SnsTopicArn"},
+            "TopicARN": {"Ref" : "AsgSnsTopicArn"},
             "NotificationTypes": [
               "autoscaling:EC2_INSTANCE_LAUNCH",
               "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
@@ -623,6 +836,7 @@
       }
     },
     "S3LoggingBucket": {
+      "Condition": "ConfigureS3Logging",
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "Tags": [
@@ -646,6 +860,7 @@
       }
     },
     "S3LoggingBucketPolicy": {
+      "Condition": "ConfigureS3Logging",
       "Type": "AWS::S3::BucketPolicy",
       "Properties": {
         "Bucket": {
@@ -710,6 +925,11 @@
       "Description": "FQDN of ELB",
       "Value": {"Ref": "ElasticLoadBalancer"}
     },
+    "InstanceHttpListeningPort": {
+      "Condition": "DisableSsl",
+      "Description": "Instance HTTP Listening Port.",
+      "Value": {"Ref": "InstanceHttpListeningPort"}
+    },
     "PublicSubnets": {
       "Description": "Public Subnets ELB Deployed to.",
       "Value": {
@@ -747,6 +967,7 @@
       "Value": {"Ref": "InstanceToElbSecurityGroup"}
     },
     "S3LoggingBucket": {
+      "Condition": "ConfigureS3Logging",
       "Description": "Logging S3 Bucket.",
       "Value": {"Ref": "S3LoggingBucket"}
     },
@@ -757,6 +978,26 @@
     "ElasticLoadBalancer": {
       "Description": "Elastic Load Balancer.",
       "Value": {"Ref": "ElasticLoadBalancer"}
+    },
+    "ElbHttpListeningPort": {
+      "Condition": {"Fn::Or": ["DisableSsl", "UseBothPorts"]},
+      "Description": "Elastic Load Balancer HTTP Listening Port.",
+      "Value": {"Ref": "ElbHttpListeningPort"}
+    },
+    "ElbHttpsListeningPort": {
+      "Condition": "EnableSsl",
+      "Description": "Elastic Load Balancer HTTPS Listening Port.",
+      "Value": {"Ref": "ElbHttpsListeningPort"}
+    },
+    "R53HostedZoneName": {
+      "Condition": "ConfigureRoute53",
+      "Description": "Route 53 Zone Updated.",
+      "Value": {"Ref": "R53HostedZoneName"}
+    },
+    "Route53ElbAlias": {
+      "Condition": "ConfigureRoute53",
+      "Description": "Route 53 DNS Alias Created and Added to ELB.",
+      "Value": {"Ref": "Route53ElbAlias"}
     }
   },
   "Metadata" : {
@@ -775,7 +1016,7 @@
           "Parameters" : [
             "MinAutoScaleCount",
             "MaxAutoScaleCount",
-            "SnsTopicArn"
+            "AsgSnsTopicArn"
           ]
         },
         {
@@ -783,7 +1024,12 @@
           "Parameters" : [
             "Ec2KeyPair",
             "AMI",
-            "InstanceType"
+            "OsType",
+            "InstanceType",
+            "InstanceHttpListeningPort",
+            "InternalAccessSecurityGroup",
+            "RemoteSecurityGroup",
+            "RDSAccessSecurityGroup"
           ]
         },
         {
@@ -796,19 +1042,33 @@
             "PrivateSubnet1",
             "PrivateSubnet2",
             "PrivateSubnet3",
-            "InternalAccessSecurityGroup",
-            "NatSecurityGroup",
-            "RDSAccessSecurityGroup",
             "PublicNetworkAcl"
+          ]
+        },
+        {
+          "Label" : {"default" : "DNS Configuration"},
+          "Parameters" : [
+            "ConfigureDns",
+            "R53HostedZoneName",
+            "Route53ElbAlias"
           ]
         },
         {
           "Label" : {"default" : "Load Balancer Configuration"},
           "Parameters" : [
-            "R53HostedZoneName",
-            "Route53ElbAlias",
+            "UseSsl",
             "ElbSslCertArn",
+            "ElbHttpListeningPort",
+            "ElbHttpsListeningPort",
+            "ListenOnBothPorts",
             "ElbStickySessions"
+          ]
+        },
+        {
+          "Label" : { "default" : "Network ACL Rule Numbers" },
+          "Parameters" : [
+            "AllowHttpToElbRuleNumber",
+            "AllowHttpsToElbRuleNumber"
           ]
         }
       ],
@@ -825,14 +1085,21 @@
         "PrivateSubnet3" : {"default" : "Public Subnet 3"},
         "PublicNetworkAcl" : {"default" : "Public Network ACL"},
         "InternalAccessSecurityGroup" : {"default" : "Instance Access Security Group"},
-        "NatSecurityGroup" : {"default" : "NAT Security Group"},
+        "RemoteSecurityGroup" : {"default" : "Remote Security Group"},
         "RDSAccessSecurityGroup" : {"default" : "RDS Security Group"},
         "MinAutoScaleCount" : {"default" : "Minimum Auto Scale Count"},
         "MaxAutoScaleCount" : {"default" : "Maximum Auto Scale Count"},
         "R53HostedZoneName" : {"default" : "Route 53 Hosted Zone"},
         "Route53ElbAlias" : {"default" : "ELB DNS Alias"},
         "ElbSslCertArn" : {"default" : "ELB SSL Cert ARN"},
-        "ElbStickySessions" : {"default" : "ELB Stickiness"}
+        "ElbStickySessions" : {"default" : "ELB Stickiness"},
+        "AllowHttpToElbRuleNumber" : {"default" : "HTTP Internet to ELB"},
+        "AllowHttpsToElbRuleNumber" : {"default" : "HTTPS Internet to ELB"},
+        "InstanceHttpListeningPort" : {"default" : "Instance HTTP Port"},
+        "ElbHttpListeningPort" : {"default" : "ELB HTTP Port"},
+        "ElbHttpsListeningPort" : {"default" : "ELB HTTPS Port"},
+        "UseSsl" : {"default" : "Use SSL/TLS?"},
+        "OsType" : { "default" : "OS Type" }
       }
     }
   }
