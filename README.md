@@ -25,43 +25,43 @@ So, be sure to examine the **Outputs** tab after creating the stack.
       <th align="left">Launch</th>
     </tr>
     <tr>
-      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template">VPC</a></td>
+      <td nowrap><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template">VPC</a></td>
       <td>
         Creates an entire VPC from scratch for Lab or Permanent. Creates a New VPC,
          3 Public Subnets, 3 Private Subnets, Route Tables, Public Network ACLs,
          Private Network ACLs, Internet Gateway attached to Public Subnets,
          Instance to Instance Security Group and Remote Access Security Group.
       </td>
-      <td>
+      <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/vpc.template">us-west-2
       </td>
-      <td>
+      <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/vpc.template">us-west-2</a></br>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/vpc.template">us-east-1</a>
       </td>
     </tr>
     <tr>
-      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat/nat-gateway.template">NAT Gateway</a></td>
+      <td nowrap><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat/nat-gateway.template">NAT Gateway</a></td>
       <td>
         Creates a NAT Gateway on an existing VPC with Public (IGW) and Private subnets. Private route table is updated to route traffic to the NAT gateway a Public subnet that has an Internet Gateway Attached.
       </td>
-      <td>
+      <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/nat-gateway.template">us-west-2
       </td>
-      <td>
+      <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/nat-gateway.template">us-west-2</a></br>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/nat-gateway.template">us-east-1</a>
       </td>
     </tr>
     <tr>
-      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion/bastion.template">Bastion Host</a></td>
+      <td nowrap><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion/bastion.template">Bastion Host</a></td>
       <td>
         Creates a single Bastion host on a Public subnet in an existing VPC. Select from either a RHEL, Ubuntu or Windows OS.
       </td>
-      <td>
+      <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/bastion.template">us-west-2
       </td>
-      <td>
+      <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/bastion.template">us-west-2</a></br>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/bastion.template">us-east-1</a>
       </td>
@@ -99,28 +99,28 @@ So, be sure to examine the **Outputs** tab after creating the stack.
       <th align="left">Launch</th>
     </tr>
     <tr>
-      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance">Chef Compliance Lab</a></td>
+      <td nowrap><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance">Chef Compliance Lab</a></td>
       <td>
         Creates a Chef Complianc Web server in a Public Subnet with Internet Gatewayy attached on an existing VPC.
          It then attaches an EIP and finally adds the instance to an existing instance-to-instance security group.
       </td>
-      <td>
+      <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/chef-compliance-lab-webapp.template">us-west-2
       </td>
-      <td>
+      <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/chef-compliance-lab-webapp.template">us-west-2</a></br>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/chef-compliance-lab-webapp.template">us-east-1</a>
       </td>
     </tr>
     <tr>
-      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.template">Test Instances</a></td>
+      <td nowrap><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.template">Test Instances</a></td>
       <td>
         Creates three test instances in an existing VPC. Each instance is a different operating system. They are; Red Hat Enterprise Linux 7, Ubuntu 14 and Windows 2012 R2.
       </td>
-      <td>
+      <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/rhel-ubuntu-win2012.template">us-west-2
       </td>
-      <td>
+      <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/rhel-ubuntu-win2012.template">us-west-2</a></br>
         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/rhel-ubuntu-win2012.template">us-east-1</a>
       </td>
