@@ -12,48 +12,118 @@ By using the configured parameters from the console or CLI you should be able to
 The templates generally output all the information you may need for another template.
 So, be sure to examine the **Outputs** tab after creating the stack.
 
-## Notable Templates
+## Templates
 
 ### Infrastructure
 
-* [VPC Template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template)<br>
-  Create an entire VPC from scratch.
-    * Creates a New VPC
-    * Creates 3 Public Subnets
-    * Creates 3 Private Subnets
-    * Public Network ACLs
-    * Private Network ACLs
-    * Internet Gateway attached to Public Subnets
-    * Instance to Instance Allow All Security Group
-* [NAT Gateway Template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat/natgateway.template)<br>
-  Create a NAT Gateway on an existing VPC with Public and Private subnets.
-    * Creates NAT Gateway on existing VPC with Public and Private subnets.
-    * Creates Security Group to Allow Instances NAT Access to the Internet.
-    * Updated Route Table for functionality of the NAT solution.
-* [Bastion Host Template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion/bastion.template)<br>
-  Create a Bastion host instance on an existing VPC with Public and Private subnets.
-    * Creates single Bastion instance on a Public subnet.
-    * Select from RHEL, Ubuntu and Windows as the Bastion Host OS.
-* [VPN BGP Site-to-Site Connection Template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpn/vpn-bgp.template)<br>
-  Create a Site-to-Site VPN BGP Connection in an existing VPC with public and/or private networks.
-    * There is an option to not exclude allowing VPN access to the public networks. Simply select false for the 'Include Public Subnets', leave default value in Public Network ACL and Route Table. The values will just be ignored.
-    * This only sets up the AWS side of the VPN. After the CloudFormation creates the objects you'll then need to configure your remote VPN Device.
-      * [Here's](https://www.bonusbits.com/wiki/HowTo:Setup_Site_to_Site_VPN_from_AWS_VPC_to_Sophos_UTM) an article that gives the configuration steps for configuring a Sophos UTM v9 VPN endpoint.
-    * This assumes that the Private Network ACL allows all outbound.
-    * The Private Network ACL inbound is updated to allow the remote network block specified.
+<table>
+  <tbody>
+    <tr>
+      <th align="left">Template</th>
+      <th align="left">Description</th>
+      <th align="left">View in Designer</th>
+      <th align="left">Launch</th>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template">VPC</a></td>
+      <td>
+        Creates an entire VPC from scratch for Lab or Permanent. Creates a New VPC,
+         3 Public Subnets, 3 Private Subnets, Route Tables, Public Network ACLs,
+         Private Network ACLs, Internet Gateway attached to Public Subnets,
+         Instance to Instance Security Group and Remote Access Security Group.
+      </td>
+      <td>
+        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/vpc.template">us-west-2
+      </td>
+      <td>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/vpc.template">us-west-2</a></br>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/vpc.template">us-east-1</a>
+      </td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat/nat-gateway.template">NAT Gateway</a></td>
+      <td>
+        Creates a NAT Gateway on an existing VPC with Public (IGW) and Private subnets. Private route table is updated to route traffic to the NAT gateway a Public subnet that has an Internet Gateway Attached.
+      </td>
+      <td>
+        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/nat-gateway.template">us-west-2
+      </td>
+      <td>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/nat-gateway.template">us-west-2</a></br>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/nat-gateway.template">us-east-1</a>
+      </td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion/bastion.template">Bastion Host</a></td>
+      <td>
+        Creates a single Bastion host on a Public subnet in an existing VPC. Select from either a RHEL, Ubuntu or Windows OS.
+      </td>
+      <td>
+        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/bastion.template">us-west-2
+      </td>
+      <td>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/bastion.template">us-west-2</a></br>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/bastion.template">us-east-1</a>
+      </td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpn/vpn-bgp.template">VPN BGP</a></td>
+      <td>
+        Creates a Site-to-Site BGP VPN Connection in and existing VPC with public and/or private networks.
+         There is an option to not exclude allowing VPN access to the public networks.
+         Simply select false for the 'Include Public Subnets', leave default value in Public Network ACL and Route Table.
+         The values will just be ignored. This only sets up the AWS side of the VPN.
+         After the CloudFormation creates the objects you'll then need to configure your remote VPN Device.
+         <a href="https://www.bonusbits.com/wiki/HowTo:Setup_Site_to_Site_VPN_from_AWS_VPC_to_Sophos_UTM">Here's</a> an article that gives the configuration steps for configuring a Sophos UTM v9 VPN endpoint.
+         This assumes that the Private Network ACL allows all outbound. Lastly, the Private Network ACL inbound is updated to allow the remote network block specified.
+      </td>
+      <td>
+        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/vpn-bgp.template">us-west-2
+      </td>
+      <td>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/vpn-bgp.template">us-west-2</a></br>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/vpn-bgp.template">us-east-1</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ### Labs
 
-* [Chef Compliance Lab](https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance)<br>
-  Creates a Chef Compliance Lab Webapp server on an existing VPC, Bastion/VPN with Public subnet that has an Internet Gateway.
-    * Creates Chef Compliance Webapp server in public subnet.
-    * Attaches EIP.
-    * Added to Internal instance-to-instance Security Group for scan access.
-
-##### Test Instances
-
-* [RHEL, Ubuntu and Windows 2012 R2 Test Instances Template](https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.template)<br>
-  Create 3 test instances in an existing VPC.
-    * Create a Red Hat Enterprise Linux 7 EC2 Instance.
-    * Create a Ubuntu 14 EC2 Instance.
-    * Create a Windows 2012 EC2 Instance.
+<table>
+  <tbody>
+    <tr>
+      <th align="left">Template</th>
+      <th align="left">Description</th>
+      <th align="left">View in Designer</th>
+      <th align="left">Launch</th>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance">Chef Compliance Lab</a></td>
+      <td>
+        Creates a Chef Complianc Web server in a Public Subnet with Internet Gatewayy attached on an existing VPC.
+         It then attaches an EIP and finally adds the instance to an existing instance-to-instance security group.
+      </td>
+      <td>
+        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/chef-compliance-lab-webapp.template">us-west-2
+      </td>
+      <td>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/chef-compliance-lab-webapp.template">us-west-2</a></br>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/chef-compliance-lab-webapp.template">us-east-1</a>
+      </td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.template">Test Instances</a></td>
+      <td>
+        Creates three test instances in an existing VPC. Each instance is a different operating system. They are; Red Hat Enterprise Linux 7, Ubuntu 14 and Windows 2012 R2.
+      </td>
+      <td>
+        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/rhel-ubuntu-win2012.template">us-west-2
+      </td>
+      <td>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/rhel-ubuntu-win2012.template">us-west-2</a></br>
+        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/rhel-ubuntu-win2012.template">us-east-1</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
