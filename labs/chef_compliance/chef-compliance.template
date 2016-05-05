@@ -264,8 +264,8 @@
       "Description": "It is ok to delete the Formation after this date",
       "Value": {"Ref": "DeleteAfter"}
     },
-    "FQDN": {
-      "Description": "Chef Compliance Server FQDN",
+    "PublicDNS": {
+      "Description": "Chef Compliance Server Public DNS Name",
       "Value": {"Fn::GetAtt": ["EC2Instance", "PublicDnsName"]}
     },
     "EIP": {
