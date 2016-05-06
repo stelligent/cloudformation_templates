@@ -93,18 +93,27 @@
     },
     "ElbHttpListeningPort": {
       "Description": "Enter HTTP Listening Port for ELB.",
-      "Type": "Number",
-      "Default": "80"
+      "Type": "String",
+      "Default": "80",
+      "MinLength": "2",
+      "MaxLength": "5",
+      "AllowedPattern": "(\\d{2,5})"
     },
     "ElbHttpsListeningPort": {
       "Description": "Enter HTTPS Listening Port for ELB. (Skip if Not Using SSL)",
-      "Type": "Number",
-      "Default": "443"
+      "Type": "String",
+      "Default": "443",
+      "MinLength": "2",
+      "MaxLength": "5",
+      "AllowedPattern": "(\\d{2,5})"
     },
     "InstanceHttpListeningPort": {
       "Description": "Enter HTTP Listening Port for Instance.",
-      "Type": "Number",
-      "Default": "80"
+      "Type": "String",
+      "Default": "80",
+      "MinLength": "2",
+      "MaxLength": "5",
+      "AllowedPattern": "(\\d{2,5})"
     },
     "ConfigureDns": {
       "Description": "Configure Route 53 DNS to ELB? Be sure record doesn't already exist.",
@@ -147,8 +156,8 @@
         "false"
       ]
     },
-    "SetupS3Logging": {
-      "Description": "Select whether or not to setup S3 Bucket Logging.",
+    "SetupElbLogging": {
+      "Description": "Select whether or not to setup S3 Bucket for ELB Logging.",
       "Type": "String",
       "Default": "false",
       "AllowedValues": [
@@ -266,17 +275,24 @@
     "ConfigureStickiness": {"Fn::Equals": [{"Ref": "ElbStickySessions"}, "true" ]},
     "EnableSsl": {"Fn::Equals": [{"Ref": "UseSsl"}, "true" ]},
     "DisableSsl": {"Fn::Equals": [{"Ref": "UseSsl"}, "false" ]},
+    "DisableSslOrUseBothPorts": {
+      "Fn::Or": [
+        {"Fn::Equals": [{"Ref": "UseSsl"}, "false" ]},
+        {"Fn::Equals": [{"Ref": "ListenOnBothPorts"}, "true" ]}
+      ]
+    },
     "UseBothPorts": {"Fn::Equals": [{"Ref": "ListenOnBothPorts"}, "true" ]},
     "ConfigureRoute53": {"Fn::Equals": [{"Ref": "ConfigureDns"}, "true" ]},
-    "ConfigureS3Logging": {"Fn::Equals": [{"Ref": "SetupS3Logging"}, "true" ]},
+    "ConfigureElbLogging": {"Fn::Equals": [{"Ref": "SetupElbLogging"}, "true" ]},
     "RHELHost": { "Fn::Equals": [{"Ref": "OsType"}, "rhel"]},
     "UbuntuHost": { "Fn::Equals": [{"Ref": "OsType"}, "ubuntu"]},
-    "LinuxHost": { "Fn::Or": [
-      {"Fn::Equals": [{"Ref": "OsType"}, "rhel"]},
-      {"Fn::Equals": [{"Ref": "OsType"}, "ubuntu"]}
-    ]
+    "LinuxHost": {
+      "Fn::Or": [
+        {"Fn::Equals": [{"Ref": "OsType"}, "rhel"]},
+        {"Fn::Equals": [{"Ref": "OsType"}, "ubuntu"]}
+      ]
     },
-    "WindowsHost": { "Fn::Equals": [ { "Ref": "OsType" }, "windows" ] }
+    "WindowsHost": {"Fn::Equals": [{"Ref": "OsType"}, "windows"]}
   },
   "Resources": {
     "IamRole": {
@@ -445,22 +461,10 @@
     "ElasticLoadBalancer": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "DependsOn": [
-        "S3LoggingBucket",
-        "S3LoggingBucketPolicy",
         "InstanceToElbSecurityGroup",
         "InternetToElbSecurityGroup"
       ],
       "Properties": {
-          "LBCookieStickinessPolicy": [
-          {"Fn:If": [
-            "ConfigureStickiness",
-            {
-              "CookieExpirationPeriod": {"Ref": "CookieExpirationPeriod"},
-              "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-elbcookie"]]}
-            },
-            {}
-          ]}
-         ],
         "Subnets": [
           {"Ref": "PublicSubnet1"},
           {"Ref": "PublicSubnet2"},
@@ -532,20 +536,23 @@
         },
         "LoadBalancerName": {"Ref": "AWS::StackName"},
         "HealthCheck": {
-          "Target": {"Fn::Join": ["", "TCP:", {"Ref": "InstanceHttpListeningPort"}]},
+          "Target": {"Fn::Join": ["", ["TCP:", {"Ref": "InstanceHttpListeningPort"}]]},
           "HealthyThreshold": "3",
           "UnhealthyThreshold": "5",
           "Interval": "30",
           "Timeout": "5"
         },
         "AccessLoggingPolicy": {
-          "Condition": "ConfigureS3Logging",
-          "S3BucketName": {
-            "Ref": "S3LoggingBucket"
-          },
-          "S3BucketPrefix": "Logs",
-          "Enabled": "true",
-          "EmitInterval": "60"
+          "Fn::If": [
+            "ConfigureElbLogging",
+            {
+              "S3BucketName": {"Ref": "S3LoggingBucket"},
+              "S3BucketPrefix": "Logs",
+              "Enabled": "true",
+              "EmitInterval": "60"
+            },
+            {"Ref": "AWS::NoValue"}
+          ]
         },
         "Tags": [
           {
@@ -588,7 +595,7 @@
       }
     },
     "InboundPublicNetworkAclEntryHttpToElb": {
-      "Condition": {"Fn::Or": ["DisableSsl", "UseBothPorts"]},
+      "Condition": "DisableSslOrUseBothPorts",
       "Type": "AWS::EC2::NetworkAclEntry",
       "Properties": {
         "NetworkAclId": {"Ref": "PublicNetworkAcl"},
@@ -685,7 +692,8 @@
                 {
                   "Fn::If": [
                     "WindowsHost",
-                    {"Fn::Base64": "# PowerShell Goes Here"}
+                    {"Fn::Base64": "# PowerShell Goes Here"},
+                    {"Ref": "AWS::NoValue"}
                   ]
                 }
               ]
@@ -836,7 +844,7 @@
       }
     },
     "S3LoggingBucket": {
-      "Condition": "ConfigureS3Logging",
+      "Condition": "ConfigureElbLogging",
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "Tags": [
@@ -860,7 +868,7 @@
       }
     },
     "S3LoggingBucketPolicy": {
-      "Condition": "ConfigureS3Logging",
+      "Condition": "ConfigureElbLogging",
       "Type": "AWS::S3::BucketPolicy",
       "Properties": {
         "Bucket": {
@@ -967,7 +975,7 @@
       "Value": {"Ref": "InstanceToElbSecurityGroup"}
     },
     "S3LoggingBucket": {
-      "Condition": "ConfigureS3Logging",
+      "Condition": "ConfigureElbLogging",
       "Description": "Logging S3 Bucket.",
       "Value": {"Ref": "S3LoggingBucket"}
     },
@@ -1099,6 +1107,7 @@
         "ElbHttpListeningPort" : {"default" : "ELB HTTP Port"},
         "ElbHttpsListeningPort" : {"default" : "ELB HTTPS Port"},
         "UseSsl" : {"default" : "Use SSL/TLS?"},
+        "SetupElbLogging" : {"default" : "Setup ELB Logging?"},
         "OsType" : { "default" : "OS Type" }
       }
     }
