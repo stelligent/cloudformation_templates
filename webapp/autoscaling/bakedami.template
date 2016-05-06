@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Webapp ASG, Baked AMI, ELB, R53 and Optional SSL by Levon Becker v20160504-0100",
+  "Description": "Webapp ASG, Baked AMI, ELB, R53 and Optional SSL by Levon Becker v20160506-1500",
   "Parameters": {
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to EC2 Instances",
@@ -988,7 +988,7 @@
       "Value": {"Ref": "ElasticLoadBalancer"}
     },
     "ElbHttpListeningPort": {
-      "Condition": {"Fn::Or": ["DisableSsl", "UseBothPorts"]},
+      "Condition": "DisableSslOrUseBothPorts",
       "Description": "Elastic Load Balancer HTTP Listening Port.",
       "Value": {"Ref": "ElbHttpListeningPort"}
     },
@@ -1088,9 +1088,9 @@
         "PublicSubnet1" : {"default" : "Public Subnet 1"},
         "PublicSubnet2" : {"default" : "Public Subnet 2"},
         "PublicSubnet3" : {"default" : "Public Subnet 3"},
-        "PrivateSubnet1" : {"default" : "Public Subnet 1"},
-        "PrivateSubnet2" : {"default" : "Public Subnet 2"},
-        "PrivateSubnet3" : {"default" : "Public Subnet 3"},
+        "PrivateSubnet1" : {"default" : "Private Subnet 1"},
+        "PrivateSubnet2" : {"default" : "Private Subnet 2"},
+        "PrivateSubnet3" : {"default" : "Private Subnet 3"},
         "PublicNetworkAcl" : {"default" : "Public Network ACL"},
         "InternalAccessSecurityGroup" : {"default" : "Instance Access Security Group"},
         "RemoteSecurityGroup" : {"default" : "Remote Security Group"},
