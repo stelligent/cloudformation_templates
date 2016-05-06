@@ -330,7 +330,7 @@
               {"Fn::If": [
                 "WindowsHost",
                   {"Fn::Base64": "# PowerShell Goes Here"},
-                  {"Fn::Base64": "# PowerShell Goes Here"}
+                  {"Ref": "AWS::NoValue"}
               ]}
             ]}
           ]
