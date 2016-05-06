@@ -28,4 +28,4 @@ Either deploy the asg-elb-ssl-s3logs.template to a current environment that meet
 1. [VPC Template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template)
 2. [NAT Gateway Template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat/nat-gateway.template) (Optional)
 3. [Bastion Host Template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion/bastion.template) (Optional)
-4. [ASG ELB Template](https://github.com/stelligent/cloudformation_templates/blob/master/webapp/autoscaling/bakedami.template)
+4. [Baked AMI ASG Webapp Template](https://github.com/stelligent/cloudformation_templates/blob/master/webapp/autoscaling/bakedami.template)
