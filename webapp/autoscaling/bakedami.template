@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Webapp ASG, Baked AMI, ELB, R53 and Optional SSL by Levon Becker v20160506-1500",
+  "Description": "Webapp ASG, Baked AMI, ELB, R53 and Optional SSL by Levon Becker v20160509-0830",
   "Parameters": {
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to EC2 Instances",
@@ -77,17 +77,17 @@
       "Default": "acl-0000000"
     },
     "Route53ElbAlias": {
-      "Description": "DNS Record to Update for the ELB. (Skip if Not Configuring Route 53)",
+      "Description": "(Skip if Not Configuring Route 53) DNS Record to Update for the ELB.",
       "Type": "String",
       "Default": "www.domain.com"
     },
     "R53HostedZoneName": {
-      "Description": "Hosted DNS Name. (Skip if Not Configuring Route 53)",
+      "Description": "(Skip if Not Configuring Route 53) Hosted DNS Name.",
       "Type": "String",
       "Default": "domain.com"
     },
     "ElbSslCertArn": {
-      "Description": "SSL Certificate ARN for the ELB to use. (Skip if Not Using SSL)",
+      "Description": "(Skip if Not Using SSL) SSL Certificate ARN for the ELB to use.",
       "Type": "String",
       "Default": "arn:aws:iam::0000000000000:server-certificate/www.domain.com"
     },
@@ -100,7 +100,7 @@
       "AllowedPattern": "(\\d{2,5})"
     },
     "ElbHttpsListeningPort": {
-      "Description": "Enter HTTPS Listening Port for ELB. (Skip if Not Using SSL)",
+      "Description": "(Skip if Not Using SSL) Enter HTTPS Listening Port for ELB.",
       "Type": "String",
       "Default": "443",
       "MinLength": "2",
@@ -134,7 +134,7 @@
       ]
     },
     "CookieExpirationPeriod": {
-      "Description": "Enter ELB Sticky Session Cookie Timeout in seconds. (Skip if Not using Sticky Sessions)",
+      "Description": "(Skip if Not Using Sticky Sessions) Enter ELB Sticky Session Cookie Timeout in seconds.",
       "Type": "Number",
       "Default": "43200"
     },
@@ -148,7 +148,7 @@
       ]
     },
     "ListenOnBothPorts": {
-      "Description": "Listen on Both HTTP and HTTPS on the ELB? (Skip if Not Using SSL)",
+      "Description": "(Skip if Not Using SSL) Listen on Both HTTP and HTTPS on the ELB?",
       "Type": "String",
       "Default": "false",
       "AllowedValues": [
@@ -236,6 +236,8 @@
       "Type": "String",
       "Default": "rhel",
       "AllowedValues": [
+        "amazon",
+        "centos",
         "rhel",
         "ubuntu",
         "windows"
@@ -259,6 +261,11 @@
   },
   "Mappings": {
     "bootstrap": {
+      "amazon": {
+        "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
+        "yumupdatenokernel": "yum update -y --exclude=kernel*",
+        "installpackages": "yum install -y curl wget mlocate ca-certificates openssl vim"
+      },
       "rhel": {
         "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
         "yumupdatenokernel": "yum update -y --exclude=kernel*",
@@ -284,8 +291,14 @@
     "UseBothPorts": {"Fn::Equals": [{"Ref": "ListenOnBothPorts"}, "true" ]},
     "ConfigureRoute53": {"Fn::Equals": [{"Ref": "ConfigureDns"}, "true" ]},
     "ConfigureElbLogging": {"Fn::Equals": [{"Ref": "SetupElbLogging"}, "true" ]},
-    "RHELHost": { "Fn::Equals": [{"Ref": "OsType"}, "rhel"]},
     "UbuntuHost": { "Fn::Equals": [{"Ref": "OsType"}, "ubuntu"]},
+    "RHELHost": {
+      "Fn::Or": [
+        {"Fn::Equals": [{"Ref": "OsType"}, "amazon"]},
+        {"Fn::Equals": [{"Ref": "OsType"}, "centos"]},
+        {"Fn::Equals": [{"Ref": "OsType"}, "rhel"]}
+      ]
+    },
     "LinuxHost": {
       "Fn::Or": [
         {"Fn::Equals": [{"Ref": "OsType"}, "rhel"]},
@@ -760,7 +773,8 @@
           },
           {
             "Key": "DeleteAfter",
-            "Value": {"Ref": "DeleteAfter"}
+            "Value": {"Ref": "DeleteAfter"},
+            "PropagateAtLaunch": "true"
           }
         ]
       }
@@ -917,26 +931,57 @@
       "Description": "It is ok to delete the Formation after this date.",
       "Value": {"Ref": "DeleteAfter"}
     },
+    "MinAutoScaleCount": {
+      "Description": "Minimum Instance Count.",
+      "Value": {"Ref": "MinAutoScaleCount"}
+    },
+    "MaxAutoScaleCount": {
+      "Description": "Maximum Instance Count.",
+      "Value": {"Ref": "MaxAutoScaleCount"}
+    },
+    "AsgSnsTopicArn": {
+      "Description": "ASG Alerts SNS Topic ARN Used.",
+      "Value": {"Ref": "AsgSnsTopicArn"}
+    },
+    "AMI": {
+      "Description": "AMI Used.",
+      "Value": {"Ref": "AMI"}
+    },
+    "OsType": {
+      "Description": "OS Type Selected.",
+      "Value": {"Ref": "OsType"}
+    },
+    "InstanceType": {
+      "Description": "Instance Type Used.",
+      "Value": {"Ref": "InstanceType"}
+    },
     "KeyPairLoaded": {
-      "Description": "Key Pair used.",
+      "Description": "Key Pair Used.",
       "Value": {"Ref": "Ec2KeyPair"}
+    },
+    "InstanceHttpListeningPort": {
+      "Description": "Instance HTTP Listening Port.",
+      "Value": {"Ref": "InstanceHttpListeningPort"}
+    },
+    "InternalAccessSecurityGroup": {
+      "Description": "Instance to Instance Access Security Group Selected.",
+      "Value": {"Ref": "InternalAccessSecurityGroup"}
+    },
+    "RemoteSecurityGroup": {
+      "Description": "Remote to Instance Access Security Group Selected.",
+      "Value": {"Ref": "RemoteSecurityGroup"}
+    },
+    "RDSAccessSecurityGroup": {
+      "Description": "RDS to Instance Access Security Group Selected.",
+      "Value": {"Ref": "RDSAccessSecurityGroup"}
+    },
+    "IAMRole": {
+      "Description": "IAM Instance Profile Role Created.",
+      "Value": {"Ref": "IamRole"}
     },
     "VPC": {
       "Description": "VPC Used.",
       "Value": {"Ref": "VPC"}
-    },
-    "ElbDNS": {
-      "Description": "Route 53 DNS CName Assigned to ELB.",
-      "Value": {"Ref": "ElbDnsCname"}
-    },
-    "ElbFQDN": {
-      "Description": "FQDN of ELB",
-      "Value": {"Ref": "ElasticLoadBalancer"}
-    },
-    "InstanceHttpListeningPort": {
-      "Condition": "DisableSsl",
-      "Description": "Instance HTTP Listening Port.",
-      "Value": {"Ref": "InstanceHttpListeningPort"}
     },
     "PublicSubnets": {
       "Description": "Public Subnets ELB Deployed to.",
@@ -962,9 +1007,32 @@
         ]
       }
     },
-    "IAMRole": {
-      "Description": "IAM Instance Profile Role Created.",
-      "Value": {"Ref": "IamRole"}
+    "PublicNetworkAcl": {
+      "Description": "Public Network ACL Used.",
+      "Value": {"Ref": "PublicNetworkAcl"}
+    },
+    "ConfigureDns": {
+      "Description": "Configure Route 53 DNS Option.",
+      "Value": {"Ref": "ConfigureDns"}
+    },
+    "R53HostedZoneName": {
+      "Condition": "ConfigureRoute53",
+      "Description": "Route 53 Zone Updated.",
+      "Value": {"Ref": "R53HostedZoneName"}
+    },
+    "Route53ElbAlias": {
+      "Condition": "ConfigureRoute53",
+      "Description": "Route 53 DNS Alias Created and Added to ELB.",
+      "Value": {"Ref": "Route53ElbAlias"}
+    },
+    "ElbDNS": {
+      "Condition": "ConfigureRoute53",
+      "Description": "Route 53 DNS CName Assigned to ELB.",
+      "Value": {"Ref": "ElbDnsCname"}
+    },
+    "ElbFQDN": {
+      "Description": "FQDN of ELB",
+      "Value": {"Ref": "ElasticLoadBalancer"}
     },
     "InternetToElbSecurityGroup": {
       "Description": "Inernet To ELB Access Security Group.",
@@ -973,6 +1041,10 @@
     "InstanceToElbSecurityGroup": {
       "Description": "Instance To ELB Access Security Group.",
       "Value": {"Ref": "InstanceToElbSecurityGroup"}
+    },
+    "SetupElbLogging": {
+      "Description": "Configure ELB S3 Bucket Logging Option.",
+      "Value": {"Ref": "SetupElbLogging"}
     },
     "S3LoggingBucket": {
       "Condition": "ConfigureElbLogging",
@@ -997,15 +1069,14 @@
       "Description": "Elastic Load Balancer HTTPS Listening Port.",
       "Value": {"Ref": "ElbHttpsListeningPort"}
     },
-    "R53HostedZoneName": {
-      "Condition": "ConfigureRoute53",
-      "Description": "Route 53 Zone Updated.",
-      "Value": {"Ref": "R53HostedZoneName"}
+    "ElbStickySessions": {
+      "Description": "Enable ELB Stickiness Option.",
+      "Value": {"Ref": "ElbStickySessions"}
     },
-    "Route53ElbAlias": {
-      "Condition": "ConfigureRoute53",
-      "Description": "Route 53 DNS Alias Created and Added to ELB.",
-      "Value": {"Ref": "Route53ElbAlias"}
+    "CookieExpirationPeriod": {
+      "Condition": "ConfigureStickiness",
+      "Description": "Cookie Expireation Period for ELB Stickiness Option.",
+      "Value": {"Ref": "CookieExpirationPeriod"}
     }
   },
   "Metadata" : {
@@ -1020,7 +1091,7 @@
           ]
         },
         {
-          "Label" : {"default" : "Auto Scale Configuration"},
+          "Label" : {"default" : "Auto Scale Group Configuration"},
           "Parameters" : [
             "MinAutoScaleCount",
             "MaxAutoScaleCount",
@@ -1030,10 +1101,10 @@
         {
           "Label" : {"default" : "Instance Settings"},
           "Parameters" : [
-            "Ec2KeyPair",
             "AMI",
             "OsType",
             "InstanceType",
+            "Ec2KeyPair",
             "InstanceHttpListeningPort",
             "InternalAccessSecurityGroup",
             "RemoteSecurityGroup",
@@ -1054,7 +1125,7 @@
           ]
         },
         {
-          "Label" : {"default" : "DNS Configuration"},
+          "Label" : {"default" : "Route 53 DNS Configuration"},
           "Parameters" : [
             "ConfigureDns",
             "R53HostedZoneName",
@@ -1064,12 +1135,14 @@
         {
           "Label" : {"default" : "Load Balancer Configuration"},
           "Parameters" : [
-            "UseSsl",
-            "ElbSslCertArn",
             "ElbHttpListeningPort",
+            "UseSsl",
             "ElbHttpsListeningPort",
+            "ElbSslCertArn",
             "ListenOnBothPorts",
-            "ElbStickySessions"
+            "SetupElbLogging",
+            "ElbStickySessions",
+            "CookieExpirationPeriod"
           ]
         },
         {
@@ -1092,22 +1165,26 @@
         "PrivateSubnet2" : {"default" : "Private Subnet 2"},
         "PrivateSubnet3" : {"default" : "Private Subnet 3"},
         "PublicNetworkAcl" : {"default" : "Public Network ACL"},
-        "InternalAccessSecurityGroup" : {"default" : "Instance Access Security Group"},
-        "RemoteSecurityGroup" : {"default" : "Remote Security Group"},
-        "RDSAccessSecurityGroup" : {"default" : "RDS Security Group"},
-        "MinAutoScaleCount" : {"default" : "Minimum Auto Scale Count"},
-        "MaxAutoScaleCount" : {"default" : "Maximum Auto Scale Count"},
-        "R53HostedZoneName" : {"default" : "Route 53 Hosted Zone"},
+        "InternalAccessSecurityGroup" : {"default" : "Instance-to-Instance SG"},
+        "RemoteSecurityGroup" : {"default" : "Remote-to-Instance SG"},
+        "RDSAccessSecurityGroup" : {"default" : "RDS-to-Instance SG"},
+        "MinAutoScaleCount" : {"default" : "Minimum Count"},
+        "MaxAutoScaleCount" : {"default" : "Maximum Count"},
+        "R53HostedZoneName" : {"default" : "Hosted Zone"},
         "Route53ElbAlias" : {"default" : "ELB DNS Alias"},
-        "ElbSslCertArn" : {"default" : "ELB SSL Cert ARN"},
-        "ElbStickySessions" : {"default" : "ELB Stickiness"},
+        "ElbSslCertArn" : {"default" : "SSL Cert ARN"},
+        "ElbStickySessions" : {"default" : "Stickiness"},
         "AllowHttpToElbRuleNumber" : {"default" : "HTTP Internet to ELB"},
         "AllowHttpsToElbRuleNumber" : {"default" : "HTTPS Internet to ELB"},
         "InstanceHttpListeningPort" : {"default" : "Instance HTTP Port"},
-        "ElbHttpListeningPort" : {"default" : "ELB HTTP Port"},
-        "ElbHttpsListeningPort" : {"default" : "ELB HTTPS Port"},
-        "UseSsl" : {"default" : "Use SSL/TLS?"},
-        "SetupElbLogging" : {"default" : "Setup ELB Logging?"},
+        "ElbHttpListeningPort" : {"default" : "HTTP Port"},
+        "ElbHttpsListeningPort" : {"default" : "HTTPS Port"},
+        "UseSsl" : {"default" : "Use SSL"},
+        "SetupElbLogging" : {"default" : "Setup Logging"},
+        "CookieExpirationPeriod" : {"default" : "Cookie Expiration Period"},
+        "ListenOnBothPorts" : {"default" : "Listen on HTTP & HTTPS"},
+        "AsgSnsTopicArn" : {"default" : "SNS Topic ARN"},
+        "ConfigureDns" : {"default" : "Configure"},
         "OsType" : { "default" : "OS Type" }
       }
     }
