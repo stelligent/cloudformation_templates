@@ -2,6 +2,21 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "Webapp ASG, Baked AMI, ELB, R53 and Optional SSL by Levon Becker v20160509-0830",
   "Parameters": {
+    "Owner": {
+      "Description": "Enter Team or Individual Name Responsible for the Stack.",
+      "Type": "String",
+      "Default": "Levon Becker"
+    },
+    "Project": {
+      "Description": "Enter Project Name.",
+      "Type": "String",
+      "Default": "MySQL RDS Creation"
+    },
+    "DeleteAfter": {
+      "Description": "Enter Date It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
+      "Type": "String",
+      "Default": "00/00/201x"
+    },
     "Ec2KeyPair": {
       "Description": "Select Keypair to Assign to EC2 Instances",
       "Type": "AWS::EC2::KeyPair::KeyName"
@@ -15,21 +30,6 @@
       "Description": "Enter Maximum Instance Auto Scale Count.",
       "Type": "Number",
       "Default": "4"
-    },
-    "Owner": {
-      "Description": "Enter Team or Individual Name Responsible for the Stack.",
-      "Type": "String",
-      "Default": "Levon Becker"
-    },
-    "Project": {
-      "Description": "Enter Project Name.",
-      "Type": "String",
-      "Default": "Webapp ASG with ELB Creation"
-    },
-    "DeleteAfter": {
-      "Description": "Enter Date It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
-      "Type": "String",
-      "Default": "00/00/201x"
     },
     "VPC": {
       "Description": "Select VPC.",
@@ -61,10 +61,6 @@
     },
     "InternalAccessSecurityGroup": {
       "Description": "Security Group That Allows Bastion Host Access to Instances.",
-      "Type": "AWS::EC2::SecurityGroup::Id"
-    },
-    "RDSAccessSecurityGroup": {
-      "Description": "Security Group That Instance Access to RDS Instances.",
       "Type": "AWS::EC2::SecurityGroup::Id"
     },
     "RemoteSecurityGroup": {
@@ -116,7 +112,7 @@
       "AllowedPattern": "(\\d{2,5})"
     },
     "ConfigureDns": {
-      "Description": "Configure Route 53 DNS to ELB? Be sure record doesn't already exist.",
+      "Description": "Configure Route 53 DNS to ELB? Be sure a matching record doesn't already exist.",
       "Type": "String",
       "Default": "false",
       "AllowedValues": [
@@ -382,42 +378,42 @@
             ],
             {
               "Fn::If": [
-              "EnableSsl",
-              [
+                "EnableSsl",
+                [
+                  {
+                    "IpProtocol": "tcp",
+                    "FromPort": {"Ref": "ElbHttpsListeningPort"},
+                    "ToPort": {"Ref": "ElbHttpsListeningPort"},
+                    "CidrIp": "0.0.0.0/0"
+                  }
+                ],
                 {
-                "IpProtocol": "tcp",
-                "FromPort": {"Ref": "ElbHttpsListeningPort"},
-                "ToPort": {"Ref": "ElbHttpsListeningPort"},
-                "CidrIp": "0.0.0.0/0"
-                }
-              ],
-              {
-                "Fn::If": [
-                  "UseBothPorts",
-                  [
-                    {
-                      "IpProtocol": "tcp",
-                      "FromPort": {"Ref": "ElbHttpListeningPort"},
-                      "ToPort": {"Ref": "ElbHttpListeningPort"},
-                      "CidrIp": "0.0.0.0/0"
-                    },
-                    {
-                      "IpProtocol": "tcp",
-                      "FromPort": {"Ref": "ElbHttpsListeningPort"},
-                      "ToPort": {"Ref": "ElbHttpsListeningPort"},
-                      "CidrIp": "0.0.0.0/0"
-                    }
-                  ],
-                  [
-                    {
-                      "IpProtocol": "tcp",
-                      "FromPort": {"Ref": "ElbHttpListeningPort"},
-                      "ToPort": {"Ref": "ElbHttpListeningPort"},
-                      "CidrIp": "0.0.0.0/0"
-                    }
+                  "Fn::If": [
+                    "UseBothPorts",
+                    [
+                      {
+                        "IpProtocol": "tcp",
+                        "FromPort": {"Ref": "ElbHttpListeningPort"},
+                        "ToPort": {"Ref": "ElbHttpListeningPort"},
+                        "CidrIp": "0.0.0.0/0"
+                      },
+                      {
+                        "IpProtocol": "tcp",
+                        "FromPort": {"Ref": "ElbHttpsListeningPort"},
+                        "ToPort": {"Ref": "ElbHttpsListeningPort"},
+                        "CidrIp": "0.0.0.0/0"
+                      }
+                    ],
+                    [
+                      {
+                        "IpProtocol": "tcp",
+                        "FromPort": {"Ref": "ElbHttpListeningPort"},
+                        "ToPort": {"Ref": "ElbHttpListeningPort"},
+                        "CidrIp": "0.0.0.0/0"
+                      }
+                    ]
                   ]
-                ]
-              }
+                }
               ]
             }
           ]
@@ -971,10 +967,6 @@
       "Description": "Remote to Instance Access Security Group Selected.",
       "Value": {"Ref": "RemoteSecurityGroup"}
     },
-    "RDSAccessSecurityGroup": {
-      "Description": "RDS to Instance Access Security Group Selected.",
-      "Value": {"Ref": "RDSAccessSecurityGroup"}
-    },
     "IAMRole": {
       "Description": "IAM Instance Profile Role Created.",
       "Value": {"Ref": "IamRole"}
@@ -1107,8 +1099,7 @@
             "Ec2KeyPair",
             "InstanceHttpListeningPort",
             "InternalAccessSecurityGroup",
-            "RemoteSecurityGroup",
-            "RDSAccessSecurityGroup"
+            "RemoteSecurityGroup"
           ]
         },
         {
@@ -1167,7 +1158,6 @@
         "PublicNetworkAcl" : {"default" : "Public Network ACL"},
         "InternalAccessSecurityGroup" : {"default" : "Instance-to-Instance SG"},
         "RemoteSecurityGroup" : {"default" : "Remote-to-Instance SG"},
-        "RDSAccessSecurityGroup" : {"default" : "RDS-to-Instance SG"},
         "MinAutoScaleCount" : {"default" : "Minimum Count"},
         "MaxAutoScaleCount" : {"default" : "Maximum Count"},
         "R53HostedZoneName" : {"default" : "Hosted Zone"},
