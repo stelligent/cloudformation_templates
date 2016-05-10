@@ -478,6 +478,18 @@
         "InternetToElbSecurityGroup"
       ],
       "Properties": {
+        "LBCookieStickinessPolicy": {
+          "Fn::If": [
+            "ConfigureStickiness",
+            [
+              {
+                "CookieExpirationPeriod": {"Ref": "CookieExpirationPeriod"},
+                "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-elbcookie"]]}
+              }
+            ],
+            {"Ref": "AWS::NoValue"}
+          ]
+        },
         "Subnets": [
           {"Ref": "PublicSubnet1"},
           {"Ref": "PublicSubnet2"},
