@@ -1,0 +1,218 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "NAT Gateway by Levon Becker v20160405-1100",
+  "Parameters": {
+    "Owner": {
+      "Description": "Enter Team or Individual Name Responsible for the Stack.",
+      "Type": "String",
+      "Default": "Levon Becker"
+    },
+    "Project": {
+      "Description": "Enter Project Name.",
+      "Type": "String",
+      "Default": "NAT Gateway Creation"
+    },
+    "DeleteAfter": {
+      "Description": "Enter Date It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
+      "Type": "String",
+      "Default": "00/00/201x"
+    },
+    "SetupNatGateway": {
+      "Description": "Setup NAT Gateway?",
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "SetupVpn": {
+      "Description": "Setup Site-to-Site VPN Connection?",
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "SetupBastion": {
+      "Description": "Setup Bastion Host?",
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "BastionOsType": {
+      "Description": "(Skip if Not setting up a Bastion Host) Select OS Type for Bastion Host.",
+      "Type": "String",
+      "Default": "rhel",
+      "AllowedValues": [
+        "rhel",
+        "ubuntu",
+        "windows"
+      ]
+    }
+  },
+  "Resources": {
+    "VpcStack":{
+      "Type":"AWS::CloudFormation::Stack",
+      "Properties":{
+        "TemplateURL":"https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc.template",
+        "TimeoutInMinutes":"15",
+        "Parameters" : { CloudFormation Stack Parameters Property Type }
+      }
+    }
+  },
+  "Outputs": {
+    "Owner": {
+      "Description": "Team or Individual that Owns this Formation.",
+      "Value": {"Ref": "Owner"}
+    },
+    "Project": {
+      "Description": "The project name",
+      "Value": {"Ref": "Project"}
+    },
+    "VPC": {
+      "Description": "Created VPC",
+      "Value": { "Fn::GetAtt" : [ "VpcStack", "Outputs.VPC" ] }
+    },
+    "VPCCIDR": {
+      "Description": "VPC Subnet CIDR Block",
+      "Value": { "Fn::GetAtt" : [ "VpcStack", "Outputs.VPC" ] }
+    },
+    "VPCe": {
+      "Description": "Created VPC Endpoint",
+      "Value": { "Fn::GetAtt" : [ "VpcStack", "Outputs.VPC" ] }
+    },
+    "PublicSubnetIDs": {
+      "Description": "Public Subnet IDs Created for VPC",
+      "Value": { "Fn::GetAtt" : [ "VpcStack", "Outputs.VPC" ] }
+    },
+    "PrivateSubnetIDs": {
+      "Description": "Private Subnet IDs Created for VPC",
+      "Value": {"Fn::Join": ["", [{"Ref": "PrivateSubnet1"}, ", ", {"Ref": "PrivateSubnet2"}, ", ", {"Ref": "PrivateSubnet3"}]]}
+    },
+    "AvailabilityZones": {
+      "Description": "Private Subnet IDs Created for VPC",
+      "Value": {"Fn::Join": ["", [
+        {"Fn::GetAtt": [ "PublicSubnet1" , "AvailabilityZone" ]}, ", ",
+        {"Fn::GetAtt": [ "PublicSubnet2" , "AvailabilityZone" ]}, ", ",
+        {"Fn::GetAtt": [ "PublicSubnet3" , "AvailabilityZone" ]}
+      ]]}
+    },
+    "PublicSubnets": {
+      "Description": "Public Subnet IDs Created for VPC",
+      "Value": {
+        "Fn::Join": [
+          "", [
+            {"Ref": "PublicSubnetCidrBlock1"}, ", ",
+            {"Ref": "PublicSubnetCidrBlock2"}, ", ",
+            {"Ref": "PublicSubnetCidrBlock3"}
+          ]
+        ]
+      }
+    },
+    "PrivateSubnets": {
+      "Description": "Private Subnet IDs Created for VPC",
+      "Value": {
+        "Fn::Join": [
+          "", [
+            {"Ref": "PrivateSubnetCidrBlock1"}, ", ",
+            {"Ref": "PrivateSubnetCidrBlock2"}, ", ",
+            {"Ref": "PrivateSubnetCidrBlock3"}
+          ]
+        ]
+      }
+    },
+    "PublicRouteTable": {
+      "Description": "Public Route Table Created for VPC",
+      "Value": {"Ref": "PublicRouteTable"}
+    },
+    "PrivateRouteTable": {
+      "Description": "Private Route Table Created for VPC",
+      "Value": {"Ref": "PrivateRouteTable"}
+    },
+    "PublicNetworkAcl": {
+      "Description": "Public Network ACL Created for VPC",
+      "Value": {"Ref": "PublicNetworkAcl"}
+    },
+    "PrivateNetworkAcl": {
+      "Description": "Private Netowrk ACL Created for VPC",
+      "Value": {"Ref": "PrivateNetworkAcl"}
+    },
+    "InternetGateway": {
+      "Description": "Internet Gateway Created for VPC",
+      "Value": {"Ref": "InternetGateway"}
+    },
+    "InternalAccessSecurityGroup": {
+      "Description": "Instance to Instance Access within VPC",
+      "Value": {"Ref": "InternalAccessSecurityGroup"}
+    },
+    "RemoteAccessSecurityGroup": {
+      "Description": "Remote Network or IP that can Access the instances of VPN or Direct Connect.",
+      "Value": {"Ref": "RemoteAccessSecurityGroup"}
+    },
+    "PublicNetworkACLRuleNumbers": {
+      "Description": "Public Network ACL Rules Numbers Created.",
+      "Value": {
+        "Fn::Join": [
+          "", [
+            "Inbound (",
+            {"Ref": "AllowHttpToPublicRuleNumber"}, ", ",
+            {"Ref": "AllowHttpsToPublicRuleNumber"}, ", ",
+            {"Ref": "AllowReturnTrafficToPublicRuleNumber"}, ", ",
+            {"Ref": "AllowVpcSubnetsRuleNumber"}, ") ",
+            "Outbound (",
+            {"Ref": "AllowAllOutboundPublicRuleNumber"}, ")"
+          ]
+        ]
+      }
+    },
+    "PrivateNetworkACLRuleNumbers": {
+      "Description": "Private Network ACL Rules Numbers Created.",
+      "Value": {
+        "Fn::Join": [
+          "", [
+            "Inbound (", {"Ref": "AllowAllInboundPrivateRuleNumber"}, ") ",
+            "Outbound (", {"Ref": "AllowAllOutboundPrivateRuleNumber"}, ")"
+          ]
+        ]
+      }
+    }
+    },
+    "DeleteAfter": {
+      "Description": "It is ok to delete the Formation after this date",
+      "Value": {"Ref": "DeleteAfter"}
+    }
+  },
+  "Metadata" : {
+    "AWS::CloudFormation::Interface" : {
+      "ParameterGroups" : [
+        {
+          "Label" : { "default" : "Ownership" },
+          "Parameters" : [ "Owner", "Project", "DeleteAfter" ]
+        },
+        {
+          "Label" : { "default" : "Network Configuration" },
+          "Parameters" : [
+            "VPC",
+            "PublicSubnet",
+            "PrivateRouteTable",
+            "PublicNetworkAcl",
+            "AllowNatRuleNumber"
+          ]
+        }
+      ],
+      "ParameterLabels" : {
+        "Owner" : { "default" : "Team or Individual Owner" },
+        "DeleteAfter" : { "default" : "Delete After Date" },
+        "PublicSubnet" : { "default" : "Public Subnet" },
+        "PrivateRouteTable" : { "default" : "Private Route Table" },
+        "PublicNetworkAcl" : { "default" : "Public Network ACL" },
+        "AllowNatRuleNumber" : { "default" : "Public Network ACL Rule Number" }
+      }
+    }
+  }
+}
