@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "NAT Gateway by Levon Becker v20160405-1100",
+  "Description": "NAT Gateway by Levon Becker v20160410-1130",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -180,7 +180,6 @@
           ]
         ]
       }
-    }
     },
     "DeleteAfter": {
       "Description": "It is ok to delete the Formation after this date",
