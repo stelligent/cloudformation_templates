@@ -196,7 +196,7 @@
     "ConfigureSnapshotOnDelete": {"Fn::Equals": [{"Ref": "SnapshotOnDelete"}, "true"]}
   },
   "Resources": {
-    "AccessSecurityGroup": {
+    "RDSAccessSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "Instance to RDS Access",
@@ -223,13 +223,13 @@
     },
     "AccessSecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "DependsOn": "AccessSecurityGroup",
+      "DependsOn": "RDSAccessSecurityGroup",
       "Properties": {
-        "GroupId": {"Ref": "AccessSecurityGroup"},
+        "GroupId": {"Ref": "RDSAccessSecurityGroup"},
         "IpProtocol": "tcp",
         "FromPort": {"Ref": "TcpPort"},
         "ToPort": {"Ref": "TcpPort"},
-        "SourceSecurityGroupId": {"Ref": "AccessSecurityGroup"}
+        "SourceSecurityGroupId": {"Ref": "RDSAccessSecurityGroup"}
       }
     },
     "DbSubnetGroup": {
@@ -260,7 +260,7 @@
     "DbInstance": {
       "Type": "AWS::RDS::DBInstance",
       "DeletionPolicy": "Snapshot",
-      "DependsOn": ["DbSubnetGroup", "AccessSecurityGroup"],
+      "DependsOn": ["DbSubnetGroup", "RDSAccessSecurityGroup"],
       "Properties": {
         "AllocatedStorage": {"Ref": "AllocatedStorage"},
         "AllowMajorVersionUpgrade": "false",
@@ -280,7 +280,7 @@
         "PubliclyAccessible": "false",
         "StorageEncrypted": "false",
         "StorageType": "gp2",
-        "VPCSecurityGroups": [{"Ref": "AccessSecurityGroup"}],
+        "VPCSecurityGroups": [{"Ref": "RDSAccessSecurityGroup"}],
         "Tags": [
           {
             "Key": "Name",
@@ -390,9 +390,9 @@
       "Description": "DB Subnet Group Created.",
       "Value": {"Ref": "DbSubnetGroup"}
     },
-    "AccessSecurityGroup": {
+    "RDSAccessSecurityGroup": {
       "Description": "RDS Access Security Group Created.",
-      "Value": {"Ref": "AccessSecurityGroup"}
+      "Value": {"Ref": "RDSAccessSecurityGroup"}
     },
     "ConfigureDns": {
       "Description": "Configure Route 53 DNS Option.",
