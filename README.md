@@ -116,7 +116,7 @@ So, be sure to examine the **Outputs** tab after creating the stack.
          <li>EIP</li>
          <li>IAM Role</li>
          <li>IAM Instance Profile</li>
-         <li>Bastion Security Group</li>
+         <li>Security Group</li>
         </ol>
       </td>
       <td nowrap>
@@ -200,6 +200,14 @@ So, be sure to examine the **Outputs** tab after creating the stack.
            <li>us-west-2</li>
            <li>us-east-1</li>
          </ol>
+        <h6>Create Details</h6>
+        <ol>
+         <li>EC2 Instance</li>
+         <li>EIP</li>
+         <li>IAM Role</li>
+         <li>IAM Instance Profile</li>
+         <li>Security Group</li>
+        </ol>
       </td>
       <td nowrap width="144">
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/chef_compliance/chef-compliance.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/chef-compliance-lab-200x200.jpg" width:100% alt="View in Designer"></a>
@@ -214,7 +222,13 @@ So, be sure to examine the **Outputs** tab after creating the stack.
     <tr>
       <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.template">Test Instances</a></td>
       <td>
-        Creates three test instances in an existing VPC. Each instance is a different operating system. They are; Red Hat Enterprise Linux 7, Ubuntu 14 and Windows 2012 R2.
+        <p>Creates three test instances in an existing VPC. Each instance is a different operating system. They are; Red Hat Enterprise Linux 7, Ubuntu 14 and Windows 2012 R2.</p>
+        <h6>Create Details</h6>
+        <ol>
+         <li>3 EC2 Instances</li>
+         <li>IAM Role</li>
+         <li>IAM Instance Profile</li>
+        </ol>
       </td>
       <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/test_instances/rhel-ubuntu-win2012.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/test-instances-200x200.jpg" width:100% alt="View in Designer"></a>
