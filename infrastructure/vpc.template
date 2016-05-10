@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "VPC by Levon Becker v20160502-0830",
+  "Description": "VPC by Levon Becker v20160510-1030",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -855,46 +855,6 @@
       "Description": "Created VPC Endpoint",
       "Value": {"Ref": "S3VpcEndpoint"}
     },
-    "PublicSubnetIDs": {
-      "Description": "Public Subnet IDs Created for VPC",
-      "Value": {"Fn::Join": ["", [{"Ref": "PublicSubnet1"}, ", ", {"Ref": "PublicSubnet2"}, ", ", {"Ref": "PublicSubnet3"}]]}
-    },
-    "PrivateSubnetIDs": {
-      "Description": "Private Subnet IDs Created for VPC",
-      "Value": {"Fn::Join": ["", [{"Ref": "PrivateSubnet1"}, ", ", {"Ref": "PrivateSubnet2"}, ", ", {"Ref": "PrivateSubnet3"}]]}
-    },
-    "AvailabilityZones": {
-      "Description": "Private Subnet IDs Created for VPC",
-      "Value": {"Fn::Join": ["", [
-        {"Fn::GetAtt": [ "PublicSubnet1" , "AvailabilityZone" ]}, ", ",
-        {"Fn::GetAtt": [ "PublicSubnet2" , "AvailabilityZone" ]}, ", ",
-        {"Fn::GetAtt": [ "PublicSubnet3" , "AvailabilityZone" ]}
-      ]]}
-    },
-    "PublicSubnets": {
-      "Description": "Public Subnet IDs Created for VPC",
-      "Value": {
-        "Fn::Join": [
-          "", [
-            {"Ref": "PublicSubnetCidrBlock1"}, ", ",
-            {"Ref": "PublicSubnetCidrBlock2"}, ", ",
-            {"Ref": "PublicSubnetCidrBlock3"}
-          ]
-        ]
-      }
-    },
-    "PrivateSubnets": {
-      "Description": "Private Subnet IDs Created for VPC",
-      "Value": {
-        "Fn::Join": [
-          "", [
-            {"Ref": "PrivateSubnetCidrBlock1"}, ", ",
-            {"Ref": "PrivateSubnetCidrBlock2"}, ", ",
-            {"Ref": "PrivateSubnetCidrBlock3"}
-          ]
-        ]
-      }
-    },
     "PublicRouteTable": {
       "Description": "Public Route Table Created for VPC",
       "Value": {"Ref": "PublicRouteTable"}
@@ -910,6 +870,66 @@
     "PrivateNetworkAcl": {
       "Description": "Private Netowrk ACL Created for VPC",
       "Value": {"Ref": "PrivateNetworkAcl"}
+    },
+    "PublicSubnet1": {
+      "Description": "Public Subnet 1 Created for VPC",
+      "Value": {"Ref": "PublicSubnet1"}
+    },
+    "PublicSubnet2": {
+      "Description": "Public Subnet 2 Created for VPC",
+      "Value": {"Ref": "PublicSubnet2"}
+    },
+    "PublicSubnet3": {
+      "Description": "Public Subnet 3 Created for VPC",
+      "Value": {"Ref": "PublicSubnet3"}
+    },
+    "PrivateSubnet1": {
+      "Description": "Private Subnet 1 Created for VPC",
+      "Value": {"Ref": "PrivateSubnet1"}
+    },
+    "PrivateSubnet2": {
+      "Description": "Private Subnet 1 Created for VPC",
+      "Value": {"Ref": "PrivateSubnet2"}
+    },
+    "PrivateSubnet3": {
+      "Description": "Private Subnet 1 Created for VPC",
+      "Value": {"Ref": "PrivateSubnet3"}
+    },
+    "AvailabilityZone1": {
+      "Description": "Private Subnet IDs Created for VPC",
+      "Value": {"Fn::GetAtt": [ "PublicSubnet1" , "AvailabilityZone" ]}
+    },
+    "AvailabilityZone2": {
+      "Description": "Private Subnet IDs Created for VPC",
+      "Value": {"Fn::GetAtt": [ "PublicSubnet2" , "AvailabilityZone" ]}
+    },
+    "AvailabilityZone3": {
+      "Description": "Private Subnet IDs Created for VPC",
+      "Value": {"Fn::GetAtt": [ "PublicSubnet3" , "AvailabilityZone" ]}
+    },
+    "PublicSubnetCidr1": {
+      "Description": "Public Subnet IDs Created for VPC",
+      "Value": {"Ref": "PublicSubnetCidrBlock1"}
+    },
+    "PublicSubnetCidr2": {
+      "Description": "Public Subnet IDs Created for VPC",
+      "Value": {"Ref": "PublicSubnetCidrBlock2"}
+    },
+    "PublicSubnetCidr3": {
+      "Description": "Public Subnet IDs Created for VPC",
+      "Value": {"Ref": "PublicSubnetCidrBlock3"}
+    },
+    "PrivateSubnetCidr1": {
+      "Description": "Private Subnet IDs Created for VPC",
+      "Value": {"Ref": "PrivateSubnetCidrBlock1"}
+    },
+    "PrivateSubnetCidr2": {
+      "Description": "Private Subnet IDs Created for VPC",
+      "Value": {"Ref": "PrivateSubnetCidrBlock2"}
+    },
+    "PrivateSubnetCidr3": {
+      "Description": "Private Subnet IDs Created for VPC",
+      "Value": {"Ref": "PrivateSubnetCidrBlock3"}
     },
     "InternetGateway": {
       "Description": "Internet Gateway Created for VPC",
