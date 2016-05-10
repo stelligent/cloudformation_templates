@@ -13,18 +13,16 @@ Collection of Generic Webapp Templates.
     <tr>
       <th align="left">Template</th>
       <th align="left">Description</th>
-      <th align="left">HowTo Videos</th>
       <th align="left">View in Designer</th>
       <th align="left">Launch</th>
     </tr>
     <tr>
-      <td nowrap><a href="https://github.com/stelligent/cloudformation_templates/blob/master/webapp/autoscaling-bakedami-rdsbackend.template">Baked AMI, RDS Backend</a></td>
+      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/webapp/autoscaling-bakedami-rdsbackend.template">Baked AMI, RDS Backend</a></td>
       <td>
         <p>Create an Autoscaling group in 3 private subnets from a baked AMI, an Elastic Load Balancer in 3 public subnets and S3 ELB Logging Bucket.
         Option to use SSL/TLS on ELB. Option to update Route 53 Hosted DNS alias to point to the ELB.
         Setup to add RDS Access Security Group. Does not create an RDS Instance. Use an RDS Instance Cloudformation Template first.</p>
       </td>
-      <td></td>
       <td nowrap width="144">
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/webapp/autoscaling-bakedami-rdsbackend.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/autoscaling-bakedami-rdsbackend-200x181.jpg" width:100% alt="View in Designer"></a>
       </td>
@@ -36,12 +34,11 @@ Collection of Generic Webapp Templates.
       </td>
     </tr>
     <tr>
-      <td nowrap><a href="https://github.com/stelligent/cloudformation_templates/blob/master/webapp/autoscaling-bakedami.template">Baked AMI</a></td>
+      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/webapp/autoscaling-bakedami.template">Baked AMI</a></td>
       <td>
         <p>Create an Autoscaling group in 3 private subnets from a baked AMI, an Elastic Load Balancer in 3 public subnets and S3 ELB Logging Bucket.
         Option to use SSL/TLS on ELB. Option to update Route 53 Hosted DNS alias to point to the ELB.</p>
       </td>
-      <td></td>
       <td nowrap width="144">
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/webapp/autoscaling-bakedami.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/autoscaling-bakedami-200x181.jpg" width:100% alt="View in Designer"></a>
       </td>

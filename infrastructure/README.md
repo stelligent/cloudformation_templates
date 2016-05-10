@@ -72,10 +72,8 @@ Collection of Foundational Infrastructure Templates.
         <h6>Create Details</h6>
         <ol>
          <li>NAT Gateway</li>
-         <li>Remote Access Security Group</li>
-         <ul>
-           <li>This can be used for to allow site-to-site VPN or Direct Connect Networks access to instances.</li>
-         </ul>
+         <li>EIP</li>
+         <li>Add Route to Private Route Table</li>
         </ol>
         <h6>Advantages over NAT Instance</h6>
         <ol>
@@ -105,6 +103,14 @@ Collection of Foundational Infrastructure Templates.
            <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
          </ul>
         <li>Available EIP</li>
+        </ol>
+        <h6>Create Details</h6>
+        <ol>
+         <li>EC2 Instance</li>
+         <li>EIP</li>
+         <li>IAM Role</li>
+         <li>IAM Instance Profile</li>
+         <li>Bastion Security Group</li>
         </ol>
       </td>
       <td nowrap>
@@ -137,6 +143,14 @@ Collection of Foundational Infrastructure Templates.
           <li>Remote Network (Office) VPN Device WAN IP</li>
           <li>Remote Network CIDR Block to Allow Access and Propagate.</li>
          </ol>
+        <h6>Create Details</h6>
+        <ol>
+         <li>Customer Gateway</li>
+         <li>Virtual Private Gateway</li>
+         <li>VPN Connection</li>
+         <li>Enable Route Propagation on Route Table/s</li>
+         <li>Add Network ACL to Allow Remote Network</li>
+        </ol>
       </td>
       <td>
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/vpn-bgp-200x200.jpg" width:100% alt="View in Designer"></a>
