@@ -144,7 +144,7 @@ So, be sure to examine the **Outputs** tab after creating the stack.
             <li>VPC</li>
             <ul>
               <li>Public Subnet, IGW, Private Subnet/s.</li>
-              <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
+              <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
             </ul>
           <li>Remote Network (Office) VPN Device WAN IP</li>
           <li>Remote Network CIDR Block to Allow Access and Propagate.</li>
@@ -191,7 +191,7 @@ So, be sure to examine the **Outputs** tab after creating the stack.
          <li>VPC</li>
          <ul>
            <li>Public Subnet, IGW, Private Subnet/s.</li>
-           <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
+           <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
          </ul>
         <li>Available EIP</li>
         </ol>
