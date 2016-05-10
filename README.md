@@ -86,22 +86,22 @@ So, be sure to examine the **Outputs** tab after creating the stack.
          This assumes that the Private Network ACL allows all outbound. Lastly, the Private Network ACL inbound is updated to allow the remote network block specified.</p>
          <h6>Prerequisites</h6>
          <ol>
-           <li>VPC</li>
-           <ul>
-             <li>Private Route Table and Network ACL required. Optional Public.</li>
-             <li>Either use an existing VPC Infrastructure or you can use the following [VPC Template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template) to create a one.</li>
-               <ul>
-                 <li>Look at the VPC CloudFormation output for any needed values to enter in this template.</li>
-               </ul>
-           </ul>
-         <li>VPN Security Group</li>
-           <ul>
-             <li>This is to allow instances access to NAT/Internet.</li>
-             <li>This is included in the [VPC Template](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template).</li>
-           </ul>
-         <li>Remote Network (Office) VPN Device WAN IP</li>
-         <li>Remote Network CIDR Block to Allow Access and Propagate.</li>
-         <li>AWS Console privileges</li>
+            <li>VPC</li>
+            <ul>
+              <li>Private Route Table and Network ACL required. Optional Public.</li>
+              <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> [VPC Template] to create a one.</li>
+                <ul>
+                  <li>Look at the VPC CloudFormation output for any needed values to enter in this template.</li>
+                </ul>
+            </ul>
+          <li>VPN Security Group</li>
+            <ul>
+              <li>This is to allow instances access to NAT/Internet.</li>
+              <li>This is included in the <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a>.</li>
+            </ul>
+          <li>Remote Network (Office) VPN Device WAN IP</li>
+          <li>Remote Network CIDR Block to Allow Access and Propagate.</li>
+          <li>AWS Console privileges</li>
          </ol>
       </td>
       <td>
