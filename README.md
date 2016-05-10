@@ -46,10 +46,6 @@ So, be sure to examine the **Outputs** tab after creating the stack.
          <ul>
            <li>Instance to Instance Access</li>
          </ul>
-         <li>NAT Instance Access Security Group</li>
-         <ul>
-           <li>This is so a NAT Can come and go while the SG persists for the Instances.</li>
-         </ul>
          <li>Remote Access Security Group</li>
          <ul>
            <li>This can be used for to allow site-to-site VPN or Direct Connect Networks access to instances.</li>
