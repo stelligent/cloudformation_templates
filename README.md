@@ -27,10 +27,34 @@ So, be sure to examine the **Outputs** tab after creating the stack.
     <tr>
       <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template">VPC</a></td>
       <td>
-        <p>Creates an entire VPC from scratch for Lab or Permanent. Creates a New VPC,
-         3 Public Subnets, 3 Private Subnets, Route Tables, Public Network ACLs,
-         Private Network ACLs, Internet Gateway attached to Public Subnets,
-         Instance to Instance Security Group and Remote Access Security Group.</p>
+        <p>Creates an entire VPC from scratch for Lab or Permanent.</p>
+        <h6>Create Details</h6>
+        <ol>
+         <li>Single VPC</li>
+         <li>3 Public Subnets</li>
+         <li>3 Private Subnets</li>
+         <li>Public Route Table</li>
+         <li>Private Route Table</li>
+         <li>Internet Gateway</li>
+         <ul>
+           <li>Attached to the Public Route Table</li>
+         </ul>
+         <li>Public Network ACL</li>
+         <li>Private Network ACL</li>
+         <li>VPC Endpoint</li>
+         <li>Instance Access Security Group</li>
+         <ul>
+           <li>Instance to Instance Access</li>
+         </ul>
+         <li>NAT Instance Access Security Group</li>
+         <ul>
+           <li>This is so a NAT Can come and go while the SG persists for the Instances.</li>
+         </ul>
+         <li>Remote Access Security Group</li>
+         <ul>
+           <li>This can be used for to allow site-to-site VPN or Direct Connect Networks access to instances.</li>
+         </ul>
+        </ol>
       </td>
       <td nowrap width="144">
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/vpc-200x200.jpg" width:100% alt="View in Designer"></a>
@@ -53,12 +77,9 @@ So, be sure to examine the **Outputs** tab after creating the stack.
          <li>VPC</li>
          <ul>
            <li>Public Subnet, IGW, Private Subnet/s.</li>
-           <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> [VPC Template] to create a one.</li>
-             <ul>
-               <li>Look at the VPC CloudFormation output for any needed values to enter in this template.</li>
-             </ul>
+           <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
          </ul>
-        <li>AWS privileges</li>
+        <li>AWS Privileges</li>
         </ol>
         <h6>Advantages over NAT Instance</h6>
         <ol>
@@ -84,15 +105,10 @@ So, be sure to examine the **Outputs** tab after creating the stack.
         <ol>
          <li>VPC</li>
          <ul>
-           <li>Private Route Table and Network ACL required. Optional Public.</li>
-           <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> [VPC Template] to create a one.</li>
-             <ul>
-               <li>Look at the VPC CloudFormation output for any needed values to enter in this template.</li>
-             </ul>
+           <li>Public Subnet, IGW, Private Subnet/s.</li>
+           <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
          </ul>
-        <li>Remote Network (Office) VPN Device WAN IP</li>
-        <li>Remote Network CIDR Block to Allow Access and Propagate.</li>
-        <li>AWS Console privileges</li>
+        <li>Available EIP</li>
         </ol>
       </td>
       <td nowrap>
@@ -119,15 +135,11 @@ So, be sure to examine the **Outputs** tab after creating the stack.
          <ol>
             <li>VPC</li>
             <ul>
-              <li>Private Route Table and Network ACL required. Optional Public.</li>
-              <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> [VPC Template] to create a one.</li>
-                <ul>
-                  <li>Look at the VPC CloudFormation output for any needed values to enter in this template.</li>
-                </ul>
+              <li>Public Subnet, IGW, Private Subnet/s.</li>
+              <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
             </ul>
           <li>Remote Network (Office) VPN Device WAN IP</li>
           <li>Remote Network CIDR Block to Allow Access and Propagate.</li>
-          <li>AWS Console privileges</li>
          </ol>
       </td>
       <td>
@@ -154,10 +166,24 @@ So, be sure to examine the **Outputs** tab after creating the stack.
       <th align="left">Launch</th>
     </tr>
     <tr>
-      <td nowrap><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance">Chef Compliance Lab</a></td>
+      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance">Chef Compliance Lab</a></td>
       <td>
-        Creates a Chef Complianc Web server in a Public Subnet with Internet Gatewayy attached on an existing VPC.
-         It then attaches an EIP and finally adds the instance to an existing instance-to-instance security group.
+        <p>Creates a Chef Complianc Web server in a Public Subnet with Internet Gatewayy attached on an existing VPC.
+         It then attaches an EIP and finally adds the instance to an existing instance-to-instance security group.</p>
+        <h6>Prerequisites</h6>
+        <ol>
+         <li>VPC</li>
+         <ul>
+           <li>Public Subnet, IGW, Private Subnet/s.</li>
+           <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
+         </ul>
+        <li>Available EIP</li>
+        </ol>
+        <h6>Supported Regions</h6>
+         <ol>
+           <li>us-west-2</li>
+           <li>us-east-1</li>
+         </ol>
       </td>
       <td nowrap width="144">
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/chef_compliance/chef-compliance.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/chef-compliance-lab-200x200.jpg" width:100% alt="View in Designer"></a>
@@ -170,7 +196,7 @@ So, be sure to examine the **Outputs** tab after creating the stack.
       </td>
     </tr>
     <tr>
-      <td nowrap><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.template">Test Instances</a></td>
+      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.template">Test Instances</a></td>
       <td>
         Creates three test instances in an existing VPC. Each instance is a different operating system. They are; Red Hat Enterprise Linux 7, Ubuntu 14 and Windows 2012 R2.
       </td>
