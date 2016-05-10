@@ -94,11 +94,6 @@ So, be sure to examine the **Outputs** tab after creating the stack.
                   <li>Look at the VPC CloudFormation output for any needed values to enter in this template.</li>
                 </ul>
             </ul>
-          <li>VPN Security Group</li>
-            <ul>
-              <li>This is to allow instances access to NAT/Internet.</li>
-              <li>This is included in the <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a>.</li>
-            </ul>
           <li>Remote Network (Office) VPN Device WAN IP</li>
           <li>Remote Network CIDR Block to Allow Access and Propagate.</li>
           <li>AWS Console privileges</li>
