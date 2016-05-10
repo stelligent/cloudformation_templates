@@ -19,8 +19,7 @@ Collection of Database Templates that use various nested templates from this rep
     <tr>
       <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/database/mysql-rds.template">MySQL RDS</a></td>
       <td>
-        <p>Creates a Chef Complianc Web server in a Public Subnet with Internet Gatewayy attached on an existing VPC.
-         It then attaches an EIP and finally adds the instance to an existing instance-to-instance security group.</p>
+        <p>Creates a MySQL RDS Database Instance.</p>
         <h6>Prerequisites</h6>
         <ol>
          <li>VPC</li>
