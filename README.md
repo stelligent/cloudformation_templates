@@ -27,7 +27,7 @@ So, be sure to examine the **Outputs** tab after creating the stack.
     <tr>
       <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template">VPC</a></td>
       <td>
-        </p>Creates an entire VPC from scratch for Lab or Permanent. Creates a New VPC,
+        <p>Creates an entire VPC from scratch for Lab or Permanent. Creates a New VPC,
          3 Public Subnets, 3 Private Subnets, Route Tables, Public Network ACLs,
          Private Network ACLs, Internet Gateway attached to Public Subnets,
          Instance to Instance Security Group and Remote Access Security Group.</p>
