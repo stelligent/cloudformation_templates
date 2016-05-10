@@ -27,10 +27,10 @@ So, be sure to examine the **Outputs** tab after creating the stack.
     <tr>
       <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template">VPC</a></td>
       <td>
-        Creates an entire VPC from scratch for Lab or Permanent. Creates a New VPC,
+        </p>Creates an entire VPC from scratch for Lab or Permanent. Creates a New VPC,
          3 Public Subnets, 3 Private Subnets, Route Tables, Public Network ACLs,
          Private Network ACLs, Internet Gateway attached to Public Subnets,
-         Instance to Instance Security Group and Remote Access Security Group.
+         Instance to Instance Security Group and Remote Access Security Group.</p>
       </td>
       <td nowrap width="144">
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/vpc-200x200.jpg" width:100% alt="View in Designer"></a>
@@ -47,7 +47,24 @@ So, be sure to examine the **Outputs** tab after creating the stack.
     <tr>
       <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat-gateway.template">NAT</a></td>
       <td>
-        Creates a NAT Gateway on an existing VPC with Public (IGW) and Private subnets. Private route table is updated to route traffic to the NAT gateway a Public subnet that has an Internet Gateway Attached.
+        <p>Creates a NAT Gateway on an existing VPC with Public (IGW) and Private subnets. Private route table is updated to route traffic to the NAT gateway a Public subnet that has an Internet Gateway Attached.</p>
+        <h6>Prerequisites</h6>
+        <ol>
+         <li>VPC</li>
+         <ul>
+           <li>Public Subnet, IGW, Private Subnet/s.</li>
+           <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> [VPC Template] to create a one.</li>
+             <ul>
+               <li>Look at the VPC CloudFormation output for any needed values to enter in this template.</li>
+             </ul>
+         </ul>
+        <li>AWS privileges</li>
+        </ol>
+        <h6>Advantages over NAT Instance</h6>
+        <ol>
+         <li>Redundancy built in.</li>
+         <li>Easier setup and management.</li>
+        </ol>
       </td>
       <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat-gateway.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/nat-gateway-200x200.jpg" width:100% alt="View in Designer"></a>
@@ -62,7 +79,21 @@ So, be sure to examine the **Outputs** tab after creating the stack.
     <tr>
       <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion.template">Bastion</a></td>
       <td>
-        Creates a single Bastion host on a Public subnet in an existing VPC. Select from either a RHEL, Ubuntu or Windows OS.
+        <p>Creates a single Bastion host on a Public subnet in an existing VPC. Select from either a RHEL, Ubuntu or Windows OS.</p>
+        <h6>Prerequisites</h6>
+        <ol>
+         <li>VPC</li>
+         <ul>
+           <li>Private Route Table and Network ACL required. Optional Public.</li>
+           <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> [VPC Template] to create a one.</li>
+             <ul>
+               <li>Look at the VPC CloudFormation output for any needed values to enter in this template.</li>
+             </ul>
+         </ul>
+        <li>Remote Network (Office) VPN Device WAN IP</li>
+        <li>Remote Network CIDR Block to Allow Access and Propagate.</li>
+        <li>AWS Console privileges</li>
+        </ol>
       </td>
       <td nowrap>
         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/bastion-200x200.jpg" width:100% alt="View in Designer"></a>
