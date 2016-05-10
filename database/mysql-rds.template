@@ -33,11 +33,6 @@
       "Description": "Private Subnet 3 to Allow Routing.",
       "Type": "AWS::EC2::Subnet::Id"
     },
-    "DbName": {
-      "Description": "Enter a Name for the database.",
-      "Type": "String",
-      "Default": "mydb"
-    },
     "MasterUsername": {
       "Description": "Database administration name. First character must be a letter and can not be 'root'.",
       "Type": "String",
@@ -211,7 +206,6 @@
   },
   "Conditions": {
     "ConfigureRoute53": {"Fn::Equals": [{"Ref": "ConfigureDns"}, "true" ]},
-    "ConfigureElbLogging": {"Fn::Equals": [{"Ref": "SetupElbLogging"}, "true" ]},
     "ConfigureAlarms": {"Fn::Equals": [{"Ref": "SetupAlarms"}, "true"]}
   },
   "Resources": {
@@ -244,7 +238,7 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "DependsOn": "AccessSecurityGroup",
       "Properties": {
-        "GroupId": {"Ref": "RDSAccessSecurityGroup"},
+        "GroupId": {"Ref": "AccessSecurityGroup"},
         "IpProtocol": "tcp",
         "FromPort": {"Ref": "TcpPort"},
         "ToPort": {"Ref": "TcpPort"},
@@ -279,7 +273,7 @@
     "DbInstance": {
       "Type": "AWS::RDS::DBInstance",
       "DeletionPolicy": "Snapshot",
-      "DependsOn": ["SubnetGroup", "AccessSecurityGroup"],
+      "DependsOn": ["DbSubnetGroup", "AccessSecurityGroup"],
       "Properties": {
         "AllocatedStorage": {"Ref": "AllocatedStorage"},
         "AllowMajorVersionUpgrade": "false",
@@ -287,8 +281,7 @@
         "BackupRetentionPeriod": {"Ref": "AutoMinorVersionUpgrade"},
         "DBInstanceClass": {"Ref": "InstanceType"},
         "DBInstanceIdentifier": {"Ref": "AWS::StackName"},
-//        "DBName": {"Ref": "DbName"},
-        "DBSubnetGroupName": {"Ref": "SubnetGroup"},
+        "DBSubnetGroupName": {"Ref": "DbSubnetGroup"},
         "Engine": {"Fn::FindInMap": ["Settings", "MySQL", "Engine"]},
         "EngineVersion": {"Fn::FindInMap": ["Settings", "MySQL", "Version"]},
         "MasterUsername": {"Ref": "MasterUsername"},
@@ -301,7 +294,6 @@
         "StorageEncrypted": "false",
         "StorageType": "gp2",
         "VPCSecurityGroups": [{"Ref": "AccessSecurityGroup"}],
-        "MonitoringInterval": [{"Ref": "AccessSecurityGroup"}],
         "Tags": [
           {
             "Key": "Name",
@@ -373,7 +365,7 @@
     "DnsAlias": {
       "Condition": "ConfigureRoute53",
       "Type": "AWS::Route53::RecordSet",
-      "DependsOn": "ElasticLoadBalancer",
+      "DependsOn": "DbInstance",
       "Properties": {
         "HostedZoneName": {"Ref": "R53HostedZoneName"},
         "Comment": "CNAME Redirect to the ELB",
@@ -383,7 +375,7 @@
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
-              "ElasticLoadBalancer",
+              "DbInstance",
               "DNSName"
             ]
           }
@@ -404,20 +396,6 @@
       "Description": "VPC Used",
       "Value": {"Ref": "VPC"}
     },
-    "NatEIP": {
-      "Description": "NAT Elastic IP Address",
-      "Value": {"Ref": "NatEIP"}
-    },
-    "PublicNetworkACLRuleNumbers": {
-      "Description": "Public Network ACL Rules Number Created.",
-      "Value": {
-        "Fn::Join": [
-          "", [
-            "Inbound (", {"Ref": "AllowNatRuleNumber"}, ")"
-          ]
-        ]
-      }
-    },
     "DeleteAfter": {
       "Description": "It is ok to delete the Formation after this date",
       "Value": {"Ref": "DeleteAfter"}
@@ -434,20 +412,56 @@
           "Label": {"default": "Network Configuration"},
           "Parameters": [
             "VPC",
-            "PublicSubnet",
-            "PrivateRouteTable",
-            "PublicNetworkAcl",
-            "AllowNatRuleNumber"
+            "PrivateSubnet1",
+            "PrivateSubnet2",
+            "PrivateSubnet3"
+          ]
+        },
+        {
+          "Label": {"default": "RDS Configuration"},
+          "Parameters": [
+            "InstanceType",
+            "MasterUsername",
+            "MasterUserPassword",
+            "BackupRetentionPeriod",
+            "PreferredBackupWindow",
+            "PreferredMaintenanceWindow",
+            "AllocatedStorage",
+            "ConfigureProvisionedIops",
+            "ProvisionedIopsValue",
+            "AutoMinorVersionUpgrade",
+            "TcpPort",
+            "MultiAvailabilityZone"
+          ]
+        },
+        {
+          "Label" : {"default" : "Route 53 DNS Configuration"},
+          "Parameters" : [
+            "ConfigureDns",
+            "R53HostedZoneName",
+            "Route53ElbAlias"
+          ]
+        },
+        {
+          "Label" : {"default" : "Monitoring"},
+          "Parameters" : [
+            "SetupAlarms",
+            "AlertSnsTopicArn",
+            "EnhancedMonitoring"
           ]
         }
       ],
       "ParameterLabels": {
-        "Owner": {"default": "Team or Individual Owner"},
-        "DeleteAfter": {"default": "Delete After Date"},
-        "PublicSubnet": {"default": "Public Subnet"},
-        "PrivateRouteTable": {"default": "Private Route Table"},
-        "PublicNetworkAcl": {"default": "Public Network ACL"},
-        "AllowNatRuleNumber": {"default": "Public Network ACL Rule Number"}
+        "Owner" : {"default" : "Team or Individual Owner"},
+        "DeleteAfter" : {"default" : "Delete After Date"},
+        "InstanceType" : {"default" : "Instance Type"},
+        "PrivateSubnet1" : {"default" : "Private Subnet 1"},
+        "PrivateSubnet2" : {"default" : "Private Subnet 2"},
+        "PrivateSubnet3" : {"default" : "Private Subnet 3"},
+        "R53HostedZoneName" : {"default" : "Hosted Zone"},
+        "Route53ElbAlias" : {"default" : "RDS DNS Alias"},
+        "AlertSnsTopicArn" : {"default" : "Alert SNS Topic ARN"},
+        "ConfigureDns" : {"default" : "Configure DNS"}
       }
     }
   }

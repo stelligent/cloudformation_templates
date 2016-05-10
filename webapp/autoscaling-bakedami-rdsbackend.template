@@ -1184,7 +1184,7 @@
         "CookieExpirationPeriod" : {"default" : "Cookie Expiration Period"},
         "ListenOnBothPorts" : {"default" : "Listen on HTTP & HTTPS"},
         "AsgSnsTopicArn" : {"default" : "SNS Topic ARN"},
-        "ConfigureDns" : {"default" : "Configure"},
+        "ConfigureDns" : {"default" : "Configure DNS"},
         "OsType" : { "default" : "OS Type" }
       }
     }
