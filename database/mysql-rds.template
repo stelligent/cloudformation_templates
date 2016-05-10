@@ -74,8 +74,8 @@
         "false"
       ]
     },
-    "Route53ElbAlias": {
-      "Description": "(Skip if Not Configuring Route 53) DNS Record to Update for the ELB.",
+    "Cname": {
+      "Description": "(Skip if Not Configuring Route 53) DNS Record to Update for the RDS Instance.",
       "Type": "String",
       "Default": "db.domain.com"
     },
@@ -349,14 +349,14 @@
         "Threshold": "1024000000"
       }
     },
-    "DnsAlias": {
+    "RecordSet": {
       "Condition": "ConfigureRoute53",
       "Type": "AWS::Route53::RecordSet",
       "DependsOn": "DbInstance",
       "Properties": {
         "HostedZoneName": {"Fn::Join": ["", [{"Ref": "R53HostedZoneName"}, "."]]},
         "Comment": "CNAME Redirect to the RDS",
-        "Name": {"Fn::Join": ["", [{"Ref": "Route53ElbAlias"}, "."]]},
+        "Name": {"Fn::Join": ["", [{"Ref": "Cname"}, "."]]},
         "Type": "CNAME",
         "TTL": "300",
         "ResourceRecords": [{"Fn::GetAtt": ["DbInstance", "Endpoint.Address"]}]
@@ -375,6 +375,48 @@
     "VPC": {
       "Description": "VPC Used",
       "Value": {"Ref": "VPC"}
+    },
+    "RDSHostname" : {
+      "Description" : "RDS Hostname",
+      "Value" : {
+        "Fn::GetAtt" : ["DbInstance", "Endpoint.Address"]
+      }
+    },
+    "RDSPort" : {
+      "Description" : "RDS Port",
+      "Value" : { "Fn::GetAtt" : ["DbInstance", "Endpoint.Port"] }
+    },
+    "DbSubnetGroup": {
+      "Description": "DB Subnet Group Created.",
+      "Value": {"Ref": "DbSubnetGroup"}
+    },
+    "AccessSecurityGroup": {
+      "Description": "RDS Access Security Group Created.",
+      "Value": {"Ref": "AccessSecurityGroup"}
+    },
+    "ConfigureDns": {
+      "Description": "Configure Route 53 DNS Option.",
+      "Value": {"Ref": "ConfigureDns"}
+    },
+    "R53HostedZoneName": {
+      "Condition": "ConfigureRoute53",
+      "Description": "Route 53 Zone Updated.",
+      "Value": {"Ref": "R53HostedZoneName"}
+    },
+    "Cname": {
+      "Condition": "ConfigureRoute53",
+      "Description": "Route 53 DNS Alias Created for RDS.",
+      "Value": {"Ref": "Cname"}
+    },
+    "AlarmCpu": {
+      "Condition": "ConfigureAlarms",
+      "Description": "CPU Alarm Created for RDS Instance/s.",
+      "Value": {"Ref": "AlarmCpu"}
+    },
+    "AlarmFreeSpace": {
+      "Condition": "ConfigureAlarms",
+      "Description": "Disk Free Space Alarm Created for RDS Instance/s.",
+      "Value": {"Ref": "AlarmFreeSpace"}
     },
     "DeleteAfter": {
       "Description": "It is ok to delete the Formation after this date",
@@ -420,7 +462,7 @@
           "Parameters" : [
             "ConfigureDns",
             "R53HostedZoneName",
-            "Route53ElbAlias"
+            "Cname"
           ]
         },
         {
@@ -439,7 +481,7 @@
         "PrivateSubnet2" : {"default" : "Private Subnet 2"},
         "PrivateSubnet3" : {"default" : "Private Subnet 3"},
         "R53HostedZoneName" : {"default" : "Hosted Zone"},
-        "Route53ElbAlias" : {"default" : "RDS DNS Alias"},
+        "Cname" : {"default" : "RDS DNS Alias"},
         "AlertSnsTopicArn" : {"default" : "Alert SNS Topic ARN"},
         "MasterUsername" : {"default" : "Master Username"},
         "MasterUserPassword" : {"default" : "Master User Password"},
