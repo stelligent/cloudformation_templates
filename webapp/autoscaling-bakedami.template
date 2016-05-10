@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Webapp ASG, Baked AMI, ELB, R53 and Optional SSL by Levon Becker v20160509-0830",
+  "Description": "Webapp ASG, Baked AMI, ELB, R53, RDS Backed and Optional SSL by Levon Becker v20160509-0830",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -474,6 +474,18 @@
         "InternetToElbSecurityGroup"
       ],
       "Properties": {
+        "LBCookieStickinessPolicy": {
+          "Fn::If": [
+            "ConfigureStickiness",
+            [
+              {
+                "CookieExpirationPeriod": {"Ref": "CookieExpirationPeriod"},
+                "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-elbcookie"]]}
+              }
+            ],
+            {"Ref": "AWS::NoValue"}
+          ]
+        },
         "Subnets": [
           {"Ref": "PublicSubnet1"},
           {"Ref": "PublicSubnet2"},
@@ -647,7 +659,6 @@
         "InstanceType": {"Ref": "InstanceType"},
         "SecurityGroups": [
           {"Ref": "InstanceToElbSecurityGroup"},
-          {"Ref": "RDSAccessSecurityGroup"},
           {"Ref": "InternalAccessSecurityGroup"},
           {"Ref": "RemoteSecurityGroup"}
         ],
@@ -1174,7 +1185,7 @@
         "CookieExpirationPeriod" : {"default" : "Cookie Expiration Period"},
         "ListenOnBothPorts" : {"default" : "Listen on HTTP & HTTPS"},
         "AsgSnsTopicArn" : {"default" : "SNS Topic ARN"},
-        "ConfigureDns" : {"default" : "Configure"},
+        "ConfigureDns" : {"default" : "Configure DNS"},
         "OsType" : { "default" : "OS Type" }
       }
     }
