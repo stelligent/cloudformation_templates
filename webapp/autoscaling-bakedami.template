@@ -588,9 +588,9 @@
       "Type": "AWS::Route53::RecordSet",
       "DependsOn": "ElasticLoadBalancer",
       "Properties": {
-        "HostedZoneName": {"Ref": "R53HostedZoneName"},
+        "HostedZoneName": {"Fn::Join": ["", [{"Ref": "R53HostedZoneName"}, "."]]},
         "Comment": "CNAME Redirect to the ELB",
-        "Name": {"Ref" : "Route53ElbAlias"},
+        "Name": {"Fn::Join": ["", [{"Ref": "Route53ElbAlias"}, "."]]},
         "Type": "CNAME",
         "TTL": "300",
         "ResourceRecords": [
