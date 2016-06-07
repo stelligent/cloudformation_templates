@@ -11,11 +11,11 @@ echo The value of arg 2 = $2
 echo The value of arg 3 = $3 
 echo The value of arg 4 = $4  
 echo The value of arg script_dir = $script_dir
-echo UPDATED 201605261214
+echo UPDATED 201606071154
 
-MY_ACCTID=$1 
-MY_ECR=$2
-MY_STACK=$3
+MY_STACK=$1
+MY_ACCTID=$2
+MY_ECR=$3
 
 echo The value of MY_ACCTID is $MY_ACCTID 
 echo The value of MY_ECR is $MY_ECR
@@ -23,15 +23,16 @@ echo The value of MY_STACK is $MY_STACK
 
 uuid=$(date +%s)
 # Only need this once (token/replace?)
-awsacctid="MY_ACCTID"
-#awsacctid=$MY_ACCTID
+#awsacctid="114930652771"
+awsacctid="$MY_ACCTID"
 # Only need this once (token/replace?)
-ecr_repo="ECSRepoName"
-#ecr_repo=$MY_ECR
+#ecr_repo="pmd-ecr-1240"
+ecr_repo="$MY_ECR"
 # Only need this once (token/replace?) or pass as argument?
 # EDIT THIS
-ecs_stack_name="CFN_StackName"
-#ecs_stack_name=$MY_STACK
+#ecs_stack_name="pmd-ecs-878355"
+ecs_stack_name="$MY_STACK"
+
 # Could hard code this?
 ecs_template_url="https://s3.amazonaws.com/stelligent-training-public/public/codepipeline/ecs-pipeline.json"
 
