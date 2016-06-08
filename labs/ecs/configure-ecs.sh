@@ -16,21 +16,20 @@ echo UPDATED 201606071154
 MY_STACK=$1
 MY_ACCTID=$2
 MY_ECR=$3
+MY_URL=$4
 
+echo The value of MY_STACK is $MY_STACK
 echo The value of MY_ACCTID is $MY_ACCTID 
 echo The value of MY_ECR is $MY_ECR
-echo The value of MY_STACK is $MY_STACK
 
+# Unique ID for Docker tag
 uuid=$(date +%s)
 awsacctid="$MY_ACCTID"
-# Only need this once (token/replace?)
-#ecr_repo="pmd-ecr-1240"
 ecr_repo="$MY_ECR"
-# Only need this once (token/replace?) or pass as argument?
 ecs_stack_name="$MY_STACK"
 
-# Could hard code this?
 ecs_template_url="https://s3.amazonaws.com/stelligent-training-public/public/codepipeline/ecs-pipeline.json"
+#ecs_template_url="$MY_URL"
 
 echo The value of arg uuid = $uuid
 eval $(aws --region us-east-1 ecr get-login)

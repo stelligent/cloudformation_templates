@@ -51,6 +51,10 @@
          "Type":"String",
          "Description":"The name of the ECR Repo"
       },
+      "ECSCFNURL":{
+         "Type":"String",
+         "Description":"The URL for this CloudFormation Template"
+      },
       "ImageTag":{
          "Type":"String",
          "Description":"The version of the image tag",

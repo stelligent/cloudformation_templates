@@ -1,64 +1,52 @@
 {
-  "AWSTemplateFormatVersion":"2010-09-09",
-  "Description":"Stelligent CloudFormation Sample Template ** This template creates one or more Amazon resources. You will be billed for the AWS resources used if you create a stack from this template.",
-  "Parameters":{
-    "IAMUsername":{
-      "Type":"String",
-      "Description":"IAM username"
-    }
-  },
-  "Resources":{
-    "MyRepository":{
-      "Type":"AWS::ECR::Repository",
-      "Properties":{
-        "RepositoryName":{
-          "Ref":"AWS::StackName"
-        },
-        "RepositoryPolicyText":{
-          "Version":"2008-10-17",
-          "Statement":[
-            {
-              "Sid":"AllowPushPull",
-              "Effect":"Allow",
-              "Principal":{
-                "AWS":[
+   "AWSTemplateFormatVersion":"2010-09-09",
+   "Description":"Stelligent CloudFormation Sample Template ** This template creates one or more Amazon resources. You will be billed for the AWS resources used if you create a stack from this template.",
+   "Parameters":{
+      "IAMARN":{
+         "Type":"String",
+         "Description":"Use the full ARN for the IAM user (e.g. arn:aws:iam::123456789012:user/patrick.henry)"
+      }
+   },
+   "Resources":{
+      "MyRepository":{
+         "Type":"AWS::ECR::Repository",
+         "Properties":{
+            "RepositoryName":{
+               "Ref":"AWS::StackName"
+            },
+            "RepositoryPolicyText":{
+               "Version":"2008-10-17",
+               "Statement":[
                   {
-                    "Fn::Join":[
-                      "",
-                      [
-                        "arn:aws:iam::",
-                        {
-                          "Ref":"AWS::AccountId"
-                        },
-                        ":user/",
-                        {
-                          "Ref":"IAMUsername"
-                        }
-                      ]
-                    ]
+                     "Sid":"AllowPushPull",
+                     "Effect":"Allow",
+                     "Principal":{
+                        "AWS":[
+                           {
+                              "Ref":"IAMARN"
+                           }
+                        ]
+                     },
+                     "Action":[
+                        "ecr:GetDownloadUrlForLayer",
+                        "ecr:BatchGetImage",
+                        "ecr:BatchCheckLayerAvailability",
+                        "ecr:PutImage",
+                        "ecr:InitiateLayerUpload",
+                        "ecr:UploadLayerPart",
+                        "ecr:CompleteLayerUpload"
+                     ]
                   }
-                ]
-              },
-              "Action":[
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:PutImage",
-                "ecr:InitiateLayerUpload",
-                "ecr:UploadLayerPart",
-                "ecr:CompleteLayerUpload"
-              ]
+               ]
             }
-          ]
-        }
+         }
       }
-    }
-  },
-  "Outputs":{
-    "ECSRepository":{
-      "Value":{
-        "Ref":"MyRepository"
+   },
+   "Outputs":{
+      "ECSRepository":{
+         "Value":{
+            "Ref":"MyRepository"
+         }
       }
-    }
-  }
+   }
 }

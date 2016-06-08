@@ -30,7 +30,7 @@
   <concurrentBuild>true</concurrentBuild>
   <builders>
     <hudson.tasks.Shell>
-      <command>bash ./configure-ecs.sh MY_STACK MY_ACCTID MY_ECR</command>
+      <command>bash ./configure-ecs.sh MY_STACK MY_ACCTID MY_ECR </command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
