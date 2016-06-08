@@ -22,15 +22,11 @@ echo The value of MY_ECR is $MY_ECR
 echo The value of MY_STACK is $MY_STACK
 
 uuid=$(date +%s)
-# Only need this once (token/replace?)
-#awsacctid="114930652771"
 awsacctid="$MY_ACCTID"
 # Only need this once (token/replace?)
 #ecr_repo="pmd-ecr-1240"
 ecr_repo="$MY_ECR"
 # Only need this once (token/replace?) or pass as argument?
-# EDIT THIS
-#ecs_stack_name="pmd-ecs-878355"
 ecs_stack_name="$MY_STACK"
 
 # Could hard code this?
