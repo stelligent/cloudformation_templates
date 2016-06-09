@@ -1330,7 +1330,7 @@
                         "wget -P /tmp https://s3.amazonaws.com/stelligent-training-public/public/jenkins/config-template.xml\n",
                         "/bin/sed -i \"s/APPNAME/",
                         {
-                           "Ref":"AppName"
+                           "Ref":"AWS::StackName"
                         },
                         "/g\" /tmp/config-template.xml\n",
                         "/bin/sed -i \"s/MY_STACK/",
@@ -1355,7 +1355,7 @@
                         "/g\" /tmp/config-template.xml\n",
                         "/usr/bin/java -jar /var/cache/jenkins/war/WEB-INF/jenkins-cli.jar -s http://localhost:8080 create-job ",
                         {
-                           "Ref":"AppName"
+                           "Ref":"AWS::StackName"
                         },
                         "< /tmp/config-template.xml\n",
                         "# Set up port forwarding\n",
@@ -1458,7 +1458,7 @@
                                  },
                                  "-",
                                  {
-                                    "Ref":"AppName"
+                                    "Ref":"AWS::StackName"
                                  }
                               ]
                            ]
@@ -1514,7 +1514,7 @@
                   "",
                   [
                      {
-                        "Ref":"AppName"
+                        "Ref":"AWS::StackName"
                      },
                      "-Jenkins"
                   ]
@@ -1585,7 +1585,7 @@
                   "",
                   [
                      {
-                        "Ref":"AppName"
+                        "Ref":"AWS::StackName"
                      },
                      "-Pipeline"
                   ]
@@ -1619,7 +1619,7 @@
                                     "",
                                     [
                                        {
-                                          "Ref":"AppName"
+                                          "Ref":"AWS::StackName"
                                        },
                                        "-SourceArtifact"
                                     ]
@@ -1651,7 +1651,7 @@
                                     "",
                                     [
                                        {
-                                          "Ref":"AppName"
+                                          "Ref":"AWS::StackName"
                                        },
                                        "-SourceArtifact"
                                     ]
@@ -1668,7 +1668,7 @@
                                  "",
                                  [
                                     {
-                                       "Ref":"AppName"
+                                       "Ref":"AWS::StackName"
                                     },
                                     "-Jenkins"
                                  ]
@@ -1682,7 +1682,7 @@
                                     "",
                                     [
                                        {
-                                          "Ref":"AppName"
+                                          "Ref":"AWS::StackName"
                                        },
                                        "-BuiltArtifact"
                                     ]
@@ -1692,7 +1692,7 @@
                         ],
                         "Configuration":{
                            "ProjectName":{
-                              "Ref":"AppName"
+                              "Ref":"AWS::StackName"
                            }
                         },
                         "RunOrder":1
