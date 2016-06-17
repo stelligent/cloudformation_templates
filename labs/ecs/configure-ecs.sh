@@ -28,10 +28,7 @@ awsacctid="$MY_ACCTID"
 ecr_repo="$MY_ECR"
 ecs_stack_name="$MY_STACK"
 
-#dev
-ecs_template_url="https://s3.amazonaws.com/stelligent-training-public/public/codepipeline/dev/ecs-pipeline.json"
-#prod
-#ecs_template_url="https://s3.amazonaws.com/stelligent-training-public/public/codepipeline/ecs-pipeline.json"
+ecs_template_url="https://s3.amazonaws.com/stelligent-training-public/public/codepipeline/ecs-pipeline.json"
 #ecs_template_url="$MY_URL"
 
 echo The value of arg uuid = $uuid

@@ -35,7 +35,7 @@
     },
     "RepositoryName":{
       "Description":"The name of the CodeCommit repo",
-      "Default":"ecs-demo",
+      "Default":"opsworks-demo",
       "Type":"String",
       "AllowedPattern":"[\\x20-\\x7E]*",
       "ConstraintDescription":"Can contain only ASCII characters."
@@ -503,16 +503,6 @@
         ]
       },
       "Description":"Pipeline Url"
-    }
-  },
-  "OpsWorksStackId":{
-    "Value":{
-      "Ref":"myStack"
-    }
-  },
-  "OpsWorksAppId":{
-    "Value":{
-      "Ref":"myApp"
     }
   }
 }
