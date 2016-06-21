@@ -2,24 +2,6 @@
   "AWSTemplateFormatVersion":"2010-09-09",
   "Description":"OpsWorks stack and Deployment Pipeline in CodePipeline",
   "Parameters":{
-    "ServiceRole":{
-      "Default":"aws-opsworks-service-role",
-      "Description":"The OpsWorks service role",
-      "Type":"String",
-      "MinLength":"1",
-      "MaxLength":"64",
-      "AllowedPattern":"[a-zA-Z][a-zA-Z0-9-]*",
-      "ConstraintDescription":"must begin with a letter and contain only alphanumeric characters."
-    },
-    "InstanceRole":{
-      "Default":"aws-opsworks-ec2-role",
-      "Description":"The OpsWorks instance role",
-      "Type":"String",
-      "MinLength":"1",
-      "MaxLength":"64",
-      "AllowedPattern":"[a-zA-Z][a-zA-Z0-9-]*",
-      "ConstraintDescription":"must begin with a letter and contain only alphanumeric characters."
-    },
     "AppName":{
       "Default":"myapp",
       "Description":"The app name",
@@ -35,7 +17,7 @@
     },
     "RepositoryName":{
       "Description":"The name of the CodeCommit repo",
-      "Default":"opsworks-demo",
+      "Default":"opsworks-php-demo",
       "Type":"String",
       "AllowedPattern":"[\\x20-\\x7E]*",
       "ConstraintDescription":"Can contain only ASCII characters."
@@ -375,7 +357,7 @@
         ]
       }
     },
-    "myinstance":{
+    "MyInstance":{
       "Type":"AWS::OpsWorks::Instance",
       "Properties":{
         "LayerIds":[
@@ -512,7 +494,7 @@
         "MyStack",
         "MyOpsWorksApp",
         "MyLayer",
-        "myinstance"
+        "MyInstance"
       ],
       "Properties":{
         "Name":{
@@ -553,8 +535,12 @@
                   }
                 ],
                 "Configuration":{
-                  "BranchName":"master",
-                  "RepositoryName":"opsworks-php-demo"
+                  "BranchName":{
+                    "Ref":"RepositoryBranch"
+                  },
+                  "RepositoryName":{
+                    "Ref":"RepositoryName"
+                  }
                 },
                 "RunOrder":1
               }
