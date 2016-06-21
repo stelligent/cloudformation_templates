@@ -73,6 +73,52 @@
     }
   },
   "Mappings":{
+    "Region2Principal":{
+      "us-east-1":{
+        "EC2Principal":"ec2.amazonaws.com",
+        "OpsWorksPrincipal":"opsworks.amazonaws.com"
+      },
+      "us-west-2":{
+        "EC2Principal":"ec2.amazonaws.com",
+        "OpsWorksPrincipal":"opsworks.amazonaws.com"
+      },
+      "us-west-1":{
+        "EC2Principal":"ec2.amazonaws.com",
+        "OpsWorksPrincipal":"opsworks.amazonaws.com"
+      },
+      "eu-west-1":{
+        "EC2Principal":"ec2.amazonaws.com",
+        "OpsWorksPrincipal":"opsworks.amazonaws.com"
+      },
+      "ap-southeast-1":{
+        "EC2Principal":"ec2.amazonaws.com",
+        "OpsWorksPrincipal":"opsworks.amazonaws.com"
+      },
+      "ap-northeast-1":{
+        "EC2Principal":"ec2.amazonaws.com",
+        "OpsWorksPrincipal":"opsworks.amazonaws.com"
+      },
+      "ap-northeast-2":{
+        "EC2Principal":"ec2.amazonaws.com",
+        "OpsWorksPrincipal":"opsworks.amazonaws.com"
+      },
+      "ap-southeast-2":{
+        "EC2Principal":"ec2.amazonaws.com",
+        "OpsWorksPrincipal":"opsworks.amazonaws.com"
+      },
+      "sa-east-1":{
+        "EC2Principal":"ec2.amazonaws.com",
+        "OpsWorksPrincipal":"opsworks.amazonaws.com"
+      },
+      "cn-north-1":{
+        "EC2Principal":"ec2.amazonaws.com.cn",
+        "OpsWorksPrincipal":"opsworks.amazonaws.com.cn"
+      },
+      "eu-central-1":{
+        "EC2Principal":"ec2.amazonaws.com",
+        "OpsWorksPrincipal":"opsworks.amazonaws.com"
+      }
+    },
     "AWSInstanceType2Virt":{
       "t2.micro":{
         "Virt":"HVM"
@@ -137,120 +183,212 @@
     }
   },
   "Resources":{
-    "myStack":{
+    "CPOpsDeploySecGroup":{
+      "Type":"AWS::EC2::SecurityGroup",
+      "Properties":{
+        "GroupDescription":"Lets you manage OpsWorks instances deployed to by CodePipeline"
+      }
+    },
+    "CPOpsDeploySecGroupIngressHTTP":{
+      "Type":"AWS::EC2::SecurityGroupIngress",
+      "Properties":{
+        "IpProtocol":"tcp",
+        "FromPort":"80",
+        "ToPort":"80",
+        "CidrIp":"0.0.0.0/0",
+        "GroupId":{
+          "Fn::GetAtt":[
+            "CPOpsDeploySecGroup",
+            "GroupId"
+          ]
+        }
+      }
+    },
+    "CPOpsDeploySecGroupIngressSSH":{
+      "Type":"AWS::EC2::SecurityGroupIngress",
+      "Properties":{
+        "IpProtocol":"tcp",
+        "FromPort":"22",
+        "ToPort":"22",
+        "CidrIp":"0.0.0.0/0",
+        "GroupId":{
+          "Fn::GetAtt":[
+            "CPOpsDeploySecGroup",
+            "GroupId"
+          ]
+        }
+      }
+    },
+    "MyStack":{
       "Type":"AWS::OpsWorks::Stack",
       "Properties":{
         "Name":{
           "Ref":"AWS::StackName"
         },
-        "DefaultOs":"Amazon Linux 2015.09",
+        "ServiceRoleArn":{
+          "Fn::GetAtt":[
+            "OpsWorksServiceRole",
+            "Arn"
+          ]
+        },
         "ConfigurationManager":{
           "Name":"Chef",
           "Version":"11.10"
         },
-        "DefaultRootDeviceType":"ebs",
-        "ServiceRoleArn":{
-          "Fn::Join":[
-            "",
-            [
-              "arn:aws:iam::",
-              {
-                "Ref":"AWS::AccountId"
-              },
-              ":role/",
-              {
-                "Ref":"ServiceRole"
-              }
-            ]
-          ]
-        },
+        "DefaultOs":"Amazon Linux 2016.03",
         "DefaultInstanceProfileArn":{
-          "Fn::Join":[
-            "",
-            [
-              "arn:aws:iam::",
-              {
-                "Ref":"AWS::AccountId"
-              },
-              ":instance-profile/",
-              {
-                "Ref":"InstanceRole"
-              }
-            ]
+          "Fn::GetAtt":[
+            "OpsWorksInstanceProfile",
+            "Arn"
           ]
-        },
-        "UseCustomCookbooks":"true",
-        "UseOpsworksSecurityGroups":"true",
-        "CustomCookbooksSource":{
-          "Type":"archive",
-          "Url":"https://s3.amazonaws.com/stelligent-training-public/public/codepipeline/aws-codepipeline-s3-aws-codedeploy_linux.zip"
         }
       }
     },
-    "myLayer":{
+    "MyLayer":{
       "Type":"AWS::OpsWorks::Layer",
-      "DependsOn":"myApp",
       "Properties":{
         "StackId":{
-          "Ref":"myStack"
+          "Ref":"MyStack"
         },
-        "Type":"web",
-        "Shortname":"web",
+        "Name":"MyLayer",
+        "Type":"php-app",
+        "Shortname":"mylayer",
         "EnableAutoHealing":"true",
         "AutoAssignElasticIps":"false",
         "AutoAssignPublicIps":"true",
         "CustomSecurityGroupIds":[
           {
             "Fn::GetAtt":[
-              "OpsWorksSecurityGroup",
+              "CPOpsDeploySecGroup",
               "GroupId"
             ]
           }
-        ],
-        "Name":"MyStaticApp"
-      }
+        ]
+      },
+      "DependsOn":[
+        "MyStack",
+        "CPOpsDeploySecGroup"
+      ]
     },
-    "myAppInstance1":{
-      "Type":"AWS::OpsWorks::Instance",
+    "OpsWorksServiceRole":{
+      "Type":"AWS::IAM::Role",
       "Properties":{
-        "StackId":{
-          "Ref":"myStack"
+        "AssumeRolePolicyDocument":{
+          "Statement":[
+            {
+              "Effect":"Allow",
+              "Principal":{
+                "Service":[
+                  {
+                    "Fn::FindInMap":[
+                      "Region2Principal",
+                      {
+                        "Ref":"AWS::Region"
+                      },
+                      "OpsWorksPrincipal"
+                    ]
+                  }
+                ]
+              },
+              "Action":[
+                "sts:AssumeRole"
+              ]
+            }
+          ]
         },
-        "LayerIds":[
+        "Path":"/",
+        "Policies":[
           {
-            "Ref":"myLayer"
-          }
-        ],
-        "InstanceType":"t2.medium"
-      }
-    },
-    "OpsWorksSecurityGroup":{
-      "Type":"AWS::EC2::SecurityGroup",
-      "Properties":{
-        "GroupDescription":"Allow inbound requests from the ELB to the OpsWorks instances",
-        "SecurityGroupIngress":[
-          {
-            "IpProtocol":"tcp",
-            "FromPort":"80",
-            "ToPort":"80"
+            "PolicyName":"opsworks-service",
+            "PolicyDocument":{
+              "Statement":[
+                {
+                  "Effect":"Allow",
+                  "Action":[
+                    "ec2:*",
+                    "iam:PassRole",
+                    "cloudwatch:GetMetricStatistics",
+                    "elasticloadbalancing:*"
+                  ],
+                  "Resource":"*"
+                }
+              ]
+            }
           }
         ]
       }
     },
-    "myApp":{
-      "Type":"AWS::OpsWorks::App",
+    "OpsWorksInstanceProfile":{
+      "Type":"AWS::IAM::InstanceProfile",
       "Properties":{
+        "Path":"/",
+        "Roles":[
+          {
+            "Ref":"OpsWorksInstanceRole"
+          }
+        ]
+      }
+    },
+    "OpsWorksInstanceRole":{
+      "Type":"AWS::IAM::Role",
+      "Properties":{
+        "AssumeRolePolicyDocument":{
+          "Statement":[
+            {
+              "Effect":"Allow",
+              "Principal":{
+                "Service":[
+                  {
+                    "Fn::FindInMap":[
+                      "Region2Principal",
+                      {
+                        "Ref":"AWS::Region"
+                      },
+                      "EC2Principal"
+                    ]
+                  }
+                ]
+              },
+              "Action":[
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path":"/",
+        "Policies":[
+          {
+            "PolicyName":"s3-get",
+            "PolicyDocument":{
+              "Version":"2012-10-17",
+              "Statement":[
+                {
+                  "Effect":"Allow",
+                  "Action":[
+                    "s3:GetObject"
+                  ],
+                  "Resource":"*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "myinstance":{
+      "Type":"AWS::OpsWorks::Instance",
+      "Properties":{
+        "LayerIds":[
+          {
+            "Ref":"MyLayer"
+          }
+        ],
         "StackId":{
-          "Ref":"myStack"
+          "Ref":"MyStack"
         },
-        "Type":"static",
-        "Shortname":"web",
-        "Name":{
-          "Ref":"AppName"
-        },
-        "AppSource":{
-          "Type":"archive",
-          "Url":"https://s3.amazonaws.com/stelligent-training-public/public/codepipeline/aws-codepipeline-s3-aws-codedeploy_linux.zip"
+        "InstanceType":"c3.large",
+        "SshKeyName":{
+          "Ref":"KeyName"
         }
       }
     },
@@ -351,12 +489,30 @@
         ]
       }
     },
+    "MyOpsWorksApp":{
+      "Type":"AWS::OpsWorks::App",
+      "Properties":{
+        "StackId":{
+          "Ref":"MyStack"
+        },
+        "Type":"php",
+        "Shortname":"phptestapp",
+        "Name":{
+          "Ref":"AppName"
+        },
+        "AppSource":{
+          "Type":"archive",
+          "Url":"https://s3.amazonaws.com/stelligent-training-public/public/codepipeline/aws-codepipeline-s3-aws-codedeploy_linux.zip"
+        }
+      }
+    },
     "MyPipeline":{
       "Type":"AWS::CodePipeline::Pipeline",
       "DependsOn":[
-        "myStack",
-        "myApp",
-        "myLayer"
+        "MyStack",
+        "MyOpsWorksApp",
+        "MyLayer",
+        "myinstance"
       ],
       "Properties":{
         "Name":{
@@ -393,51 +549,27 @@
                 },
                 "OutputArtifacts":[
                   {
-                    "Name":{
-                      "Fn::Join":[
-                        "",
-                        [
-                          {
-                            "Ref":"AWS::StackName"
-                          },
-                          "-SourceArtifact"
-                        ]
-                      ]
-                    }
+                    "Name":"MyApp"
                   }
                 ],
                 "Configuration":{
-                  "BranchName":{
-                    "Ref":"RepositoryBranch"
-                  },
-                  "RepositoryName":{
-                    "Ref":"RepositoryName"
-                  }
+                  "BranchName":"master",
+                  "RepositoryName":"opsworks-php-demo"
                 },
                 "RunOrder":1
               }
             ]
           },
           {
-            "Name":"Deploy",
+            "Name":"Beta",
             "Actions":[
               {
-                "Name":"DeployStaticWebsite",
                 "InputArtifacts":[
                   {
-                    "Name":{
-                      "Fn::Join":[
-                        "",
-                        [
-                          {
-                            "Ref":"AWS::StackName"
-                          },
-                          "-SourceArtifact"
-                        ]
-                      ]
-                    }
+                    "Name":"MyApp"
                   }
                 ],
+                "Name":"DeployPHPApp",
                 "ActionTypeId":{
                   "Category":"Deploy",
                   "Owner":"AWS",
@@ -449,14 +581,14 @@
                 ],
                 "Configuration":{
                   "StackId":{
-                    "Ref":"myStack"
+                    "Ref":"MyStack"
                   },
                   "AppId":{
-                    "Ref":"myApp"
+                    "Ref":"MyOpsWorksApp"
                   },
                   "DeploymentType":"deploy_app",
                   "LayerId":{
-                    "Ref":"myLayer"
+                    "Ref":"MyLayer"
                   }
                 },
                 "RunOrder":1
