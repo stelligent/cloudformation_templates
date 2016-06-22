@@ -2,15 +2,6 @@
   "AWSTemplateFormatVersion":"2010-09-09",
   "Description":"OpsWorks stack and Deployment Pipeline in CodePipeline",
   "Parameters":{
-    "AppName":{
-      "Default":"myapp",
-      "Description":"The app name",
-      "Type":"String",
-      "MinLength":"1",
-      "MaxLength":"64",
-      "AllowedPattern":"[a-zA-Z][a-zA-Z0-9]*",
-      "ConstraintDescription":"must begin with a letter and contain only alphanumeric characters."
-    },
     "KeyName":{
       "Description":"Name of an existing EC2 KeyPair for SSH access to the instances.",
       "Type":"AWS::EC2::KeyPair::KeyName"
@@ -38,8 +29,7 @@
             "default":"Dynamic Configuration"
           },
           "Parameters":[
-            "KeyName",
-            "AppName"
+            "KeyName"
           ]
         },
         {
@@ -480,7 +470,7 @@
         "Type":"php",
         "Shortname":"phptestapp",
         "Name":{
-          "Ref":"AppName"
+          "Ref":"AWS::StackName"
         },
         "AppSource":{
           "Type":"other"
