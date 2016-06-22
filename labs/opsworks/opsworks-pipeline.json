@@ -483,8 +483,7 @@
           "Ref":"AppName"
         },
         "AppSource":{
-          "Type":"archive",
-          "Url":"https://s3.amazonaws.com/stelligent-training-public/public/codepipeline/aws-codepipeline-s3-aws-codedeploy_linux.zip"
+          "Type":"other"
         }
       }
     },
