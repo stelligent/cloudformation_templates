@@ -536,7 +536,7 @@
             ]
           },
           {
-            "Name":"Beta",
+            "Name":"Deploy",
             "Actions":[
               {
                 "InputArtifacts":[

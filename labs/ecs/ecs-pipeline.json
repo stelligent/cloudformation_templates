@@ -161,10 +161,10 @@
   "Mappings":{
     "VPCIpSpace":{
       "us-east-1":{
-        "RANGE":"10.42"
+        "RANGE":"10.52"
       },
       "us-west-2":{
-        "RANGE":"10.43"
+        "RANGE":"10.53"
       }
     },
     "SubnetTypeIpRanges":{
@@ -322,7 +322,7 @@
         },
         "AvailabilityZone":{
           "Fn::Select":[
-            "0",
+            "2",
             {
               "Fn::GetAZs":{
                 "Ref":"AWS::Region"
@@ -375,7 +375,7 @@
         },
         "AvailabilityZone":{
           "Fn::Select":[
-            "1",
+            "3",
             {
               "Fn::GetAZs":{
                 "Ref":"AWS::Region"
