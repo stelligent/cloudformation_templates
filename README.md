@@ -126,18 +126,23 @@ So, be sure to examine the **Outputs** tab after creating the stack.
                     <th align="left">AWS CLI Example</th>
                 </tr>
                 <tr>
-                    <td>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-vpc" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc.template" --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPC Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPCSubnetCidrBlock,ParameterValue="10.20.0.0/16" ParameterKey=AvailabilityZone1,ParameterValue="a" ParameterKey=AvailabilityZone2,ParameterValue="b" ParameterKey=AvailabilityZone3,ParameterValue="c" ParameterKey=PublicSubnetCidrBlock1,ParameterValue="10.20.1.0/24" ParameterKey=PublicSubnetCidrBlock2,ParameterValue="10.20.2.0/24" ParameterKey=PublicSubnetCidrBlock3,ParameterValue="10.20.3.0/24" ParameterKey=PrivateSubnetCidrBlock1,ParameterValue="10.20.4.0/24" ParameterKey=PrivateSubnetCidrBlock2,ParameterValue="10.20.5.0/24" ParameterKey=PrivateSubnetCidrBlock3,ParameterValue="10.20.6.0/24" ParameterKey=RemoteAccessNetwork,ParameterValue="50.12.34.56/32"
+                    <td>
+                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpc-parameters.json">JSON</a> File</h6>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>OR with Custom Parameters JSON File</h6>
-                    <p><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpc-parameters.json">Example Parameters JSON</a></p>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-vpc" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-vpc.json</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-vpc" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-vpc.json
+                    <h6>Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-vpc" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc.template" --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPC Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPCSubnetCidrBlock,ParameterValue="10.20.0.0/16" ParameterKey=AvailabilityZone1,ParameterValue="a" ParameterKey=AvailabilityZone2,ParameterValue="b" ParameterKey=AvailabilityZone3,ParameterValue="c" ParameterKey=PublicSubnetCidrBlock1,ParameterValue="10.20.1.0/24" ParameterKey=PublicSubnetCidrBlock2,ParameterValue="10.20.2.0/24" ParameterKey=PublicSubnetCidrBlock3,ParameterValue="10.20.3.0/24" ParameterKey=PrivateSubnetCidrBlock1,ParameterValue="10.20.4.0/24" ParameterKey=PrivateSubnetCidrBlock2,ParameterValue="10.20.5.0/24" ParameterKey=PrivateSubnetCidrBlock3,ParameterValue="10.20.6.0/24" ParameterKey=RemoteAccessNetwork,ParameterValue="50.12.34.56/32"</code>
                     </td>
                 </tr>
             </table>
@@ -214,18 +219,23 @@ So, be sure to examine the **Outputs** tab after creating the stack.
                     <th align="left">AWS CLI Example</th>
                 </tr>
                 <tr>
-                    <td>aws cloudformation create-stack --profile stelligentlabs-uswest2 --stack-name "levons-cfntesting-nat" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat-gateway.template" --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="NAT Gateway Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459"
+                    <td>
+                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/nat-gateway-parameters.json">JSON</a> File</h6>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>OR with Custom Parameters JSON File</h6>
-                    <p><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/nat-gateway-parameters.json">Example Parameters JSON</a></p>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-nat" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat-gateway.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-nat.json</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-nat" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat-gateway.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-nat.json
+                    <h6>Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>aws cloudformation create-stack --profile stelligentlabs-uswest2 --stack-name "levons-cfntesting-nat" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat-gateway.template" --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="NAT Gateway Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459"</code>
                     </td>
                 </tr>
             </table>
@@ -299,18 +309,23 @@ So, be sure to examine the **Outputs** tab after creating the stack.
                     <th align="left">AWS CLI Example</th>
                 </tr>
                 <tr>
-                    <td>aws cloudformation create-stack --profile stelligentlabs-uswest2 --stack-name "levons-cfntesting-bastion" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion.template" --capabilities CAPABILITY_IAM --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Bastion Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=OsType,ParameterValue="rhel" ParameterKey=NetworkAccessIP,ParameterValue="50.23.45.67/32" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev"
+                    <td>
+                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/bastion-parameters.json">JSON</a> File</h6>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>OR with Custom Parameters JSON File</h6>
-                    <p><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/bastion-parameters.json">Example Parameters JSON</a></p>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-bastion" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-rhel-bastion.json --capabilities CAPABILITY_IAM</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-bastion" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-rhel-bastion.json --capabilities CAPABILITY_IAM
+                    <h6>Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>aws cloudformation create-stack --profile stelligentlabs-uswest2 --stack-name "levons-cfntesting-bastion" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion.template" --capabilities CAPABILITY_IAM --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Bastion Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=OsType,ParameterValue="rhel" ParameterKey=NetworkAccessIP,ParameterValue="50.23.45.67/32" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev"</code>
                     </td>
                 </tr>
             </table>
@@ -388,21 +403,26 @@ So, be sure to examine the **Outputs** tab after creating the stack.
         <td colspan="2">
             <table>
                 <tr>
-                    <th align="left">AWS CLI Example</th>
+                    <th align="left">AWS CLI</th>
                 </tr>
                 <tr>
-                    <td>aws cloudformation create-stack --profile stelligentlabs-uswest2 --stack-name "levons-cfntesting-vpn" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPN Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicRouteTable,ParameterValue="rtb-d6cce3b2" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=PrivateNetworkAcl,ParameterValue="acl-3c207458" ParameterKey=RemoteVpnDeviceIp,ParameterValue="50.23.45.67" ParameterKey=RemoteNetworkCidr,ParameterValue="192.168.100.0/24" ParameterKey=IncludePublicSubnets,ParameterValue="true"
+                    <td>
+                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpn-bgp-parameters.json">JSON</a> File</h6>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>OR with Custom Parameters JSON File</h6>
-                    <p><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpn-bgp-parameters.json">Example Parameters JSON</a></p>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-bastion" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-vpn.json</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-bastion" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-vpn.json
+                    <h6>Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>aws cloudformation create-stack --profile stelligentlabs-uswest2 --stack-name "levons-cfntesting-vpn" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPN Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicRouteTable,ParameterValue="rtb-d6cce3b2" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=PrivateNetworkAcl,ParameterValue="acl-3c207458" ParameterKey=RemoteVpnDeviceIp,ParameterValue="50.23.45.67" ParameterKey=RemoteNetworkCidr,ParameterValue="192.168.100.0/24" ParameterKey=IncludePublicSubnets,ParameterValue="true"</code>
                     </td>
                 </tr>
             </table>
