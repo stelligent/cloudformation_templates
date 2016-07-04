@@ -1,0 +1,50 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Levon Becker"
+  },
+  {
+    "ParameterKey": "Project",
+    "ParameterValue": "NAT Gateway Creation"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "Never"
+  },
+  {
+    "ParameterKey": "VPC",
+    "ParameterValue": "vpc-b9f488dd"
+  },
+  {
+    "ParameterKey": "PublicRouteTable",
+    "ParameterValue": "rtb-d6cce3b2"
+  },
+  {
+    "ParameterKey": "PrivateRouteTable",
+    "ParameterValue": "rtb-d5cce3b1"
+  },
+  {
+    "ParameterKey": "PublicNetworkAcl",
+    "ParameterValue": "acl-3d207459"
+  },
+  {
+    "ParameterKey": "PrivateNetworkAcl",
+    "ParameterValue": "acl-3c207458"
+  },
+  {
+    "ParameterKey": "RemoteVpnDeviceIp",
+    "ParameterValue": "50.23.45.67"
+  },
+  {
+    "ParameterKey": "RemoteNetworkCidr",
+    "ParameterValue": "192.168.100.0/24"
+  },
+  {
+    "ParameterKey": "RemoteBgpAsn",
+    "ParameterValue": "65000"
+  },
+  {
+    "ParameterKey": "IncludePublicSubnets",
+    "ParameterValue": "true"
+  }
+]
