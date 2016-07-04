@@ -1,0 +1,74 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Levon Becker"
+  },
+  {
+    "ParameterKey": "Project",
+    "ParameterValue": "MySQL RDS Creation"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "08/01/2016"
+  },
+  {
+    "ParameterKey": "VPC",
+    "ParameterValue": "vpc-b9f488dd"
+  },
+  {
+    "ParameterKey": "PrivateSubnet1",
+    "ParameterValue": "subnet-14197570"
+  },
+  {
+    "ParameterKey": "PrivateSubnet2",
+    "ParameterValue": "subnet-14197571"
+  },
+  {
+    "ParameterKey": "PrivateSubnet3",
+    "ParameterValue": "subnet-14197572"
+  },
+  {
+    "ParameterKey": "PublicNetworkAcl",
+    "ParameterValue": "acl-3d207459"
+  },
+  {
+    "ParameterKey": "MasterUsername",
+    "ParameterValue": "superman"
+  },
+  {
+    "ParameterKey": "MasterUserPassword",
+    "ParameterValue": "Kryptonite"
+  },
+  {
+    "ParameterKey": "BackupRetentionPeriod",
+    "ParameterValue": "30"
+  },
+  {
+    "ParameterKey": "MultiAvailabilityZone",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "ConfigureDns",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "Cname",
+    "ParameterValue": "justice.league.com"
+  },
+  {
+    "ParameterKey": "R53HostedZoneName",
+    "ParameterValue": "league.com"
+  },
+  {
+    "ParameterKey": "AlertSnsTopicArn",
+    "ParameterValue": "arn:aws:sns:us-west-2:000000000000:rds-alerts"
+  },
+  {
+    "ParameterKey": "AllocatedStorage",
+    "ParameterValue": "30"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "db.t2.medium"
+  }
+]
