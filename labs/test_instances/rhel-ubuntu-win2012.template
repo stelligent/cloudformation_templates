@@ -9,7 +9,7 @@
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
       "Type": "String",
-      "Default": "Levon Becker"
+      "Default": "FirstName LastName"
     },
     "Project": {
       "Description": "Enter Project Name.",

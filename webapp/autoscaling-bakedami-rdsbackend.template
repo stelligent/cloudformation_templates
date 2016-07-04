@@ -1,16 +1,16 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Webapp ASG, Baked AMI, ELB, R53, RDS Backed and Optional SSL by Levon Becker v20160509-0830",
+  "Description": "Webapp ASG, Baked AMI, ELB, R53, RDS Backed and Optional SSL by Levon Becker v20160517-1230",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
       "Type": "String",
-      "Default": "Levon Becker"
+      "Default": "FirstName LastName"
     },
     "Project": {
       "Description": "Enter Project Name.",
       "Type": "String",
-      "Default": "MySQL RDS Creation"
+      "Default": "Autoscaling Baked AMI RDS Backed Webapp Stack Creation"
     },
     "DeleteAfter": {
       "Description": "Enter Date It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
@@ -234,11 +234,13 @@
     "OsType": {
       "Description": "Select OS Type of the AMI.",
       "Type": "String",
-      "Default": "rhel",
+      "Default": "rhel7",
       "AllowedValues": [
         "amazon",
-        "centos",
-        "rhel",
+        "centos6",
+        "centos7",
+        "rhel6",
+        "rhel7",
         "ubuntu",
         "windows"
       ]
@@ -263,18 +265,38 @@
     "bootstrap": {
       "amazon": {
         "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
-        "yumupdatenokernel": "yum update -y --exclude=kernel*",
-        "installpackages": "yum install -y curl wget mlocate ca-certificates openssl vim"
+        "patch": "echo 'ACTION: Patching' && yum update -y --exclude=kernel*",
+        "installpackages": "echo 'ACTION: Installing Software Packages' && yum install -y curl wget mlocate ca-certificates openssl vim"
       },
-      "rhel": {
+      "centos6": {
+        "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M",
+        "patch": "echo 'ACTION: Patching' && yum update -y --exclude=kernel*",
+        "installpackages": "echo 'ACTION: Installing Software Packages' && yum install -y curl wget mlocate ca-certificates openssl vim"
+      },
+      "centos7": {
         "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
-        "yumupdatenokernel": "yum update -y --exclude=kernel*",
-        "installpackages": "yum install -y curl wget mlocate ca-certificates openssl vim"
+        "patch": "echo 'ACTION: Patching' && yum update -y --exclude=kernel*",
+        "installpackages": "echo 'ACTION: Installing Software Packages' && yum install -y curl wget mlocate ca-certificates openssl vim"
+      },
+      "rhel6": {
+        "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M",
+        "patch": "echo 'ACTION: Patching' && yum update -y --exclude=kernel*",
+        "installpackages": "echo 'ACTION: Installing Software Packages' && yum install -y curl wget mlocate ca-certificates openssl vim"
+      },
+      "rhel7": {
+        "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
+        "patch": "echo 'ACTION: Patching' && yum update -y --exclude=kernel*",
+        "installpackages": "echo 'ACTION: Installing Software Packages' && yum install -y curl wget mlocate ca-certificates openssl vim"
       },
       "ubuntu": {
         "warmebs": "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress",
-        "aptgetupgradenokernel": "apt-mark hold linux-image-generic linux-headers-generic && apt-get update && sleep 1 && apt-get upgrade -y && apt-mark unhold linux-image-generic linux-headers-generic",
-        "installpackages": "apt-get update && sleep 1 && apt-get install -y curl wget vim ca-certificates openssl htop"
+        "patch": "echo 'ACTION: Patching' && apt-mark hold linux-image-generic linux-headers-generic && apt-get update && sleep 1 && apt-get upgrade -y && apt-mark unhold linux-image-generic linux-headers-generic",
+        "installpackages": "echo 'ACTION: Installing Software Packages' && apt-get update && sleep 1 && apt-get install -y curl wget vim ca-certificates openssl htop"
+      },
+      "windows": {
+        "warmebs": "echo 'ACTION: Performing EBS Warming'",
+        "patch": "echo 'ACTION: Patching'",
+        "installpackages": "echo 'ACTION: Installing Software Packages'"
       }
     }
   },
@@ -290,22 +312,7 @@
     },
     "UseBothPorts": {"Fn::Equals": [{"Ref": "ListenOnBothPorts"}, "true" ]},
     "ConfigureRoute53": {"Fn::Equals": [{"Ref": "ConfigureDns"}, "true" ]},
-    "ConfigureElbLogging": {"Fn::Equals": [{"Ref": "SetupElbLogging"}, "true" ]},
-    "UbuntuHost": { "Fn::Equals": [{"Ref": "OsType"}, "ubuntu"]},
-    "RHELHost": {
-      "Fn::Or": [
-        {"Fn::Equals": [{"Ref": "OsType"}, "amazon"]},
-        {"Fn::Equals": [{"Ref": "OsType"}, "centos"]},
-        {"Fn::Equals": [{"Ref": "OsType"}, "rhel"]}
-      ]
-    },
-    "LinuxHost": {
-      "Fn::Or": [
-        {"Fn::Equals": [{"Ref": "OsType"}, "rhel"]},
-        {"Fn::Equals": [{"Ref": "OsType"}, "ubuntu"]}
-      ]
-    },
-    "WindowsHost": {"Fn::Equals": [{"Ref": "OsType"}, "windows"]}
+    "ConfigureElbLogging": {"Fn::Equals": [{"Ref": "SetupElbLogging"}, "true" ]}
   },
   "Resources": {
     "IamRole": {
@@ -519,8 +526,13 @@
             ],
             {
               "Fn::If": [
-                "EnableSsl",
+                "UseBothPorts",
                 [
+                  {
+                    "LoadBalancerPort": {"Ref": "ElbHttpListeningPort"},
+                    "InstancePort": {"Ref": "InstanceHttpListeningPort"},
+                    "Protocol": "HTTP"
+                  },
                   {
                     "SSLCertificateId": {"Ref": "ElbSslCertArn"},
                     "LoadBalancerPort": {"Ref": "ElbHttpsListeningPort"},
@@ -531,13 +543,8 @@
                 ],
                 {
                   "Fn::If": [
-                    "UseBothPorts",
+                    "EnableSsl",
                     [
-                      {
-                        "LoadBalancerPort": {"Ref": "ElbHttpListeningPort"},
-                        "InstancePort": {"Ref": "InstanceHttpListeningPort"},
-                        "Protocol": "HTTP"
-                      },
                       {
                         "SSLCertificateId": {"Ref": "ElbSslCertArn"},
                         "LoadBalancerPort": {"Ref": "ElbHttpsListeningPort"},
@@ -679,51 +686,19 @@
           }
         ],
         "UserData" : {
-          "Fn::If": [
-            "RHELHost",
-            {
-              "Fn::Base64": {
-                "Fn::Join": [
-                  "", [
-                    "#!/bin/bash\n",
-                    {"Fn::FindInMap": ["bootstrap", "rhel", "warmebs"]},
-                    "\n",
-                    {"Fn::FindInMap": ["bootstrap", "rhel", "yumupdatenokernel"]},
-                    "\n",
-                    {"Fn::FindInMap": ["bootstrap", "rhel", "installpackages"]},
-                    "\n"
-                  ]
-                ]
-              }
-            },
-            {
-              "Fn::If": [
-                "UbuntuHost",
-                {
-                  "Fn::Base64": {
-                    "Fn::Join": [
-                      "", [
-                        "#!/bin/bash\n",
-                        {"Fn::FindInMap": ["bootstrap", "ubuntu", "warmebs"]},
-                        "\n",
-                        {"Fn::FindInMap": ["bootstrap", "ubuntu", "aptgetupgradenokernel"]},
-                        "\n",
-                        {"Fn::FindInMap": ["bootstrap", "ubuntu", "installpackages"]},
-                        "\n"
-                      ]
-                    ]
-                  }
-                },
-                {
-                  "Fn::If": [
-                    "WindowsHost",
-                    {"Fn::Base64": "# PowerShell Goes Here"},
-                    {"Ref": "AWS::NoValue"}
-                  ]
-                }
+          "Fn::Base64": {
+            "Fn::Join": [
+              "", [
+                "#!/bin/bash\n",
+                {"Fn::FindInMap": ["bootstrap", {"Ref": "OsType"}, "warmebs"]},
+                "\n",
+                {"Fn::FindInMap": ["bootstrap", {"Ref": "OsType"}, "patch"]},
+                "\n",
+                {"Fn::FindInMap": ["bootstrap", {"Ref": "OsType"}, "installpackages"]},
+                "\n"
               ]
-            }
-          ]
+            ]
+          }
         }
       }
     },
@@ -791,68 +766,52 @@
         ]
       }
     },
-    "cpuhigh": {
+    "CPUAlarmHigh": {
       "Type": "AWS::CloudWatch::Alarm",
       "DependsOn": [
         "AutoScalingGroup",
         "ScaleUpPolicy"
       ],
       "Properties": {
-        "AlarmActions": [
-          {"Ref": "ScaleUpPolicy"}
-        ],
-        "AlarmDescription": "Scale up if CPU > 60% average over 10 minutes",
-        "ComparisonOperator": "GreaterThanThreshold",
-        "Dimensions": [
-          {
-            "Name": "AutoScalingGroup",
-            "Value": {"Ref": "AutoScalingGroup"}
-          }
-        ],
-        "EvaluationPeriods": 2,
+        "AlarmDescription": "Scale-up if CPU > 60% for 10 minutes",
         "MetricName": "CPUUtilization",
         "Namespace": "AWS/EC2",
-        "Period": 300,
         "Statistic": "Average",
+        "Period": "300",
+        "EvaluationPeriods": "2",
         "Threshold": "60",
-        "Unit": "Percent"
+        "AlarmActions": [ { "Ref": "ScaleUpPolicy" } ],
+        "Dimensions": [
+          {
+            "Name": "AutoScalingGroupName",
+            "Value": { "Ref": "AutoScalingGroup" }
+          }
+        ],
+        "ComparisonOperator": "GreaterThanThreshold"
       }
     },
-    "cpulow": {
+    "CPUAlarmLow": {
       "Type": "AWS::CloudWatch::Alarm",
       "DependsOn": [
         "AutoScalingGroup",
         "ScaleDownPolicy"
       ],
       "Properties": {
-        "AlarmActions": [{"Ref": "ScaleDownPolicy"}],
-        "AlarmDescription": "Scale down if CPU <= 30% average over 30 minutes",
-        "ComparisonOperator": "LessThanOrEqualToThreshold",
-        "Dimensions": [
-          {
-            "Name": "AutoScalingGroup",
-            "Value": {"Ref": "AutoScalingGroup"}
-          }
-        ],
-        "EvaluationPeriods": 6,
+        "AlarmDescription": "Scale-down if CPU < 30% for 10 minutes",
         "MetricName": "CPUUtilization",
         "Namespace": "AWS/EC2",
-        "Period": 300,
         "Statistic": "Average",
+        "Period": "300",
+        "EvaluationPeriods": "2",
         "Threshold": "30",
-        "Unit": "Percent"
-      }
-    },
-    "ScaleDownPolicy": {
-      "Type": "AWS::AutoScaling::ScalingPolicy",
-      "DependsOn": [
-        "AutoScalingGroup"
-      ],
-      "Properties": {
-        "AdjustmentType": "ChangeInCapacity",
-        "AutoScalingGroupName": {"Ref": "AutoScalingGroup"},
-        "Cooldown": 1800,
-        "ScalingAdjustment": "-1"
+        "AlarmActions": [ { "Ref": "ScaleDownPolicy" } ],
+        "Dimensions": [
+          {
+            "Name": "AutoScalingGroupName",
+            "Value": { "Ref": "AutoScalingGroup" }
+          }
+        ],
+        "ComparisonOperator": "LessThanThreshold"
       }
     },
     "ScaleUpPolicy": {
@@ -867,6 +826,18 @@
         },
         "Cooldown": 300,
         "ScalingAdjustment": "1"
+      }
+    },
+    "ScaleDownPolicy": {
+      "Type": "AWS::AutoScaling::ScalingPolicy",
+      "DependsOn": [
+        "AutoScalingGroup"
+      ],
+      "Properties": {
+        "AdjustmentType": "ChangeInCapacity",
+        "AutoScalingGroupName": {"Ref": "AutoScalingGroup"},
+        "Cooldown": 1800,
+        "ScalingAdjustment": "-1"
       }
     },
     "S3LoggingBucket": {
