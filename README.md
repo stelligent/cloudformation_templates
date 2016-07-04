@@ -235,7 +235,104 @@ So, be sure to examine the **Outputs** tab after creating the stack.
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligentlabs-uswest2 --stack-name "levons-cfntesting-nat" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat-gateway.template" --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="NAT Gateway Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459"</code>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-nat" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat-gateway.template" --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="NAT Gateway Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459"</code>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpn-bgp.template">VPN BGP (Virtual Private Network using Border Gateway Protocol)</a></h4></th>
+    </tr>
+    <tr>
+        <td valign="top">
+            <p>Creates a Site-to-Site BGP VPN Connection in and existing VPC with public and/or private networks.
+             There is an option to not exclude allowing VPN access to the public networks.
+             Simply select false for the 'Include Public Subnets', leave default value in Public Network ACL and Route Table.
+             The values will just be ignored. This only sets up the AWS side of the VPN.
+             After the CloudFormation creates the objects you'll then need to configure your remote VPN Device.
+             <a href="https://www.bonusbits.com/wiki/HowTo:Setup_Site_to_Site_VPN_from_AWS_VPC_to_Sophos_UTM" target="_blank">Here's</a> an article that gives the configuration steps for configuring a Sophos UTM v9 VPN endpoint.
+             This assumes that the Private Network ACL allows all outbound. Lastly, the Private Network ACL inbound is updated to allow the remote network block specified.</p>
+             <h6>Prerequisites</h6>
+             <ol>
+                <li>VPC</li>
+                <ul>
+                  <li>Public Subnet, IGW, Private Subnet/s.</li>
+                  <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
+                </ul>
+              <li>Remote Network (Office) VPN Device WAN IP</li>
+              <li>Remote Network CIDR Block to Allow Access and Propagate.</li>
+             </ol>
+            <h6>Create Details</h6>
+            <ol>
+             <li>Customer Gateway</li>
+             <li>Virtual Private Gateway</li>
+             <li>VPN Connection</li>
+             <li>Enable Route Propagation on Route Table/s</li>
+             <li>Add Network ACL to Allow Remote Network</li>
+            </ol>
+        </td>
+        <td  nowrap width="200" valign="top">
+            <table>
+                <tr>
+                    <th align="left">Launch</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <p>us-west-2</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <p>us-east-1</p>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th align="left">View in Designer</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/vpn-bgp-200x200.jpg" width:100% alt="View in Designer"></a>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th align="left">How To Video</th>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="https://s3.amazonaws.com/stelligent-public-media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
+                        <p>COMING SOON</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <table>
+                <tr>
+                    <th align="left">AWS CLI Example</th>
+                </tr>
+                <tr>
+                    <td>
+                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpn-bgp-parameters.json">JSON</a> File</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-vpn" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-vpn.json</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <h6>Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-vpn" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPN Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicRouteTable,ParameterValue="rtb-d6cce3b2" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=PrivateNetworkAcl,ParameterValue="acl-3c207458" ParameterKey=RemoteVpnDeviceIp,ParameterValue="50.23.45.67" ParameterKey=RemoteNetworkCidr,ParameterValue="192.168.100.0/24" ParameterKey=IncludePublicSubnets,ParameterValue="true"</code>
                     </td>
                 </tr>
             </table>
@@ -325,41 +422,38 @@ So, be sure to examine the **Outputs** tab after creating the stack.
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligentlabs-uswest2 --stack-name "levons-cfntesting-bastion" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion.template" --capabilities CAPABILITY_IAM --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Bastion Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=OsType,ParameterValue="rhel" ParameterKey=NetworkAccessIP,ParameterValue="50.23.45.67/32" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev"</code>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-bastion" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion.template" --capabilities CAPABILITY_IAM --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Bastion Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=OsType,ParameterValue="rhel" ParameterKey=NetworkAccessIP,ParameterValue="50.23.45.67/32" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev"</code>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
+</table>
+
+### Database
+
+<table>
     <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpn-bgp.template">VPN BGP (Virtual Private Network using Border Gateway Protocol)</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/database/mysql-rds.template">MySQL RDS</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
-            <p>Creates a Site-to-Site BGP VPN Connection in and existing VPC with public and/or private networks.
-             There is an option to not exclude allowing VPN access to the public networks.
-             Simply select false for the 'Include Public Subnets', leave default value in Public Network ACL and Route Table.
-             The values will just be ignored. This only sets up the AWS side of the VPN.
-             After the CloudFormation creates the objects you'll then need to configure your remote VPN Device.
-             <a href="https://www.bonusbits.com/wiki/HowTo:Setup_Site_to_Site_VPN_from_AWS_VPC_to_Sophos_UTM" target="_blank">Here's</a> an article that gives the configuration steps for configuring a Sophos UTM v9 VPN endpoint.
-             This assumes that the Private Network ACL allows all outbound. Lastly, the Private Network ACL inbound is updated to allow the remote network block specified.</p>
-             <h6>Prerequisites</h6>
-             <ol>
-                <li>VPC</li>
-                <ul>
-                  <li>Public Subnet, IGW, Private Subnet/s.</li>
-                  <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
-                </ul>
-              <li>Remote Network (Office) VPN Device WAN IP</li>
-              <li>Remote Network CIDR Block to Allow Access and Propagate.</li>
-             </ol>
+            <p>Creates a MySQL RDS Database Instance.</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>VPC</li>
+             <ul>
+               <li>Public Subnet, IGW, Private Subnet/s.</li>
+               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/database/mysql-rds.template" target="_blank">VPC Template</a> to create a one.</li>
+             </ul>
+            </ol>
             <h6>Create Details</h6>
             <ol>
-             <li>Customer Gateway</li>
-             <li>Virtual Private Gateway</li>
-             <li>VPN Connection</li>
-             <li>Enable Route Propagation on Route Table/s</li>
-             <li>Add Network ACL to Allow Remote Network</li>
+             <li>DB Instance</li>
+             <li>DB Subnet Group</li>
+             <li>Security Group</li>
+             <li>Cloud Watch Alarms</li>
+             <li>Route 53 Record Set (Optional)</li>
             </ol>
         </td>
         <td  nowrap width="200" valign="top">
@@ -369,9 +463,9 @@ So, be sure to examine the **Outputs** tab after creating the stack.
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/database/mysql-rds.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
                         <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/database/mysql-rds.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
                         <p>us-east-1</p>
                     </td>
                 </tr>
@@ -382,7 +476,7 @@ So, be sure to examine the **Outputs** tab after creating the stack.
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/vpn-bgp-200x200.jpg" width:100% alt="View in Designer"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/database/mysql-rds.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/mysql-rds-200x200.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
@@ -403,16 +497,16 @@ So, be sure to examine the **Outputs** tab after creating the stack.
         <td colspan="2">
             <table>
                 <tr>
-                    <th align="left">AWS CLI</th>
+                    <th align="left">AWS CLI Example</th>
                 </tr>
                 <tr>
                     <td>
-                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpn-bgp-parameters.json">JSON</a> File</h6>
+                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/database/parameters_examples/mysql-rds-parameters.json">JSON</a> File</h6>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-bastion" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-vpn.json</code>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-mysql-rds" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/database/mysql-rds.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-mysql-rds.json</code>
                     </td>
                 </tr>
                 <tr>
@@ -422,56 +516,12 @@ So, be sure to examine the **Outputs** tab after creating the stack.
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligentlabs-uswest2 --stack-name "levons-cfntesting-vpn" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPN Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicRouteTable,ParameterValue="rtb-d6cce3b2" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=PrivateNetworkAcl,ParameterValue="acl-3c207458" ParameterKey=RemoteVpnDeviceIp,ParameterValue="50.23.45.67" ParameterKey=RemoteNetworkCidr,ParameterValue="192.168.100.0/24" ParameterKey=IncludePublicSubnets,ParameterValue="true"</code>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-mysql-rds" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/database/mysql-rds.template" --parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="MySQL RDS Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=MasterUsername,ParameterValue="superman" ParameterKey=MasterUserPassword,ParameterValue="Kryptonite" ParameterKey=BackupRetentionPeriod,ParameterValue="30" ParameterKey=MultiAvailabilityZone,ParameterValue="true" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Cname,ParameterValue="justice.league.com" ParameterKey=R53HostedZoneName,ParameterValue="league.com" ParameterKey=AlertSnsTopicArn,ParameterValue="arn:aws:sns:us-west-2:000000000000:rds-alerts" ParameterKey=AllocatedStorage,ParameterValue="30" ParameterKey=InstanceType,ParameterValue="db.t2.medium"</code>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
-</table>
-
-### Database
-
-<table>
-  <tbody>
-    <tr>
-      <th align="left">Template</th>
-      <th align="left">Description</th>
-      <th align="left">View in Designer</th>
-      <th align="left">Launch</th>
-    </tr>
-    <tr>
-      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/database/mysql-rds.template">MySQL RDS</a></td>
-      <td>
-        <p>Creates a MySQL RDS Database Instance.</p>
-        <h6>Prerequisites</h6>
-        <ol>
-         <li>VPC</li>
-         <ul>
-           <li>Public Subnet, IGW, Private Subnet/s.</li>
-           <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/database/mysql-rds.template" target="_blank">VPC Template</a> to create a one.</li>
-         </ul>
-        </ol>
-        <h6>Create Details</h6>
-        <ol>
-         <li>DB Instance</li>
-         <li>DB Subnet Group</li>
-         <li>Security Group</li>
-         <li>Cloud Watch Alarms</li>
-         <li>Route 53 Record Set (Optional)</li>
-        </ol>
-      </td>
-      <td nowrap width="144">
-        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/database/mysql-rds.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/mysql-rds-200x200.jpg" width:100% alt="View in Designer"></a>
-      </td>
-      <td nowrap width="144">
-        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/database/mysql-rds.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
-        <p>us-west-2</p>
-        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/database/mysql-rds.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
-        <p>us-east-1</p>
-      </td>
-    </tr>
-  </tbody>
 </table>
 
 ### Autoscaling
