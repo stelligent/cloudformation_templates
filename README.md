@@ -54,7 +54,7 @@ So, be sure to examine the **Outputs** tab after creating the stack.
 
 <table>
     <tr>
-        <th align="left" colspan="2"><h5><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template">VPC (Virtual Private Cloud)</a></h5></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template">VPC (Virtual Private Cloud)</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
@@ -149,7 +149,7 @@ So, be sure to examine the **Outputs** tab after creating the stack.
         </td>
     </tr>
     <tr>
-        <th align="left" colspan="2"><h5><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat-gateway.template">NAT Gateway (Network Addresss Translation)</a></h5></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat-gateway.template">NAT Gateway (Network Addresss Translation)</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
@@ -242,7 +242,7 @@ So, be sure to examine the **Outputs** tab after creating the stack.
         </td>
     </tr>
     <tr>
-        <th align="left" colspan="2"><h5><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion.template">Bastion</a></h5></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion.template">Bastion</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
@@ -332,7 +332,7 @@ So, be sure to examine the **Outputs** tab after creating the stack.
         </td>
     </tr>
     <tr>
-        <th align="left" colspan="2"><h5><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpn-bgp.template">VPN BGP (Virtual Private Network using Border Gateway Protocol)</a></h5></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpn-bgp.template">VPN BGP (Virtual Private Network using Border Gateway Protocol)</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
