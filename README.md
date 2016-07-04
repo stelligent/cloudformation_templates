@@ -24,7 +24,7 @@ With a simple shell script and a customized parameter json file you can spin up 
 * [Orchestration (WIP)](#orchestration)
 * [Infrastructure](#infrastructure)
 * [Database](#database)
-* [Autoscaling](#utoscaling)
+* [Autoscaling](#autoscaling)
 * [Labs](#labs)
 
 
