@@ -12,10 +12,30 @@ By using the configured parameters from the console or CLI you should be able to
 The templates generally output all the information you may need for another template.
 So, be sure to examine the **Outputs** tab after creating the stack.
 
+The AWS CLI examples can be dropped in a shell script and/or added to your CI/CD solution to spin up solutions in a fully automated fashion.
+Of course logic around updating stacks, deleting and checking for success/failure should be addressed.
+
+With a simple shell script and a customized parameter json file you can spin up stacks quickly and consistently.
+ Furthermore it's just as easy to tear a CloudFormation stack versus if all the objects where created manually.
+
 ## Templates
 
+### Categories
+* [Orchestration (WIP)](#orchestration)
+* [Infrastructure](#infrastructure)
+* [Database](#database)
+* [Autoscaling](#utoscaling)
+* [Labs](#labs)
 
-### Orchestrators (WIP)
+
+### Orchestration
+**!! WIP !!**<br>
+One template to rule them all... These are master templates that call nested templates.
+These are good to build out a full environment without having to run each template individually.
+Coupled with a custom parameters JSON file can give you a one command solution to a complex setup and eliminate the need to duplicate code.
+
+For instance you could have a VPC, NAT, RDS and Autoscaling Webapp behind an ELB and Update DNS all in one
+command using various foundational templates that I've creates to be used together.
 
 <table>
   <tbody>
