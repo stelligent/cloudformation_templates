@@ -953,7 +953,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <h6>Parameters</h6>
+                        <h4>Parameters</h4>
                     </td>
                 </tr>
                 <tr>
