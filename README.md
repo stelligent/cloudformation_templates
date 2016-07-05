@@ -96,23 +96,29 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/parameters_examples/infrastructure-parameters.json">JSON</a> File</h6>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/orchestrators/infrastructure.template"</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-webapp-xyz" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/orchestrators/infrastructure.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-webapp-xyz.json</code>
+                        <h5>Parameters</h5>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>Pass Parameters on CLI</h6>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/parameters_examples/infrastructure-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                                <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-webapp-xyz" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/orchestrators/infrastructure.template"</code>
-                                <code>--parameters COMING SOON</code>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code>--parameters COMING SOON</code>
                     </td>
                 </tr>
             </table>
@@ -197,23 +203,29 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpc-parameters.json">JSON</a> File</h6>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc.template"</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-vpc" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-vpc.json</code>
+                        <h5>Parameters</h5>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>Pass Parameters on CLI</h6>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpc-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                                <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-vpc" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc.template"</code>
-                                <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPC Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPCSubnetCidrBlock,ParameterValue="10.20.0.0/16" ParameterKey=AvailabilityZone1,ParameterValue="a" ParameterKey=AvailabilityZone2,ParameterValue="b" ParameterKey=AvailabilityZone3,ParameterValue="c" ParameterKey=PublicSubnetCidrBlock1,ParameterValue="10.20.1.0/24" ParameterKey=PublicSubnetCidrBlock2,ParameterValue="10.20.2.0/24" ParameterKey=PublicSubnetCidrBlock3,ParameterValue="10.20.3.0/24" ParameterKey=PrivateSubnetCidrBlock1,ParameterValue="10.20.4.0/24" ParameterKey=PrivateSubnetCidrBlock2,ParameterValue="10.20.5.0/24" ParameterKey=PrivateSubnetCidrBlock3,ParameterValue="10.20.6.0/24" ParameterKey=RemoteAccessNetwork,ParameterValue="50.12.34.56/32"</code>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPC Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPCSubnetCidrBlock,ParameterValue="10.20.0.0/16" ParameterKey=AvailabilityZone1,ParameterValue="a" ParameterKey=AvailabilityZone2,ParameterValue="b" ParameterKey=AvailabilityZone3,ParameterValue="c" ParameterKey=PublicSubnetCidrBlock1,ParameterValue="10.20.1.0/24" ParameterKey=PublicSubnetCidrBlock2,ParameterValue="10.20.2.0/24" ParameterKey=PublicSubnetCidrBlock3,ParameterValue="10.20.3.0/24" ParameterKey=PrivateSubnetCidrBlock1,ParameterValue="10.20.4.0/24" ParameterKey=PrivateSubnetCidrBlock2,ParameterValue="10.20.5.0/24" ParameterKey=PrivateSubnetCidrBlock3,ParameterValue="10.20.6.0/24" ParameterKey=RemoteAccessNetwork,ParameterValue="50.12.34.56/32"</code>
                     </td>
                 </tr>
             </table>
@@ -291,23 +303,29 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/nat-gateway-parameters.json">JSON</a> File</h6>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat-gateway.template"</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-nat" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat-gateway.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-nat.json</code>
+                        <h5>Parameters</h5>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>Pass Parameters on CLI</h6>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/nat-gateway-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                                <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-nat" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat-gateway.template"</code>
-                                <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="NAT Gateway Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459"</code>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="NAT Gateway Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459"</code>
                     </td>
                 </tr>
             </table>
@@ -389,23 +407,29 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpn-bgp-parameters.json">JSON</a> File</h6>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template"</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-vpn" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-vpn.json</code>
+                        <h5>Parameters</h5>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>Pass Parameters on CLI</h6>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpn-bgp-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                                <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-vpn" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template"</code>
-                                <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPN Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicRouteTable,ParameterValue="rtb-d6cce3b2" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=PrivateNetworkAcl,ParameterValue="acl-3c207458" ParameterKey=RemoteVpnDeviceIp,ParameterValue="50.23.45.67" ParameterKey=RemoteNetworkCidr,ParameterValue="192.168.100.0/24" ParameterKey=IncludePublicSubnets,ParameterValue="true"</code>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPN Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicRouteTable,ParameterValue="rtb-d6cce3b2" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=PrivateNetworkAcl,ParameterValue="acl-3c207458" ParameterKey=RemoteVpnDeviceIp,ParameterValue="50.23.45.67" ParameterKey=RemoteNetworkCidr,ParameterValue="192.168.100.0/24" ParameterKey=IncludePublicSubnets,ParameterValue="true"</code>
                     </td>
                 </tr>
             </table>
@@ -480,23 +504,29 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/bastion-parameters.json">JSON</a> File</h6>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion.template"</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-bastion" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-rhel-bastion.json --capabilities CAPABILITY_IAM</code>
+                        <h5>Parameters</h5>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>Pass Parameters on CLI</h6>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/bastion-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                                <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-bastion" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion.template" --capabilities CAPABILITY_IAM</code>
-                                <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Bastion Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=OsType,ParameterValue="rhel" ParameterKey=NetworkAccessIP,ParameterValue="50.23.45.67/32" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev"</code>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Bastion Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=OsType,ParameterValue="rhel" ParameterKey=NetworkAccessIP,ParameterValue="50.23.45.67/32" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev"</code>
                     </td>
                 </tr>
             </table>
@@ -575,23 +605,29 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/database/parameters_examples/mysql-rds-parameters.json">JSON</a> File</h6>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/database/mysql-rds.template"</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-mysql-rds" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/database/mysql-rds.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-mysql-rds.json</code>
+                        <h5>Parameters</h5>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>Pass Parameters on CLI</h6>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/database/parameters_examples/mysql-rds-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                                <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-mysql-rds" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/database/mysql-rds.template"</code>
-                                <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="MySQL RDS Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=MasterUsername,ParameterValue="superman" ParameterKey=MasterUserPassword,ParameterValue="Kryptonite" ParameterKey=BackupRetentionPeriod,ParameterValue="30" ParameterKey=MultiAvailabilityZone,ParameterValue="true" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Cname,ParameterValue="justice.league.com" ParameterKey=R53HostedZoneName,ParameterValue="league.com" ParameterKey=AlertSnsTopicArn,ParameterValue="arn:aws:sns:us-west-2:000000000000:rds-alerts" ParameterKey=AllocatedStorage,ParameterValue="30" ParameterKey=InstanceType,ParameterValue="db.t2.medium"</code>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="MySQL RDS Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=MasterUsername,ParameterValue="superman" ParameterKey=MasterUserPassword,ParameterValue="Kryptonite" ParameterKey=BackupRetentionPeriod,ParameterValue="30" ParameterKey=MultiAvailabilityZone,ParameterValue="true" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Cname,ParameterValue="justice.league.com" ParameterKey=R53HostedZoneName,ParameterValue="league.com" ParameterKey=AlertSnsTopicArn,ParameterValue="arn:aws:sns:us-west-2:000000000000:rds-alerts" ParameterKey=AllocatedStorage,ParameterValue="30" ParameterKey=InstanceType,ParameterValue="db.t2.medium"</code>
                     </td>
                 </tr>
             </table>
