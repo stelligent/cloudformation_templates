@@ -673,23 +673,29 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/webapp/parameters_examples/autoscaling-bakedami-rdsbackend-parameters.json">JSON</a> File</h6>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/webapp/autoscaling-bakedami-rdsbackend.template"</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-rdsbacked-webapp" --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/webapp/autoscaling-bakedami-rdsbackend.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-rdsbacked-webapp.json</code>
+                        <h5>Parameters</h5>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>Pass Parameters on CLI</h6>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/webapp/parameters_examples/autoscaling-bakedami-rdsbackend-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                                <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-rdsbacked-webapp" --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/webapp/autoscaling-bakedami-rdsbackend.template"</code>
-                                <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Autoscaling Baked AMI Webapp Stack Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet1,ParameterValue="subnet-24197570" ParameterKey=PublicSubnet2,ParameterValue="subnet-24197571" ParameterKey=PublicSubnet3,ParameterValue="subnet-24197572" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=AMI,ParameterValue="ami-00000000" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev" ParameterKey=MinAutoScaleCount,ParameterValue="3" ParameterKey=MaxAutoScaleCount,ParameterValue="6" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=RemoteSecurityGroup,ParameterValue="sg-50d8410d" ParameterKey=RDSAccessSecurityGroup,ParameterValue="sg-40d8410e" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Route53ElbAlias,ParameterValue="www.hecklejeckle.com" ParameterKey=UseSsl,ParameterValue="true" ParameterKey=ElbSslCertArn,ParameterValue="arn:aws:iam::0000000000000:server-certificate/www.hecklejeckle.com" ParameterKey=ElbHttpListeningPort,ParameterValue="443" ParameterKey=InstanceHttpListeningPort,ParameterValue="8443" ParameterKey=ListenOnBothPorts,ParameterValue="false" ParameterKey=SetupElbLogging,ParameterValue="true"</code>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Autoscaling Baked AMI Webapp Stack Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet1,ParameterValue="subnet-24197570" ParameterKey=PublicSubnet2,ParameterValue="subnet-24197571" ParameterKey=PublicSubnet3,ParameterValue="subnet-24197572" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=AMI,ParameterValue="ami-00000000" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev" ParameterKey=MinAutoScaleCount,ParameterValue="3" ParameterKey=MaxAutoScaleCount,ParameterValue="6" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=RemoteSecurityGroup,ParameterValue="sg-50d8410d" ParameterKey=RDSAccessSecurityGroup,ParameterValue="sg-40d8410e" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Route53ElbAlias,ParameterValue="www.hecklejeckle.com" ParameterKey=UseSsl,ParameterValue="true" ParameterKey=ElbSslCertArn,ParameterValue="arn:aws:iam::0000000000000:server-certificate/www.hecklejeckle.com" ParameterKey=ElbHttpListeningPort,ParameterValue="443" ParameterKey=InstanceHttpListeningPort,ParameterValue="8443" ParameterKey=ListenOnBothPorts,ParameterValue="false" ParameterKey=SetupElbLogging,ParameterValue="true"</code>
                     </td>
                 </tr>
             </table>
@@ -765,22 +771,28 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/webapp/parameters_examples/autoscaling-bakedami-parameters.json">JSON</a> File</h6>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/webapp/autoscaling-bakedami.template"</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-webapp" --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/webapp/autoscaling-bakedami.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-webapp.json</code>
+                        <h5>Parameters</h5>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>Pass Parameters on CLI</h6>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/webapp/parameters_examples/autoscaling-bakedami-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-webapp" --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/webapp/autoscaling-bakedami.template"</code>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Autoscaling Baked AMI Webapp Stack Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet1,ParameterValue="subnet-24197570" ParameterKey=PublicSubnet2,ParameterValue="subnet-24197571" ParameterKey=PublicSubnet3,ParameterValue="subnet-24197572" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=AMI,ParameterValue="ami-00000000" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev" ParameterKey=MinAutoScaleCount,ParameterValue="3" ParameterKey=MaxAutoScaleCount,ParameterValue="6" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=RemoteSecurityGroup,ParameterValue="sg-50d8410d" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Route53ElbAlias,ParameterValue="www.hecklejeckle.com" ParameterKey=UseSsl,ParameterValue="true" ParameterKey=ElbSslCertArn,ParameterValue="arn:aws:iam::0000000000000:server-certificate/www.hecklejeckle.com" ParameterKey=ElbHttpListeningPort,ParameterValue="443" ParameterKey=InstanceHttpListeningPort,ParameterValue="8443" ParameterKey=ListenOnBothPorts,ParameterValue="false" ParameterKey=SetupElbLogging,ParameterValue="true"</code>
                     </td>
                 </tr>
@@ -867,22 +879,28 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance/example-parameters.json">JSON</a> File</h6>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/chef_compliance/chef-compliance.template"</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-chefcompliance" --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/chef_compliance/chef-compliance.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-chefcompliance.json</code>
+                        <h5>Parameters</h5>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>Pass Parameters on CLI</h6>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance/example-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-chefcompliance" --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/chef_compliance/chef-compliance.template"</code>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <code>--parameters ... COMING SOON</code>
                     </td>
                 </tr>
