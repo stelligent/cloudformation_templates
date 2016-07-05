@@ -947,22 +947,24 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                    <h6>Base Command</h6>
-                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-testinstances" --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/test_instances/rhel-ubuntu-win2012.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <th align="left">Parameters</th>
-                </tr>
-                <tr>
-                    <td>
-                    <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/example-parameters.json">(Example Here)</a></h6>
-                    <code>--parameters file:///Users/username/aws/cloudformation_parameters/stelligent-dev-testinstances.json</code>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/labs/test_instances/rhel-ubuntu-win2012.template"</code>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <h6>Option 2 - Pass Parameters on CLI</h6>
+                        <h6>Parameters</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/example-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
                     </td>
                 </tr>
                 <tr>
