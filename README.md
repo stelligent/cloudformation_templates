@@ -21,14 +21,14 @@ With a simple shell script and a customized parameter json file you can spin up 
 ## Templates
 
 ### Categories
-* [Orchestration (WIP)](#orchestration)
+* [Orchestrators (WIP)](#orchestrators)
 * [Infrastructure](#infrastructure)
 * [Database](#database)
 * [Autoscaling](#autoscaling)
 * [Labs](#labs)
 
 
-### Orchestration
+### Orchestrators
 **!! WIP !!**<br>
 One template to rule them all... These are master templates that call nested templates.
 These are good to build out a full environment without having to run each template individually.
@@ -38,36 +38,86 @@ For instance you could have a VPC, NAT, RDS and Autoscaling Webapp behind an ELB
 command using various foundational templates that I've creates to be used together.
 
 <table>
-  <tbody>
     <tr>
-      <th align="left">Template</th>
-      <th align="left">Description</th>
-      <th align="left">View in Designer</th>
-      <th align="left">Launch</th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/infrastructure.template">Infrastructure</a></h4></th>
     </tr>
     <tr>
-      <td><a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/infrastructure.template">Infrastructure</a></td>
-      <td>
-        <p>Select the foundational pieces for building out an infrastructure from the ground up.</p>
-        <h6>Create Details</h6>
-        <ol>
-         <li>VPC</li>
-         <li>Nat Gateway (Optional)</li>
-         <li>Bastion Host (Optinoal)</li>
-         <li>VPN (Optional)</li></li>
-        </ol>
-      </td>
-      <td nowrap width="144">
-        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/orchestrators/infrastructure.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/vpc-200x200.jpg" width:100% alt="View in Designer"></a>
-      </td>
-      <td nowrap width="144">
-        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/orchestrators/infrastructure.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
-        <p>us-west-2</p>
-        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/orchestrators/infrastructure.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
-        <p>us-east-1</p>
-      </td>
+        <td valign="top">
+            <p>Select the foundational pieces for building out an infrastructure from the ground up.</p>
+            <h6>Create Details</h6>
+            <ol>
+             <li>VPC</li>
+             <li>Nat Gateway (Optional)</li>
+             <li>Bastion Host (Optinoal)</li>
+             <li>VPN (Optional)</li></li>
+            </ol>
+        </td>
+        <td  nowrap width="200" valign="top">
+            <table>
+                <tr>
+                    <th align="left">Launch</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/orchestrators/infrastructure.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <p>us-west-2</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/orchestrators/infrastructure.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <p>us-east-1</p>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th align="left">View in Designer</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/orchestrators/infrastructure.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public-media/cfn-diagrams/vpc-200x200.jpg" width:100% alt="View in Designer"></a>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th align="left">How To Video</th>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="https://s3.amazonaws.com/stelligent-public-media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
+                        <p>COMING SOON</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
     </tr>
-  </tbody>
+    <tr>
+        <td colspan="2">
+            <table>
+                <tr>
+                    <th align="left">AWS CLI Example</th>
+                </tr>
+                <tr>
+                    <td>
+                    <h6>Use Custom Parameters <a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/parameters_examples/infrastructure-parameters.json">JSON</a> File</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-webapp-xyz" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/orchestrators/infrastructure.template" --parameters file:///Users/username/aws/cloudformation_parameters/stelligent-webapp-xyz.json</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <h6>Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-webapp-xyz" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/orchestrators/infrastructure.template" --parameters ... COMING SOON</code>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
 </table>
 
 ### Infrastructure
