@@ -908,9 +908,14 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
   </tbody>
 </table>
+
+<html>
+<head>
+<meta charset=utf-8 />
+<title>JS Bin</title>
 <style id="jsbin-css">
-/* In case you want to display multiple awscliexamples underneath, separate them a bit */
-.awscliexample{
+/* In case you want to display multiple articles underneath, separate them a bit */
+.article{
   margin-bottom: 50px;
 }
 
@@ -919,7 +924,7 @@ command using various foundational templates that I've creates to be used togeth
   font-weight: bold;
 }
 
-/* The awscliexample body should be a bit separated from the teaser */
+/* The article body should be a bit separated from the teaser */
 .full{
   padding-top: 10px;
 }
@@ -933,16 +938,52 @@ command using various foundational templates that I've creates to be used togeth
   display: block;
 }
 </style>
+</head>
+<body>
+
+  <article class="article">
+        <section class="teaser">
+            Hey, I am a incredible teaser text! I just introduce you to the article.
+        </section>
+        <section class="full">
+            I am the articles body text. You should not see me initially.
+        </section>
+    </article>
+
+  <article class="article">
+        <section class="teaser">
+            Hey, I am a incredible teaser text! I just introduce you to the article.
+        </section>
+        <section class="full">
+            I am the articles body text. You should not see me initially.
+        </section>
+    </article>
+
+  <article class="article">
+        <section class="teaser">
+            Hey, I am a incredible teaser text! I just introduce you to the article.
+        </section>
+        <section class="full">
+            I am the articles body text. You should not see me initially.
+        </section>
+    </article>
+
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script id="jsbin-javascript">
 $('.full').hide();
-$('.teaser').after('<button class="more">Parameters</button>');
+
+$('.teaser').after('<button class="more">Read more</button>');
+
 $('.more').on('click', function(){
   //"this" is a reference to the button element!
   $(this).slideUp().next('.full').slideDown();
 });
-$('.full').append('<button class="collapse">Collapse</button>');
+
+$('.full').append('<button class="collapse">Collapse text</button>');
+
 $('.collapse').on('click', function(){
   $(this).parent().slideUp().prev('.more').slideDown();
 });
 </script>
+</body>
+</html>
