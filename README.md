@@ -1001,6 +1001,42 @@ command using various foundational templates that I've creates to be used togeth
         </td>
     </tr>
     <tr>
+        <td colspan="2">
+            <table>
+                <tr>
+                    <th align="left">AWS CLI Example</th>
+                </tr>
+                <tr>
+                    <td>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/chef_compliance/chef-compliance.template"</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h5>Parameters</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance/example-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code>--parameters ... COMING SOON</code>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.template">Test Instances</a></h4></th>
     </tr>
     <tr>
