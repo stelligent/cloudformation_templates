@@ -1009,7 +1009,7 @@ command using various foundational templates that I've creates to be used togeth
                 <tr>
                     <td>
                         <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json --parameters  ParameterKey=KeyName,ParameterValue=pmd_useast1_training"</code>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json --parameters  ParameterKey=KeyName,ParameterValue={Your EC2 KeyPair Name}"</code>
                     </td>
                 </tr>
                 <tr>
