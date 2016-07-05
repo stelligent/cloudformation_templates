@@ -1019,7 +1019,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance/example-parameters.json">(Example Here)</a></h6>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/opsworks/example-parameters.json">(Example Here)</a></h6>
                         <code>--parameters file:///localpath/to/custom-parameters.json</code>
                     </td>
                 </tr>
