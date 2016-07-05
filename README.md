@@ -111,14 +111,8 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <awscliexample class="awscliexample">
-                            <section class="teaser">
                                 <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-webapp-xyz" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/orchestrators/infrastructure.template"</code>
-                            </section>
-                            <section class="full">
                                 <code>--parameters COMING SOON</code>
-                            </section>
-                        </awscliexample>
                     </td>
                 </tr>
             </table>
@@ -218,14 +212,8 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <awscliexample class="awscliexample">
-                            <section class="teaser">
                                 <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-vpc" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc.template"</code>
-                            </section>
-                            <section class="full">
                                 <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPC Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPCSubnetCidrBlock,ParameterValue="10.20.0.0/16" ParameterKey=AvailabilityZone1,ParameterValue="a" ParameterKey=AvailabilityZone2,ParameterValue="b" ParameterKey=AvailabilityZone3,ParameterValue="c" ParameterKey=PublicSubnetCidrBlock1,ParameterValue="10.20.1.0/24" ParameterKey=PublicSubnetCidrBlock2,ParameterValue="10.20.2.0/24" ParameterKey=PublicSubnetCidrBlock3,ParameterValue="10.20.3.0/24" ParameterKey=PrivateSubnetCidrBlock1,ParameterValue="10.20.4.0/24" ParameterKey=PrivateSubnetCidrBlock2,ParameterValue="10.20.5.0/24" ParameterKey=PrivateSubnetCidrBlock3,ParameterValue="10.20.6.0/24" ParameterKey=RemoteAccessNetwork,ParameterValue="50.12.34.56/32"</code>
-                            </section>
-                        </awscliexample>
                     </td>
                 </tr>
             </table>
@@ -318,14 +306,8 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <awscliexample class="awscliexample">
-                            <section class="teaser">
                                 <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-nat" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/nat-gateway.template"</code>
-                            </section>
-                            <section class="full">
                                 <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="NAT Gateway Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459"</code>
-                            </section>
-                        </awscliexample>
                     </td>
                 </tr>
             </table>
@@ -422,14 +404,8 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <awscliexample class="awscliexample">
-                            <section class="teaser">
                                 <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-vpn" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpn-bgp.template"</code>
-                            </section>
-                            <section class="full">
                                 <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPN Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicRouteTable,ParameterValue="rtb-d6cce3b2" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=PrivateNetworkAcl,ParameterValue="acl-3c207458" ParameterKey=RemoteVpnDeviceIp,ParameterValue="50.23.45.67" ParameterKey=RemoteNetworkCidr,ParameterValue="192.168.100.0/24" ParameterKey=IncludePublicSubnets,ParameterValue="true"</code>
-                            </section>
-                        </awscliexample>
                     </td>
                 </tr>
             </table>
@@ -519,14 +495,8 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <awscliexample class="awscliexample">
-                            <section class="teaser">
                                 <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-bastion" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/bastion.template" --capabilities CAPABILITY_IAM</code>
-                            </section>
-                            <section class="full">
                                 <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Bastion Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=OsType,ParameterValue="rhel" ParameterKey=NetworkAccessIP,ParameterValue="50.23.45.67/32" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev"</code>
-                            </section>
-                        </awscliexample>
                     </td>
                 </tr>
             </table>
@@ -620,14 +590,8 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <awscliexample class="awscliexample">
-                            <section class="teaser">
                                 <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-mysql-rds" --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/database/mysql-rds.template"</code>
-                            </section>
-                            <section class="full">
                                 <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="MySQL RDS Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=MasterUsername,ParameterValue="superman" ParameterKey=MasterUserPassword,ParameterValue="Kryptonite" ParameterKey=BackupRetentionPeriod,ParameterValue="30" ParameterKey=MultiAvailabilityZone,ParameterValue="true" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Cname,ParameterValue="justice.league.com" ParameterKey=R53HostedZoneName,ParameterValue="league.com" ParameterKey=AlertSnsTopicArn,ParameterValue="arn:aws:sns:us-west-2:000000000000:rds-alerts" ParameterKey=AllocatedStorage,ParameterValue="30" ParameterKey=InstanceType,ParameterValue="db.t2.medium"</code>
-                            </section>
-                        </awscliexample>
                     </td>
                 </tr>
             </table>
@@ -724,14 +688,8 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <awscliexample class="awscliexample">
-                            <section class="teaser">
                                 <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-rdsbacked-webapp" --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/webapp/autoscaling-bakedami-rdsbackend.template"</code>
-                            </section>
-                            <section class="full">
                                 <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Autoscaling Baked AMI Webapp Stack Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet1,ParameterValue="subnet-24197570" ParameterKey=PublicSubnet2,ParameterValue="subnet-24197571" ParameterKey=PublicSubnet3,ParameterValue="subnet-24197572" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=AMI,ParameterValue="ami-00000000" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev" ParameterKey=MinAutoScaleCount,ParameterValue="3" ParameterKey=MaxAutoScaleCount,ParameterValue="6" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=RemoteSecurityGroup,ParameterValue="sg-50d8410d" ParameterKey=RDSAccessSecurityGroup,ParameterValue="sg-40d8410e" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Route53ElbAlias,ParameterValue="www.hecklejeckle.com" ParameterKey=UseSsl,ParameterValue="true" ParameterKey=ElbSslCertArn,ParameterValue="arn:aws:iam::0000000000000:server-certificate/www.hecklejeckle.com" ParameterKey=ElbHttpListeningPort,ParameterValue="443" ParameterKey=InstanceHttpListeningPort,ParameterValue="8443" ParameterKey=ListenOnBothPorts,ParameterValue="false" ParameterKey=SetupElbLogging,ParameterValue="true"</code>
-                            </section>
-                        </awscliexample>
                     </td>
                 </tr>
             </table>
@@ -822,14 +780,8 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <awscliexample class="awscliexample">
-                            <section class="teaser">
-                                <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-webapp" --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/webapp/autoscaling-bakedami.template"</code>
-                            </section>
-                            <section class="full">
-                                <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Autoscaling Baked AMI Webapp Stack Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet1,ParameterValue="subnet-24197570" ParameterKey=PublicSubnet2,ParameterValue="subnet-24197571" ParameterKey=PublicSubnet3,ParameterValue="subnet-24197572" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=AMI,ParameterValue="ami-00000000" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev" ParameterKey=MinAutoScaleCount,ParameterValue="3" ParameterKey=MaxAutoScaleCount,ParameterValue="6" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=RemoteSecurityGroup,ParameterValue="sg-50d8410d" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Route53ElbAlias,ParameterValue="www.hecklejeckle.com" ParameterKey=UseSsl,ParameterValue="true" ParameterKey=ElbSslCertArn,ParameterValue="arn:aws:iam::0000000000000:server-certificate/www.hecklejeckle.com" ParameterKey=ElbHttpListeningPort,ParameterValue="443" ParameterKey=InstanceHttpListeningPort,ParameterValue="8443" ParameterKey=ListenOnBothPorts,ParameterValue="false" ParameterKey=SetupElbLogging,ParameterValue="true"</code>
-                            </section>
-                        </awscliexample>
+                        <code>aws cloudformation create-stack --profile stelligent-dev --stack-name "stelligent-dev-webapp" --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/webapp/autoscaling-bakedami.template"</code>
+                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Autoscaling Baked AMI Webapp Stack Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet1,ParameterValue="subnet-24197570" ParameterKey=PublicSubnet2,ParameterValue="subnet-24197571" ParameterKey=PublicSubnet3,ParameterValue="subnet-24197572" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=AMI,ParameterValue="ami-00000000" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev" ParameterKey=MinAutoScaleCount,ParameterValue="3" ParameterKey=MaxAutoScaleCount,ParameterValue="6" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=RemoteSecurityGroup,ParameterValue="sg-50d8410d" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Route53ElbAlias,ParameterValue="www.hecklejeckle.com" ParameterKey=UseSsl,ParameterValue="true" ParameterKey=ElbSslCertArn,ParameterValue="arn:aws:iam::0000000000000:server-certificate/www.hecklejeckle.com" ParameterKey=ElbHttpListeningPort,ParameterValue="443" ParameterKey=InstanceHttpListeningPort,ParameterValue="8443" ParameterKey=ListenOnBothPorts,ParameterValue="false" ParameterKey=SetupElbLogging,ParameterValue="true"</code>
                     </td>
                 </tr>
             </table>
@@ -908,82 +860,3 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
   </tbody>
 </table>
-
-<html>
-<head>
-<meta charset=utf-8 />
-<title>JS Bin</title>
-<style id="jsbin-css">
-/* In case you want to display multiple articles underneath, separate them a bit */
-.article{
-  margin-bottom: 50px;
-}
-
-/* we want the teaser to stand out a bit, so we format it bold */
-.teaser{
-  font-weight: bold;
-}
-
-/* The article body should be a bit separated from the teaser */
-.full{
-  padding-top: 10px;
-}
-
-/* This class is used to hide elements */
-.hidden{
-  display: none;
-}
-
-.collapse, .more{
-  display: block;
-}
-</style>
-</head>
-<body>
-
-  <article class="article">
-        <section class="teaser">
-            Hey, I am a incredible teaser text! I just introduce you to the article.
-        </section>
-        <section class="full">
-            I am the articles body text. You should not see me initially.
-        </section>
-    </article>
-
-  <article class="article">
-        <section class="teaser">
-            Hey, I am a incredible teaser text! I just introduce you to the article.
-        </section>
-        <section class="full">
-            I am the articles body text. You should not see me initially.
-        </section>
-    </article>
-
-  <article class="article">
-        <section class="teaser">
-            Hey, I am a incredible teaser text! I just introduce you to the article.
-        </section>
-        <section class="full">
-            I am the articles body text. You should not see me initially.
-        </section>
-    </article>
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script id="jsbin-javascript">
-$('.full').hide();
-
-$('.teaser').after('<button class="more">Read more</button>');
-
-$('.more').on('click', function(){
-  //"this" is a reference to the button element!
-  $(this).slideUp().next('.full').slideDown();
-});
-
-$('.full').append('<button class="collapse">Collapse text</button>');
-
-$('.collapse').on('click', function(){
-  $(this).parent().slideUp().prev('.more').slideDown();
-});
-</script>
-</body>
-</html>
