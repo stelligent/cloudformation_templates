@@ -21,7 +21,7 @@ With a simple shell script and a customized parameter json file you can spin up 
 ## Templates
 
 ### Categories
-* [Orchestrators (WIP)](#orchestrators)
+* [Orchestrators](#orchestrators)
 * [Infrastructure](#infrastructure)
 * [Database](#database)
 * [Autoscaling](#autoscaling)
@@ -29,7 +29,6 @@ With a simple shell script and a customized parameter json file you can spin up 
 
 
 ### Orchestrators
-**!! WIP !!**<br>
 One template to rule them all... These are master templates that call nested templates.
 These are good to build out a full environment without having to run each template individually.
 Coupled with a custom parameters JSON file can give you a one command solution to a complex setup and eliminate the need to duplicate code.
@@ -39,7 +38,7 @@ command using various foundational templates that I've creates to be used togeth
 
 <table>
     <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/infrastructure.template">Infrastructure</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/infrastructure.template">Infrastructure (WIP)</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
