@@ -948,7 +948,7 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
     <tr>
         <td valign="top">
-            <p>Automates the integrate between AWS OpsWorks, CodeCommit and CodePipeline</p>
+            <p>Automates the integration between AWS OpsWorks, CodeCommit and CodePipeline</p>
             <h6>Prerequisites</h6>
             <ol>
              <li>EC2 Key Pair</li>
