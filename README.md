@@ -1,29 +1,3 @@
-<style id="jsbin-css">
-/* In case you want to display multiple awscliexamples underneath, separate them a bit */
-.awscliexample{
-  margin-bottom: 50px;
-}
-
-/* we want the teaser to stand out a bit, so we format it bold */
-.teaser{
-  font-weight: bold;
-}
-
-/* The awscliexample body should be a bit separated from the teaser */
-.full{
-  padding-top: 10px;
-}
-
-/* This class is used to hide elements */
-.hidden{
-  display: none;
-}
-
-.collapse, .more{
-  display: block;
-}
-</style>
-
 # Stelligent CloudFormation Templates
 
 ## Purpose
@@ -934,7 +908,31 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
   </tbody>
 </table>
+<style id="jsbin-css">
+/* In case you want to display multiple awscliexamples underneath, separate them a bit */
+.awscliexample{
+  margin-bottom: 50px;
+}
 
+/* we want the teaser to stand out a bit, so we format it bold */
+.teaser{
+  font-weight: bold;
+}
+
+/* The awscliexample body should be a bit separated from the teaser */
+.full{
+  padding-top: 10px;
+}
+
+/* This class is used to hide elements */
+.hidden{
+  display: none;
+}
+
+.collapse, .more{
+  display: block;
+}
+</style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script id="jsbin-javascript">
 $('.full').hide();
