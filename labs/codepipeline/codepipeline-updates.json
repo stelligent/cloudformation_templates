@@ -2,14 +2,15 @@
   "AWSTemplateFormatVersion":"2010-09-09",
   "Description":"CodePipeline Updates Lab",
   "Parameters":{
-    "KeyName":{
-      "Description":"Name of an existing EC2 KeyPair for SSH access to the instances.",
-      "Type":"AWS::EC2::KeyPair::KeyName"
-    },
     "S3BucketLambdaFunction":{
       "Type":"String",
       "Description":"S3 bucket to use for artifacts. Just bucket Name; not URL. IAM user should have access to the bucket.",
       "Default":"stelligent-training-public"
+    },
+    "SNSTopic":{
+      "Type":"String",
+      "Description":"SNS Topic for receiving CodePipeline notifications",
+      "Default":"PMDCloudFormationTopic"
     },
     "RepositoryName":{
       "Description":"The name of the CodeCommit repo",
@@ -29,14 +30,6 @@
   "Metadata":{
     "AWS::CloudFormation::Interface":{
       "ParameterGroups":[
-        {
-          "Label":{
-            "default":"Dynamic Configuration"
-          },
-          "Parameters":[
-            "KeyName"
-          ]
-        },
         {
           "Label":{
             "default":"CodeCommit Configuration"
@@ -319,6 +312,35 @@
           },
           {
             "Name":"Staging",
+            "Actions":[
+              {
+                "InputArtifacts":[
+
+                ],
+                "Name":"Build",
+                "ActionTypeId":{
+                  "Category":"Invoke",
+                  "Owner":"AWS",
+                  "Version":"1",
+                  "Provider":"Lambda"
+                },
+                "OutputArtifacts":[
+
+                ],
+                "Configuration":{
+                  "FunctionName":{
+                    "Ref":"CodePipelineLambdaDummy"
+                  },
+                  "UserParameters":{
+                    "Ref":"AWS::StackName"
+                  }
+                },
+                "RunOrder":1
+              }
+            ]
+          },
+          {
+            "Name":"Production",
             "Actions":[
               {
                 "InputArtifacts":[
