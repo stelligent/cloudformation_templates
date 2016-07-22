@@ -114,5 +114,25 @@
   {
     "ParameterKey": "BastionInstanceType",
     "ParameterValue": "t2.small"
+  },
+  {
+    "ParameterKey": "RemoteVpnDeviceIp",
+    "ParameterValue": "0.0.0.0"
+  },
+  {
+    "ParameterKey": "RemoteBgpAsn",
+    "ParameterValue": "65000"
+  },
+  {
+    "ParameterKey": "IncludePublicSubnets",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "AllowOfficeNetworktoPublicRuleNumber",
+    "ParameterValue": "125"
+  },
+  {
+    "ParameterKey": "AllowOfficeNetworktoPrivateRuleNumber",
+    "ParameterValue": "125"
   }
 ]
