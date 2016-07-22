@@ -5,7 +5,7 @@
   },
   {
     "ParameterKey": "Project",
-    "ParameterValue": "VPC Creation"
+    "ParameterValue": "Infrastructure Stack Creation"
   },
   {
     "ParameterKey": "DeleteAfter",
@@ -53,7 +53,7 @@
   },
   {
     "ParameterKey": "RemoteAccessNetwork",
-    "ParameterValue": "50.39.106.21/32"
+    "ParameterValue": "50.12.34.100/32"
   },
   {
     "ParameterKey": "AllowHttpToPublicRuleNumber",
