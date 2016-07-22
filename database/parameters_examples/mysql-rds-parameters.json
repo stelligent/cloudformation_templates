@@ -48,6 +48,10 @@
     "ParameterValue": "true"
   },
   {
+    "ParameterKey": "TcpPort",
+    "ParameterValue": "3306"
+  },
+  {
     "ParameterKey": "ConfigureDns",
     "ParameterValue": "true"
   },
@@ -66,6 +70,26 @@
   {
     "ParameterKey": "AllocatedStorage",
     "ParameterValue": "30"
+  },
+  {
+    "ParameterKey": "PreferredBackupWindow",
+    "ParameterValue": "17:00-19:00"
+  },
+  {
+    "ParameterKey": "PreferredMaintenanceWindow",
+    "ParameterValue": "Sun:19:00-Sun:23:00"
+  },
+  {
+    "ParameterKey": "ConfigureProvisionedIops",
+    "ParameterValue": "false"
+  },
+  {
+    "ParameterKey": "SnapshotOnDelete",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "SetupAlarms",
+    "ParameterValue": "true"
   },
   {
     "ParameterKey": "InstanceType",

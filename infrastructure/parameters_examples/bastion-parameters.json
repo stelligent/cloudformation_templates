@@ -42,5 +42,13 @@
   {
     "ParameterKey": "Ec2KeyPair",
     "ParameterValue": "stelligent-dev"
+  },
+  {
+    "ParameterKey": "AllowSshRdpToBastionRuleNumber",
+    "ParameterValue": "200"
+  },
+  {
+    "ParameterKey": "AllowIcmpToBastionRuleNumber",
+    "ParameterValue": "205"
   }
 ]

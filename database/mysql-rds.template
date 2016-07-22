@@ -418,6 +418,50 @@
       "Description": "Disk Free Space Alarm Created for RDS Instance/s.",
       "Value": {"Ref": "AlarmFreeSpace"}
     },
+    "PrivateSubnet1": {
+      "Description": "Private Subnet 1 Deployment",
+      "Value": {"Ref": "PrivateSubnet1"}
+    },
+    "PrivateSubnet2": {
+      "Description": "Private Subnet 2 Deployment",
+      "Value": {"Ref": "PrivateSubnet2"}
+    },
+    "PrivateSubnet3": {
+      "Description": "Private Subnet 3 Deployment",
+      "Value": {"Ref": "PrivateSubnet3"}
+    },
+    "BackupRetentionPeriod": {
+      "Description": "Backup Retention Period in Days",
+      "Value": {"Ref": "BackupRetentionPeriod"}
+    },
+    "MultiAvailabilityZone": {
+      "Description": "Enable Multi Availability Zones?",
+      "Value": {"Ref": "MultiAvailabilityZone"}
+    },
+    "SnapshotOnDelete": {
+      "Description": "Create Snapshot on Delete?",
+      "Value": {"Ref": "SnapshotOnDelete"}
+    },
+    "AlertSnsTopicArn": {
+      "Description": "SNS Topic ARN for Alerts",
+      "Value": {"Ref": "AlertSnsTopicArn"}
+    },
+    "PreferredBackupWindow": {
+      "Description": "Preferred Backup Window",
+      "Value": {"Ref": "PreferredBackupWindow"}
+    },
+    "PreferredMaintenanceWindow": {
+      "Description": "Preferred Maintenance Window",
+      "Value": {"Ref": "PreferredMaintenanceWindow"}
+    },
+    "AllocatedStorage": {
+      "Description": "Allocated Storage in GB",
+      "Value": {"Ref": "AllocatedStorage"}
+    },
+    "ConfigureProvisionedIops": {
+      "Description": "Configure Provisioned IOPS?",
+      "Value": {"Ref": "ConfigureProvisionedIops"}
+    },
     "DeleteAfter": {
       "Description": "It is ok to delete the Formation after this date",
       "Value": {"Ref": "DeleteAfter"}
