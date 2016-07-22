@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "NAT Gateway by Levon Becker v20160410-1130",
+  "Description": "Infrastructure Stack by Levon Becker v20160721-2030",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
@@ -10,12 +10,151 @@
     "Project": {
       "Description": "Enter Project Name.",
       "Type": "String",
-      "Default": "NAT Gateway Creation"
+      "Default": "Infrastructure Stack Creation"
     },
     "DeleteAfter": {
-      "Description": "Enter Date It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
+      "Description": "Enter Date (MM/DD/YYYY). It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
       "Type": "String",
       "Default": "00/00/201x"
+    },
+    "VPCSubnetCidrBlock": {
+      "Description": "Enter VPC CIDR Block. (i.e. 10.0.0.0/16 = 10.0.0.0-10.0.255.255 = 256 Subnets - 65534 hosts)",
+      "Type": "String",
+      "Default": "10.0.0.0/16",
+      "MinLength": "10",
+      "MaxLength": "18",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    },
+    "AvailabilityZone1": {
+      "Description": "Enter Availability Zone 1 for Public and Private Subnets to use.",
+      "Type": "String",
+      "Default": "a",
+      "AllowedValues": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ]
+    },
+    "AvailabilityZone2": {
+      "Description": "Enter Availability Zone 1 for Public and Private Subnets to use.",
+      "Type": "String",
+      "Default": "b",
+      "AllowedValues": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ]
+    },
+    "AvailabilityZone3": {
+      "Description": "Enter Availability Zone 1 for Public and Private Subnets to use.",
+      "Type": "String",
+      "Default": "c",
+      "AllowedValues": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f"
+      ]
+    },
+    "PublicSubnetCidrBlock1": {
+      "Description": "Enter Public Subnet 1 CIDR Block.",
+      "Type": "String",
+      "Default": "10.0.1.0/24",
+      "MinLength": "10",
+      "MaxLength": "18",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    },
+    "PublicSubnetCidrBlock2": {
+      "Description": "Enter Public Subnet 2 CIDR Block.",
+      "Type": "String",
+      "Default": "10.0.2.0/24",
+      "MinLength": "10",
+      "MaxLength": "18",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    },
+    "PublicSubnetCidrBlock3": {
+      "Description": "Enter Public Subnet 3 CIDR Block.",
+      "Type": "String",
+      "Default": "10.0.3.0/24",
+      "MinLength": "10",
+      "MaxLength": "18",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    },
+    "PrivateSubnetCidrBlock1": {
+      "Description": "Enter Private Subnet 1 CIDR Block.",
+      "Type": "String",
+      "Default": "10.0.4.0/24",
+      "MinLength": "10",
+      "MaxLength": "18",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    },
+    "PrivateSubnetCidrBlock2": {
+      "Description": "Enter Private Subnet 2 CIDR Block.",
+      "Type": "String",
+      "Default": "10.0.5.0/24",
+      "MinLength": "10",
+      "MaxLength": "18",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    },
+    "PrivateSubnetCidrBlock3": {
+      "Description": "Enter Private Subnet 3 CIDR Block.",
+      "Type": "String",
+      "Default": "10.0.6.0/24",
+      "MinLength": "10",
+      "MaxLength": "18",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    },
+    "RemoteAccessNetwork": {
+      "Description": "Source Network IP CIDR Block such as an Office that can access instances say over VPN. (i.e. 192.168.100.0/24)",
+      "Type": "String",
+      "MinLength": "9",
+      "MaxLength": "18",
+      "Default": "192.168.100.0/24",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "must be a valid CIDR range of the form x.x.x.x/x."
+    },
+    "AllowHttpToPublicRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow HTTP From Internet to Public Network.",
+      "Type": "Number",
+      "Default": "100"
+    },
+    "AllowHttpsToPublicRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow HTTPS From Internet to Public Network.",
+      "Type": "Number",
+      "Default": "105"
+    },
+    "AllowReturnTrafficToPublicRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow Return Traffic From Internet to Public Network.",
+      "Type": "Number",
+      "Default": "110"
+    },
+    "AllowVpcSubnetsRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow All VPC Subnets Cross Access to Public Network.",
+      "Type": "Number",
+      "Default": "115"
+    },
+    "AllowAllOutboundPublicRuleNumber": {
+      "Description": "Enter Public Network ACL Rule Number to Allow All Outbound Traffic from the Public Network.",
+      "Type": "Number",
+      "Default": "100"
+    },
+    "AllowAllInboundPrivateRuleNumber": {
+      "Description": "Enter Private Network ACL Rule Number to Allow All Inbound Traffic.",
+      "Type": "Number",
+      "Default": "100"
+    },
+    "AllowAllOutboundPrivateRuleNumber": {
+      "Description": "Enter Private Network ACL Rule Number to Allow All Outbound Traffic.",
+      "Type": "Number",
+      "Default": "100"
     },
     "SetupNatGateway": {
       "Description": "Setup NAT Gateway?",
@@ -59,9 +198,31 @@
     "VpcStack":{
       "Type":"AWS::CloudFormation::Stack",
       "Properties":{
-        "TemplateURL":"https://s3.amazonaws.com/stelligent-public-cloudformation-templates/github/infrastructure/vpc.template",
+        "TemplateURL":"https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpc.template",
         "TimeoutInMinutes":"15",
-        "Parameters" : { CloudFormation Stack Parameters Property Type }
+        "Parameters" : {
+          "Owner" : {"Ref": "Owner"},
+          "Project" : {"Ref": "Project"},
+          "VPCSubnetCidrBlock" : {"Ref": "VPCSubnetCidrBlock"},
+          "AvailabilityZone1" : {"Ref": "AvailabilityZone1"},
+          "AvailabilityZone2" : {"Ref": "AvailabilityZone2"},
+          "AvailabilityZone3" : {"Ref": "AvailabilityZone3"},
+          "PublicSubnetCidrBlock1" : {"Ref": "PublicSubnetCidrBlock1"},
+          "PublicSubnetCidrBlock2" : {"Ref": "PublicSubnetCidrBlock2"},
+          "PublicSubnetCidrBlock3" : {"Ref": "PublicSubnetCidrBlock3"},
+          "PrivateSubnetCidrBlock1" : {"Ref": "PrivateSubnetCidrBlock1"},
+          "PrivateSubnetCidrBlock2" : {"Ref": "PrivateSubnetCidrBlock2"},
+          "PrivateSubnetCidrBlock3" : {"Ref": "PrivateSubnetCidrBlock3"},
+          "RemoteAccessNetwork" : {"Ref": "RemoteAccessNetwork"},
+          "AllowHttpToPublicRuleNumber" : {"Ref": "AllowHttpToPublicRuleNumber"},
+          "AllowHttpsToPublicRuleNumber" : {"Ref": "AllowHttpsToPublicRuleNumber"},
+          "AllowReturnTrafficToPublicRuleNumber" : {"Ref": "AllowReturnTrafficToPublicRuleNumber"},
+          "AllowVpcSubnetsRuleNumber" : {"Ref": "AllowVpcSubnetsRuleNumber"},
+          "AllowAllOutboundPublicRuleNumber" : {"Ref": "AllowAllOutboundPublicRuleNumber"},
+          "AllowAllInboundPrivateRuleNumber" : {"Ref": "AllowAllInboundPrivateRuleNumber"},
+          "AllowAllOutboundPrivateRuleNumber" : {"Ref": "AllowAllOutboundPrivateRuleNumber"},
+          "DeleteAfter" : {"Ref": "DeleteAfter"}
+        }
       }
     }
   },
@@ -76,83 +237,103 @@
     },
     "VPC": {
       "Description": "Created VPC",
-      "Value": { "Fn::GetAtt" : [ "VpcStack", "Outputs.VPC" ] }
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.VPC"]}
     },
     "VPCCIDR": {
       "Description": "VPC Subnet CIDR Block",
-      "Value": { "Fn::GetAtt" : [ "VpcStack", "Outputs.VPC" ] }
+      "Value": {"Ref": "VPCSubnetCidrBlock"}
     },
     "VPCe": {
       "Description": "Created VPC Endpoint",
-      "Value": { "Fn::GetAtt" : [ "VpcStack", "Outputs.VPC" ] }
-    },
-    "PublicSubnetIDs": {
-      "Description": "Public Subnet IDs Created for VPC",
-      "Value": { "Fn::GetAtt" : [ "VpcStack", "Outputs.VPC" ] }
-    },
-    "PrivateSubnetIDs": {
-      "Description": "Private Subnet IDs Created for VPC",
-      "Value": {"Fn::Join": ["", [{"Ref": "PrivateSubnet1"}, ", ", {"Ref": "PrivateSubnet2"}, ", ", {"Ref": "PrivateSubnet3"}]]}
-    },
-    "AvailabilityZones": {
-      "Description": "Private Subnet IDs Created for VPC",
-      "Value": {"Fn::Join": ["", [
-        {"Fn::GetAtt": [ "PublicSubnet1" , "AvailabilityZone" ]}, ", ",
-        {"Fn::GetAtt": [ "PublicSubnet2" , "AvailabilityZone" ]}, ", ",
-        {"Fn::GetAtt": [ "PublicSubnet3" , "AvailabilityZone" ]}
-      ]]}
-    },
-    "PublicSubnets": {
-      "Description": "Public Subnet IDs Created for VPC",
-      "Value": {
-        "Fn::Join": [
-          "", [
-            {"Ref": "PublicSubnetCidrBlock1"}, ", ",
-            {"Ref": "PublicSubnetCidrBlock2"}, ", ",
-            {"Ref": "PublicSubnetCidrBlock3"}
-          ]
-        ]
-      }
-    },
-    "PrivateSubnets": {
-      "Description": "Private Subnet IDs Created for VPC",
-      "Value": {
-        "Fn::Join": [
-          "", [
-            {"Ref": "PrivateSubnetCidrBlock1"}, ", ",
-            {"Ref": "PrivateSubnetCidrBlock2"}, ", ",
-            {"Ref": "PrivateSubnetCidrBlock3"}
-          ]
-        ]
-      }
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.VPCe"]}
     },
     "PublicRouteTable": {
       "Description": "Public Route Table Created for VPC",
-      "Value": {"Ref": "PublicRouteTable"}
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.PublicRouteTable"]}
     },
     "PrivateRouteTable": {
       "Description": "Private Route Table Created for VPC",
-      "Value": {"Ref": "PrivateRouteTable"}
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.PrivateRouteTable"]}
     },
     "PublicNetworkAcl": {
       "Description": "Public Network ACL Created for VPC",
-      "Value": {"Ref": "PublicNetworkAcl"}
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.PublicNetworkAcl"]}
     },
     "PrivateNetworkAcl": {
       "Description": "Private Netowrk ACL Created for VPC",
-      "Value": {"Ref": "PrivateNetworkAcl"}
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.PrivateNetworkAcl"]}
+    },
+    "PublicSubnet1": {
+      "Description": "Public Subnet 1 Created for VPC",
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.PublicSubnet1"]}
+    },
+    "PublicSubnet2": {
+      "Description": "Public Subnet 2 Created for VPC",
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.PublicSubnet2"]}
+    },
+    "PublicSubnet3": {
+      "Description": "Public Subnet 3 Created for VPC",
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.PublicSubnet3"]}
+    },
+    "PrivateSubnet1": {
+      "Description": "Private Subnet 1 Created for VPC",
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.PrivateSubnet1"]}
+    },
+    "PrivateSubnet2": {
+      "Description": "Private Subnet 2 Created for VPC",
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.PrivateSubnet2"]}
+    },
+    "PrivateSubnet3": {
+      "Description": "Private Subnet 3 Created for VPC",
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.PrivateSubnet3"]}
+    },
+    "AvailabilityZone1": {
+      "Description": "AvailabilityZone 1",
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.AvailabilityZone1"]}
+    },
+    "AvailabilityZone2": {
+      "Description": "AvailabilityZone 2",
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.AvailabilityZone2"]}
+    },
+    "AvailabilityZone3": {
+      "Description": "AvailabilityZone 3",
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.AvailabilityZone3"]}
+    },
+    "PublicSubnetCidr1": {
+      "Description": "Public Subnet IDs Created for VPC",
+      "Value": {"Ref": "PublicSubnetCidrBlock1"}
+    },
+    "PublicSubnetCidr2": {
+      "Description": "Public Subnet IDs Created for VPC",
+      "Value": {"Ref": "PublicSubnetCidrBlock2"}
+    },
+    "PublicSubnetCidr3": {
+      "Description": "Public Subnet IDs Created for VPC",
+      "Value": {"Ref": "PublicSubnetCidrBlock3"}
+    },
+    "PrivateSubnetCidr1": {
+      "Description": "Private Subnet IDs Created for VPC",
+      "Value": {"Ref": "PrivateSubnetCidrBlock1"}
+    },
+    "PrivateSubnetCidr2": {
+      "Description": "Private Subnet IDs Created for VPC",
+      "Value": {"Ref": "PrivateSubnetCidrBlock2"}
+    },
+    "PrivateSubnetCidr3": {
+      "Description": "Private Subnet IDs Created for VPC",
+      "Value": {"Ref": "PrivateSubnetCidrBlock3"}
     },
     "InternetGateway": {
       "Description": "Internet Gateway Created for VPC",
-      "Value": {"Ref": "InternetGateway"}
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.InternetGateway"]}
     },
     "InternalAccessSecurityGroup": {
       "Description": "Instance to Instance Access within VPC",
-      "Value": {"Ref": "InternalAccessSecurityGroup"}
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.InternalAccessSecurityGroup"]}
     },
     "RemoteAccessSecurityGroup": {
       "Description": "Remote Network or IP that can Access the instances of VPN or Direct Connect.",
-      "Value": {"Ref": "RemoteAccessSecurityGroup"}
+      "Value": {"Fn::GetAtt":["VpcStack", "Outputs.RemoteAccessSecurityGroup"]}
     },
     "PublicNetworkACLRuleNumbers": {
       "Description": "Public Network ACL Rules Numbers Created.",
@@ -182,7 +363,7 @@
       }
     },
     "DeleteAfter": {
-      "Description": "It is ok to delete the Formation after this date",
+      "Description": "It is ok to delete this Formation after this date",
       "Value": {"Ref": "DeleteAfter"}
     }
   },
@@ -194,23 +375,66 @@
           "Parameters" : [ "Owner", "Project", "DeleteAfter" ]
         },
         {
-          "Label" : { "default" : "Network Configuration" },
+          "Label" : { "default" : "Infrastructure Options" },
           "Parameters" : [
-            "VPC",
-            "PublicSubnet",
-            "PrivateRouteTable",
-            "PublicNetworkAcl",
-            "AllowNatRuleNumber"
+            "SetupNatGateway",
+            "SetupVpn",
+            "SetupBastion",
+            "BastionOsType"
+          ]
+        },
+        {
+          "Label" : { "default" : "Remote Configurations" },
+          "Parameters" : [ "RemoteAccessNetwork" ]
+        },
+        {
+          "Label" : { "default" : "AWS Network Configurations" },
+          "Parameters" : [
+            "VPCSubnetCidrBlock",
+            "PublicSubnetCidrBlock1",
+            "PublicSubnetCidrBlock2",
+            "PublicSubnetCidrBlock3",
+            "PrivateSubnetCidrBlock1",
+            "PrivateSubnetCidrBlock2",
+            "PrivateSubnetCidrBlock3",
+            "AvailabilityZone1",
+            "AvailabilityZone2",
+            "AvailabilityZone3"
+          ]
+        },
+        {
+          "Label" : { "default" : "AWS Network ACL Rule Numbers" },
+          "Parameters" : [
+            "AllowHttpToPublicRuleNumber",
+            "AllowHttpsToPublicRuleNumber",
+            "AllowReturnTrafficToPublicRuleNumber",
+            "AllowVpcSubnetsRuleNumber",
+            "AllowAllOutboundPublicRuleNumber",
+            "AllowAllInboundPrivateRuleNumber",
+            "AllowAllOutboundPrivateRuleNumber"
           ]
         }
       ],
       "ParameterLabels" : {
         "Owner" : { "default" : "Team or Individual Owner" },
         "DeleteAfter" : { "default" : "Delete After Date" },
-        "PublicSubnet" : { "default" : "Public Subnet" },
-        "PrivateRouteTable" : { "default" : "Private Route Table" },
-        "PublicNetworkAcl" : { "default" : "Public Network ACL" },
-        "AllowNatRuleNumber" : { "default" : "Public Network ACL Rule Number" }
+        "VPCSubnetCidrBlock" : { "default" : "VPC Subnet" },
+        "PublicSubnetCidrBlock1" : { "default" : "Public Subnet 1" },
+        "PublicSubnetCidrBlock2" : { "default" : "Public Subnet 2" },
+        "PublicSubnetCidrBlock3" : { "default" : "Public Subnet 3" },
+        "PrivateSubnetCidrBlock1" : { "default" : "Private Subnet 1" },
+        "PrivateSubnetCidrBlock2" : { "default" : "Private Subnet 2" },
+        "PrivateSubnetCidrBlock3" : { "default" : "Private Subnet 3" },
+        "AvailabilityZone1" : { "default" : "Availability Zone 1" },
+        "AvailabilityZone2" : { "default" : "Availability Zone 2" },
+        "AvailabilityZone3" : { "default" : "Availability Zone 3" },
+        "AllowHttpToPublicRuleNumber" : { "default" : "HTTP to Public" },
+        "AllowHttpsToPublicRuleNumber" : { "default" : "HTTPS to Public" },
+        "AllowReturnTrafficToPublicRuleNumber" : { "default" : "Return Traffic to Public" },
+        "AllowVpcSubnetsRuleNumber" : { "default" : "VPC Subnets to Public" },
+        "AllowAllOutboundPublicRuleNumber" : { "default" : "Public Outbound" },
+        "AllowAllInboundPrivateRuleNumber" : { "default" : "Private Inbound" },
+        "AllowAllOutboundPrivateRuleNumber" : { "default" : "Private Outbound" }
       }
     }
   }
