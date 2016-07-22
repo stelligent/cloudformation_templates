@@ -981,7 +981,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/opsworks_codepipeline.jpg" width:100% alt="View in Designer"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
@@ -991,7 +991,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public-media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
+                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
                         <p>COMING SOON</p>
                     </td>
                 </tr>
