@@ -942,7 +942,7 @@ command using various foundational templates that I've creates to be used togeth
         </td>
     </tr>
        <tr>
-        <th align="left" colspan="2"><h4><a href="https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/">OpsWorks CodePipeline Lab</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/opsworks">OpsWorks CodePipeline Lab</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
