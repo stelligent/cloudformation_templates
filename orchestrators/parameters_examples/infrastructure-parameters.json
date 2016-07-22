@@ -1,0 +1,118 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Levon Becker"
+  },
+  {
+    "ParameterKey": "Project",
+    "ParameterValue": "VPC Creation"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "Never"
+  },
+  {
+    "ParameterKey": "VPCSubnetCidrBlock",
+    "ParameterValue": "10.20.0.0/16"
+  },
+  {
+    "ParameterKey": "AvailabilityZone1",
+    "ParameterValue": "a"
+  },
+  {
+    "ParameterKey": "AvailabilityZone2",
+    "ParameterValue": "b"
+  },
+  {
+    "ParameterKey": "AvailabilityZone3",
+    "ParameterValue": "c"
+  },
+  {
+    "ParameterKey": "PublicSubnetCidrBlock1",
+    "ParameterValue": "10.20.1.0/24"
+  },
+  {
+    "ParameterKey": "PublicSubnetCidrBlock2",
+    "ParameterValue": "10.20.2.0/24"
+  },
+  {
+    "ParameterKey": "PublicSubnetCidrBlock3",
+    "ParameterValue": "10.20.3.0/24"
+  },
+  {
+    "ParameterKey": "PrivateSubnetCidrBlock1",
+    "ParameterValue": "10.20.4.0/24"
+  },
+  {
+    "ParameterKey": "PrivateSubnetCidrBlock2",
+    "ParameterValue": "10.20.5.0/24"
+  },
+  {
+    "ParameterKey": "PrivateSubnetCidrBlock3",
+    "ParameterValue": "10.20.6.0/24"
+  },
+  {
+    "ParameterKey": "RemoteAccessNetwork",
+    "ParameterValue": "50.39.106.21/32"
+  },
+  {
+    "ParameterKey": "AllowHttpToPublicRuleNumber",
+    "ParameterValue": "100"
+  },
+  {
+    "ParameterKey": "AllowHttpsToPublicRuleNumber",
+    "ParameterValue": "105"
+  },
+  {
+    "ParameterKey": "AllowReturnTrafficToPublicRuleNumber",
+    "ParameterValue": "110"
+  },
+  {
+    "ParameterKey": "AllowVpcSubnetsRuleNumber",
+    "ParameterValue": "115"
+  },
+  {
+    "ParameterKey": "AllowAllOutboundPublicRuleNumber",
+    "ParameterValue": "100"
+  },
+  {
+    "ParameterKey": "AllowAllInboundPrivateRuleNumber",
+    "ParameterValue": "100"
+  },
+  {
+    "ParameterKey": "AllowAllOutboundPrivateRuleNumber",
+    "ParameterValue": "100"
+  },
+  {
+    "ParameterKey": "SetupNatGateway",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "SetupVpn",
+    "ParameterValue": "false"
+  },
+  {
+    "ParameterKey": "SetupBastion",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "BastionOsType",
+    "ParameterValue": "rhel"
+  },
+  {
+    "ParameterKey": "AllowSshRdpToBastionRuleNumber",
+    "ParameterValue": "200"
+  },
+  {
+    "ParameterKey": "AllowIcmpToBastionRuleNumber",
+    "ParameterValue": "205"
+  },
+  {
+    "ParameterKey": "Ec2KeyPair",
+    "ParameterValue": "mycool-key"
+  },
+  {
+    "ParameterKey": "BastionInstanceType",
+    "ParameterValue": "t2.small"
+  }
+]
