@@ -943,7 +943,7 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 
        <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codecommit">CodeComit CodePipeline Lab</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codecommit">CodeCommit CodePipeline Lab</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
