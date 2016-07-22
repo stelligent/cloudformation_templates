@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Infrastructure Stack by Levon Becker v20160721-2030",
+  "Description": "Infrastructure Stack by Levon Becker v20160722-1600",
   "Parameters": {
     "Owner": {
       "Description": "Enter Team or Individual Name Responsible for the Stack.",
