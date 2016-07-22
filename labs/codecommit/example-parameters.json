@@ -1,0 +1,6 @@
+[
+  {
+    "ParameterKey": "EC2KeyPairName",
+    "ParameterValue": "stelligent-dev"
+  }
+]

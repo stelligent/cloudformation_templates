@@ -14,7 +14,7 @@
     },
     "RepositoryName":{
       "Description":"The name of the CodeCommit repo",
-      "Default":"opsworks-php-demo",
+      "Default":"codecommit-demo",
       "Type":"String",
       "AllowedPattern":"[\\x20-\\x7E]*",
       "ConstraintDescription":"Can contain only ASCII characters."
