@@ -38,7 +38,7 @@ command using various foundational templates that I've creates to be used togeth
 
 <table>
     <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/infrastructure.template">Infrastructure (WIP)</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/infrastructure.template">Infrastructure</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
