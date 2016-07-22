@@ -1,4 +1,4 @@
-# AWS OpsWorks Solutions Templates
+# AWS CodeCommit Solutions Templates
 
 ## Purpose
 
