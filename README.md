@@ -47,7 +47,7 @@ command using various foundational templates that I've creates to be used togeth
             <ol>
              <li>VPC</li>
              <li>Nat Gateway (Optional)</li>
-             <li>Bastion Host (Optinoal)</li>
+             <li>Bastion Host (Optional)</li>
              <li>VPN (Optional)</li></li>
             </ol>
         </td>
