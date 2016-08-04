@@ -13,16 +13,7 @@ Chef Compliance Webapp Server Setup Template that uses a Chef Compliance AMI pro
 3. AWS Permissions to create IAM roles
 4. EC2 Key Pair Setup
 
-## Instructions
-
-### Infrastructure
-Setup the following as needed or desired. Obviously you will need permissions to create these items to continue.
-
-1. [VPC](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template)
-2. [NAT Gateway](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat/nat-gateway.template) (Optional)
-3. [Bastion Host](https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion/bastion.template) (Optional - WIP if I add tcp22 to SG)
-
-### Chef Compliance Webapp
+## Chef Compliance Webapp
 
 <table>
     <tr>
