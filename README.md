@@ -941,8 +941,7 @@ command using various foundational templates that I've creates to be used togeth
             </table>
         </td>
     </tr>
-
-       <tr>
+    <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/eb">Elastic Beanstalk CodePipeline Lab</a></h4></th>
     </tr>
     <tr>
