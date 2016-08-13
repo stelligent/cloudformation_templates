@@ -22,12 +22,21 @@
             </ol>
             <h6>Supported Regions</h6>
              <ol>
-               <li>us-west-2</li>
+               <li>cn-north-1</li>
                <li>us-east-1</li>
+               <li>us-west-1</li>
+               <li>us-west-2</li>
+               <li>eu-west-1</li>
+               <li>eu-central-1</li>
+               <li>ap-northeast-1</li>
+               <li>ap-northeast-2</li>
+               <li>ap-southeast-1</li>
+               <li>ap-southeast-2</li>
+               <li>sa-east-1</li>
              </ol>
             <h6>Create Details</h6>
             <ol>
-             <li>EC2 Instance</li>
+             <li>EC2 Instance (Amazon Linux)</li>
              <li>EIP (Optional)</li>
              <li>IAM Role</li>
              <li>IAM Instance Profile</li>
@@ -54,7 +63,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/bitbucket/bitbucket.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/bitbucket-lab-200x200.jpg" width:100% alt="View in Designer"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/bitbucket/bitbucket.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/bitbucket-200x200.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
