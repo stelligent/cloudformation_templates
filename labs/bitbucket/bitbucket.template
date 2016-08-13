@@ -1,0 +1,826 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Atlassian Bitbucket Server by Levon Becker v20160812-1400",
+  "Parameters": {
+    "Owner": {
+      "Description": "Enter Team or Individual Name Responsible for the Stack.",
+      "Type": "String",
+      "Default": "FirstName LastName"
+    },
+    "Project": {
+      "Description": "Enter Project Name.",
+      "Type": "String",
+      "Default": "Infrastructure Stack Creation"
+    },
+    "DeleteAfter": {
+      "Description": "Enter Date (MM/DD/YYYY). It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
+      "Type": "String",
+      "Default": "00/00/201x"
+    },
+    "BitbucketVersion": {
+      "Description": "Version of Bitbucket, or 'latest' for the latest public release",
+      "Type": "String",
+      "MinLength": "5",
+      "MaxLength": "18",
+      "Default": "latest",
+      "ConstraintDescription": "must be a valid Bitbucket version number, or 'latest' for the latest public release."
+    },
+    "CidrBlock": {
+      "Description": "The IP address range that is permitted to access the instance",
+      "Type": "String",
+      "MinLength": "9",
+      "MaxLength": "18",
+      "Default": "0.0.0.0/0",
+      "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})",
+      "ConstraintDescription": "must be a valid IP CIDR range of the form x.x.x.x/x."
+    },
+    "EbsOptimized": {
+      "Description": "Enable EBS Optimizations",
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ],
+      "ConstraintDescription": "must be 'true' or 'false'."
+    },
+    "HomeDeleteOnTermination": {
+      "Description": "Delete home directory volume when the instance is terminated.  You must back up your data before terminating your instance if this option is set to 'true'!",
+      "Type": "String",
+      "Default": "true",
+      "AllowedValues": [
+        "true",
+        "false"
+      ],
+      "ConstraintDescription": "must be 'true' or 'false'."
+    },
+    "HomeIops": {
+      "Description": "Home directory IOPS (3000 - 20000, only used with Provisioned IOPS).  Note: The ratio of IOPS provisioned to the volume size requested can be a maximum of 30; for example, a volume with 3000 IOPS must be at least 100 GiB",
+      "Type": "Number",
+      "Default": "5000",
+      "MinValue": "3000",
+      "MaxValue": "20000",
+      "ConstraintDescription": "must be in the range 3000 - 20000."
+    },
+    "HomeSize": {
+      "Description": "Home directory storage size, in gibibytes (GiB) (100 - 16384)",
+      "Type": "Number",
+      "Default": "100",
+      "MinValue": "100",
+      "MaxValue": "16384",
+      "ConstraintDescription": "must be in the range 100 - 16384."
+    },
+    "HomeVolumeType": {
+      "Description": "Home directory volume type",
+      "Type": "String",
+      "Default": "General Purpose (SSD)",
+      "AllowedValues": [
+        "General Purpose (SSD)",
+        "Provisioned IOPS"
+      ],
+      "ConstraintDescription": "must be 'General Purpose (SSD)' or 'Provisioned IOPS'."
+    },
+    "InstanceType": {
+      "Description": "EC2 Instance type",
+      "Type": "String",
+      "Default": "t2.small",
+      "AllowedValues": [
+        "t2.small",
+        "t2.medium",
+        "t2.large",
+        "m1.small",
+        "m3.medium",
+        "m3.large",
+        "m3.xlarge",
+        "m3.2xlarge",
+        "m4.large",
+        "m4.xlarge",
+        "m4.2xlarge",
+        "m4.4xlarge",
+        "m4.10xlarge",
+        "c3.large",
+        "c3.xlarge",
+        "c3.2xlarge",
+        "c3.4xlarge",
+        "c3.8xlarge",
+        "c4.large",
+        "c4.xlarge",
+        "c4.2xlarge",
+        "c4.4xlarge",
+        "c4.8xlarge",
+        "hs1.8xlarge",
+        "i2.xlarge",
+        "i2.2xlarge",
+        "i2.4xlarge",
+        "i2.8xlarge",
+        "m4.large",
+        "m4.xlarge",
+        "m4.2xlarge",
+        "r3.large",
+        "r3.xlarge",
+        "r3.2xlarge",
+        "r3.4xlarge",
+        "r3.8xlarge"
+      ],
+      "ConstraintDescription": "must be a valid EC2 instance type, 'large' or larger."
+    },
+    "KeyName": {
+      "Description": "(REQUIRED) The EC2 Key Pair to allow SSH access to the instance",
+      "Type": "AWS::EC2::KeyPair::KeyName",
+      "ConstraintDescription": "must be the name of an existing EC2 KeyPair."
+    },
+    "RootIops": {
+      "Description": "Root volume IOPS (1500 - 20000, only used with Provisioned IOPS).  Note: The ratio of IOPS provisioned to the volume size requested can be a maximum of 30; for example, a volume with 3000 IOPS must be at least 100 GiB",
+      "Type": "Number",
+      "Default": "2500",
+      "MinValue": "1500",
+      "MaxValue": "20000",
+      "ConstraintDescription": "must be in the range 1500 - 20000."
+    },
+    "RootSize": {
+      "Description": "Root volume storage size, in gibibytes (GiB) (50 - 16384)",
+      "Type": "Number",
+      "Default": "50",
+      "MinValue": "50",
+      "MaxValue": "16384",
+      "ConstraintDescription": "must be in the range 50 - 16384."
+    },
+    "RootVolumeType": {
+      "Description": "Root volume type",
+      "Type": "String",
+      "Default": "General Purpose (SSD)",
+      "AllowedValues": [
+        "General Purpose (SSD)",
+        "Provisioned IOPS"
+      ],
+      "ConstraintDescription": "must be 'General Purpose (SSD)' or 'Provisioned IOPS'."
+    },
+    "GenerateSSLCert": {
+      "Description": "SSL Certificate",
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ],
+      "ConstraintDescription": "must be 'None' or 'Generate a self-signed certificate'."
+    },
+    "Subnet": {
+      "Description": "Subnet within the selected VPC",
+      "Type": "AWS::EC2::Subnet::Id",
+      "ConstraintDescription": "must be the ID of a Subnet within the selected VPC."
+    },
+    "VPC": {
+      "Description": "Virtual Private Cloud ID",
+      "Type": "AWS::EC2::VPC::Id",
+      "ConstraintDescription": "must be the ID of a VPC."
+    },
+    "SetPublic": {
+      "Description": "Add EIP Public Access? (Must be in Public Subnet)",
+      "Type": "String",
+      "Default": "false",
+      "AllowedValues": [
+        "true",
+        "false"
+      ]
+    },
+    "InternalAccessSecurityGroup": {
+      "Description": "Security Group That Allows Chef Compliance Host Access to Instances.",
+      "Type": "AWS::EC2::SecurityGroup::Id"
+    }
+  },
+  "Conditions": {
+    "CreateEIP": {"Fn::Equals": [{"Ref": "SetPublic"}, "true" ]},
+    "NoEIP": {"Fn::Equals": [{"Ref": "SetPublic"}, "false" ]},
+    "DoGenerateSSLCert": {
+      "Fn::Equals": [
+        {
+          "Ref": "GenerateSSLCert"
+        },
+        "true"
+      ]
+    },
+    "IsEbsOptimized": {
+      "Fn::Equals": [
+        {
+          "Ref": "EbsOptimized"
+        },
+        "true"
+      ]
+    },
+    "IsHomeProvisionedIops": {
+      "Fn::Equals": [
+        {
+          "Ref": "HomeVolumeType"
+        },
+        "Provisioned IOPS"
+      ]
+    },
+    "IsRootProvisionedIops": {
+      "Fn::Equals": [
+        {
+          "Ref": "RootVolumeType"
+        },
+        "Provisioned IOPS"
+      ]
+    }
+  },
+  "Mappings": {
+    "AWSInstanceType2Arch": {
+      "t2.micro"    : { "Arch" : "HVM64"  },
+      "t2.small"    : { "Arch" : "HVM64"  },
+      "t2.medium"   : { "Arch" : "HVM64"  },
+      "t2.large"    : { "Arch" : "HVM64"  },
+      "m3.medium"   : { "Arch" : "HVM64"  },
+      "m3.large"    : { "Arch" : "HVM64"  },
+      "m3.xlarge"   : { "Arch" : "HVM64"  },
+      "m3.2xlarge"  : { "Arch" : "HVM64"  },
+      "m4.large"    : { "Arch" : "HVM64"  },
+      "m4.xlarge"   : { "Arch" : "HVM64"  },
+      "m4.2xlarge"  : { "Arch" : "HVM64"  },
+      "m4.4xlarge"  : { "Arch" : "HVM64"  },
+      "m4.10xlarge" : { "Arch" : "HVM64"  },
+      "c3.large"    : { "Arch" : "HVM64"  },
+      "c3.xlarge"   : { "Arch" : "HVM64"  },
+      "c3.2xlarge"  : { "Arch" : "HVM64"  },
+      "c3.4xlarge"  : { "Arch" : "HVM64"  },
+      "c3.8xlarge"  : { "Arch" : "HVM64"  },
+      "c4.large"    : { "Arch" : "HVM64"  },
+      "c4.xlarge"   : { "Arch" : "HVM64"  },
+      "c4.2xlarge"  : { "Arch" : "HVM64"  },
+      "c4.4xlarge"  : { "Arch" : "HVM64"  },
+      "c4.8xlarge"  : { "Arch" : "HVM64"  },
+      "r3.large"    : { "Arch" : "HVM64"  },
+      "r3.xlarge"   : { "Arch" : "HVM64"  },
+      "r3.2xlarge"  : { "Arch" : "HVM64"  },
+      "r3.4xlarge"  : { "Arch" : "HVM64"  },
+      "r3.8xlarge"  : { "Arch" : "HVM64"  },
+      "i2.xlarge"   : { "Arch" : "HVM64"  },
+      "i2.2xlarge"  : { "Arch" : "HVM64"  },
+      "i2.4xlarge"  : { "Arch" : "HVM64"  },
+      "i2.8xlarge"  : { "Arch" : "HVM64"  },
+      "d2.xlarge"   : { "Arch" : "HVM64"  },
+      "d2.2xlarge"  : { "Arch" : "HVM64"  },
+      "d2.4xlarge"  : { "Arch" : "HVM64"  },
+      "d2.8xlarge"  : { "Arch" : "HVM64"  },
+      "hi1.4xlarge" : { "Arch" : "HVM64"  },
+      "hs1.8xlarge" : { "Arch" : "HVM64"  },
+      "cr1.8xlarge" : { "Arch" : "HVM64"  },
+      "cc2.8xlarge" : { "Arch" : "HVM64"  }
+    },
+    "AWSRegionArch2AMI": {
+      "cn-north-1": {
+        "HVM64": ""
+      },
+      "us-east-1": {
+        "HVM64": "ami-70c82b1d"
+      },
+      "us-west-1": {
+        "HVM64": "ami-766b1216"
+      },
+      "us-west-2": {
+        "HVM64": "ami-052fdd65"
+      },
+      "eu-west-1": {
+        "HVM64": "ami-5ce9622f"
+      },
+      "eu-central-1": {
+        "HVM64": "ami-68b95407"
+      },
+      "ap-northeast-1": {
+        "HVM64": "ami-7ace2b1b"
+      },
+      "ap-northeast-2": {
+        "HVM64": "ami-4a519924"
+      },
+      "ap-southeast-1": {
+        "HVM64": "ami-975087f4"
+      },
+      "ap-southeast-2": {
+        "HVM64": "ami-5a072b39"
+      },
+      "sa-east-1": {
+        "HVM64": "ami-8b7df4e7"
+      }
+    }
+  },
+  "Resources": {
+    "IamRole": {
+      "Type"  : "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [{"Effect": "Allow", "Principal": {"Service": ["ec2.amazonaws.com"]}, "Action": ["sts:AssumeRole"]}]
+        },
+        "Path": "/"
+      }
+    },
+    "IamPolicies": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-instance-policy"]]},
+        "PolicyDocument": {
+          "Statement": [{
+            "Effect": "Allow",
+            "Action": [
+              "s3:*",
+              "ec2:Describe*",
+              "elasticloadbalancing:Describe*",
+              "autoscaling:Describe*",
+              "cloudwatch:*",
+              "logs:*",
+              "sns:*",
+              "ec2:AttachVolume",
+              "ec2:CreateSnapshot",
+              "ec2:CreateTags",
+              "ec2:CreateVolume",
+              "ec2:DeleteSnapshot",
+              "ec2:DetachVolume"
+            ],
+            "Resource": "*"
+          }]
+        },
+        "Roles": [{"Ref": "IamRole"}]
+      }
+    },
+    "IamInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [{"Ref": "IamRole"}]
+      }
+    },
+    "SecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Security group allowing SSH and HTTP/HTTPS access",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": {
+              "Ref": "CidrBlock"
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": {
+              "Ref": "CidrBlock"
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": {
+              "Ref": "CidrBlock"
+            }
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "7999",
+            "ToPort": "7999",
+            "CidrIp": {
+              "Ref": "CidrBlock"
+            }
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Fn::Join": ["", [{"Ref": "AWS::StackName"}, "-web-access"]]}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          }
+        ]
+      }
+    },
+    "EC2Instance": {
+      "DependsOn": [
+        "SecurityGroup",
+        "IamInstanceProfile"
+      ],
+      "Type": "AWS::EC2::Instance",
+      "Metadata": {
+        "Comment": "Launch Bitbucket Server with an IAM Role that allows DIY Backup",
+        "AWS::CloudFormation::Init": {
+          "configSets": {
+            "default": ["config1", "config2"]
+          },
+          "config1": {
+            "files": {
+              "/etc/cfn/cfn-hup.conf": {
+                "content": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "[main]\n",
+                      "stack=",
+                      {
+                        "Ref": "AWS::StackId"
+                      },
+                      "\n",
+                      "region=",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      "\n"
+                    ]
+                  ]
+                },
+                "mode": "000400",
+                "owner": "root",
+                "group": "root"
+              },
+              "/etc/cfn/hooks.d/cfn-auto-reloader.conf": {
+                "content": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "[cfn-auto-reloader-hook]\n",
+                      "triggers=post.update\n",
+                      "path=Resources.EC2Instance.Metadata.AWS::CloudFormation::Init\n",
+                      "action=/opt/aws/bin/cfn-init -v ",
+                      " --stack ",
+                      {"Ref": "AWS::StackName"},
+                      " --resource EC2Instance ",
+                      " --region ",
+                      {"Ref": "AWS::Region"},
+                      "\n",
+                      "runas=root\n"
+                    ]
+                  ]
+                }
+              },
+              "/etc/atl": {
+                "content": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "ATL_BITBUCKET_VERSION=",
+                      {"Ref": "BitbucketVersion"},
+                      "\n",
+                      {
+                        "Fn::If": [
+                          "DoGenerateSSLCert",
+                          "ATL_SSL_SELF_CERT_ENABLED=true\n",
+                          {"Ref": "AWS::NoValue"}
+                        ]
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          },
+          "config2": {
+            "services": {
+              "sysvinit": {
+                "cfn-hup": {
+                  "enabled": "true",
+                  "ensureRunning": "true",
+                  "files": [
+                    "/etc/cfn/cfn-hup.conf",
+                    "/etc/cfn/hooks.d/cfn-auto-reloader.conf"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "Properties": {
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/xvda",
+            "Ebs": {
+              "VolumeType": {
+                "Fn::If": [
+                  "IsRootProvisionedIops",
+                  "io1",
+                  "gp2"
+                ]
+              },
+              "Iops": {
+                "Fn::If": [
+                  "IsRootProvisionedIops",
+                  {
+                    "Ref": "RootIops"
+                  },
+                  {
+                    "Ref": "AWS::NoValue"
+                  }
+                ]
+              },
+              "DeleteOnTermination": "true",
+              "VolumeSize": {
+                "Ref": "RootSize"
+              }
+            }
+          },
+          {
+            "DeviceName": "/dev/xvdf",
+            "Ebs": {
+              "VolumeType": {
+                "Fn::If": [
+                  "IsHomeProvisionedIops",
+                  "io1",
+                  "gp2"
+                ]
+              },
+              "Iops": {
+                "Fn::If": [
+                  "IsHomeProvisionedIops",
+                  {
+                    "Ref": "HomeIops"
+                  },
+                  {
+                    "Ref": "AWS::NoValue"
+                  }
+                ]
+              },
+              "DeleteOnTermination": {
+                "Ref": "HomeDeleteOnTermination"
+              },
+              "VolumeSize": {
+                "Ref": "HomeSize"
+              }
+            }
+          }
+        ],
+        "EbsOptimized": {
+          "Fn::If": [
+            "IsEbsOptimized",
+            true,
+            false
+          ]
+        },
+        "IamInstanceProfile": {
+          "Ref": "IamInstanceProfile"
+        },
+        "ImageId": {
+          "Fn::FindInMap": [
+            "AWSRegionArch2AMI",
+            {
+              "Ref": "AWS::Region"
+            },
+            {
+              "Fn::FindInMap": [
+                "AWSInstanceType2Arch",
+                {
+                  "Ref": "InstanceType"
+                },
+                "Arch"
+              ]
+            }
+          ]
+        },
+        "InstanceType": {
+          "Ref": "InstanceType"
+        },
+        "KeyName": {
+          "Ref": "KeyName"
+        },
+        "NetworkInterfaces": [
+          {
+            "GroupSet": [
+              {"Ref": "SecurityGroup"},
+              {"Ref": "InternalAccessSecurityGroup"}
+            ],
+            "AssociatePublicIpAddress": "false",
+            "DeviceIndex": "0",
+            "DeleteOnTermination": "true",
+            "SubnetId": {"Ref": "Subnet"}
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {"Ref": "AWS::StackName"}
+          },
+          {
+            "Key": "Owner",
+            "Value": {"Ref": "Owner"}
+          },
+          {
+            "Key": "Project",
+            "Value": {"Ref": "Project"}
+          },
+          {
+            "Key": "DeleteAfter",
+            "Value": {"Ref": "DeleteAfter"}
+          },
+          {
+            "Key": "BitBucketVersion",
+            "Value": {"Ref": "BitbucketVersion"}
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash -xe\n",
+                "yum update -y aws-cfn-bootstrap\n",
+                "/opt/aws/bin/cfn-init -v ",
+                " --stack ",
+                {"Ref": "AWS::StackName"},
+                " --resource EC2Instance ",
+                " --region ",
+                {"Ref": "AWS::Region"},
+                "\n",
+                "/opt/aws/bin/cfn-signal -e $? ",
+                " --stack ",
+                {"Ref": "AWS::StackName"},
+                " --resource EC2Instance ",
+                " --region ",
+                {"Ref": "AWS::Region"},
+                "\n"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "EIP": {
+      "Condition": "CreateEIP",
+      "Type": "AWS::EC2::EIP",
+      "Properties": {
+        "Domain" : "vpc"
+      }
+    },
+    "EIPAssociation": {
+      "Condition": "CreateEIP",
+      "Type": "AWS::EC2::EIPAssociation",
+      "DependsOn": [
+        "EC2Instance",
+        "EIP"
+      ],
+      "Properties": {
+        "InstanceId": {"Ref": "EC2Instance"},
+        "AllocationId": { "Fn::GetAtt" : [ "EIP", "AllocationId" ]}
+      }
+    }
+  },
+  "Outputs": {
+    "Owner": {
+      "Description": "Team or Individual that Owns this Formation.",
+      "Value": {"Ref": "Owner"}
+    },
+    "Project": {
+      "Description": "The project name",
+      "Value": {"Ref": "Project"}
+    },
+    "DeleteAfter": {
+      "Description": "It is ok to delete the Formation after this date",
+      "Value": {"Ref": "DeleteAfter"}
+    },
+    "PublicURL": {
+      "Condition": "CreateEIP",
+      "Description": "The public URL of the Bitbucket Server instance",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            {
+              "Fn::If": [
+                "DoGenerateSSLCert",
+                "https",
+                "http"
+              ]
+            },
+            "://",
+            {
+              "Fn::GetAtt": [
+                "EC2Instance",
+                "PublicDnsName"
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "PrivateURL": {
+      "Description": "The public URL of the Bitbucket Server instance",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            {
+              "Fn::If": [
+                "DoGenerateSSLCert",
+                "https",
+                "http"
+              ]
+            },
+            "://",
+            {
+              "Fn::GetAtt": [
+                "EC2Instance",
+                "PrivateIp"
+              ]
+            }
+          ]
+        ]
+      }
+    },
+    "PublicIp": {
+      "Condition": "CreateEIP",
+      "Description": "The public IP address of the Bitbucket Server instance",
+      "Value": {"Ref": "EIP"}
+    },
+    "PrivateIp": {
+      "Description": "The private IP address of the Bitbucket Server instance",
+      "Value": {
+        "Fn::GetAtt": [
+          "EC2Instance",
+          "PrivateIp"
+        ]
+      }
+    },
+    "IAMRole": {
+      "Description": "IAM Instance Profile Role Created.",
+      "Value": {"Ref": "IamRole"}
+    },
+    "VPC": {
+      "Description": "VPC Used",
+      "Value": {"Ref": "VPC"}
+    },
+    "DeployedToSubnet": {
+      "Description": "Public Subnet the Bastion Host was Deployed on.",
+      "Value": {"Ref": "Subnet"}
+    },
+    "InstanceType": {
+      "Description": "Instance Type.",
+      "Value": {"Ref": "InstanceType"}
+    },
+    "KeyPairLoaded": {
+      "Description": "Key Pair used.",
+      "Value": {"Ref": "KeyName"}
+    }
+  },
+  "Metadata": {
+    "AWS::CloudFormation::Interface" : {
+      "ParameterGroups" : [
+        {
+          "Label" : { "default" : "Ownership" },
+          "Parameters" : [ "Owner", "Project", "DeleteAfter" ]
+        },
+        {
+          "Label" : { "default" : "BitBucket Server Settings" },
+          "Parameters" : [
+            "BitbucketVersion"
+          ]
+        },
+        {
+          "Label" : { "default" : "Network Settings" },
+          "Parameters" : [
+            "VPC",
+            "Subnet",
+            "SetPublic",
+            "CidrBlock"
+          ]
+        },
+        {
+          "Label" : { "default" : "Instance Settings" },
+          "Parameters" : [
+            "KeyName",
+            "InstanceType",
+            "EbsOptimized",
+            "HomeDeleteOnTermination",
+            "HomeIops",
+            "HomeSize",
+            "HomeVolumeType",
+            "RootIops",
+            "RootSize",
+            "RootVolumeType",
+            "GenerateSSLCert",
+            "InternalAccessSecurityGroup"
+          ]
+        }
+      ],
+      "ParameterLabels" : {
+        "Owner" : { "default" : "Team or Individual Owner" },
+        "DeleteAfter" : { "default" : "Delete After Date" },
+        "Subnet" : { "default" : "Subnet" },
+        "InternalAccessSecurityGroup" : { "default" : "Instance Access SG" },
+        "KeyName" : { "default" : "EC2 Access Keypair" }
+      }
+    }
+  }
+}

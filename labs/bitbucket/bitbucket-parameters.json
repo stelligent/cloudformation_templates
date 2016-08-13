@@ -1,0 +1,78 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Firstname Lastname"
+  },
+  {
+    "ParameterKey": "Project",
+    "ParameterValue": "Bitbucket Server Creation"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "Never"
+  },
+  {
+    "ParameterKey": "BitbucketVersion",
+    "ParameterValue": "latest"
+  },
+  {
+    "ParameterKey": "CidrBlock",
+    "ParameterValue": "0.0.0.0/0"
+  },
+  {
+    "ParameterKey": "EbsOptimized",
+    "ParameterValue": "false"
+  },
+  {
+    "ParameterKey": "HomeIops",
+    "ParameterValue": "5000"
+  },
+  {
+    "ParameterKey": "HomeSize",
+    "ParameterValue": "100"
+  },
+  {
+    "ParameterKey": "HomeVolumeType",
+    "ParameterValue": "General Purpose (SSD)"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "t2.small"
+  },
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": "stelligent-dev"
+  },
+  {
+    "ParameterKey": "RootIops",
+    "ParameterValue": "2500"
+  },
+  {
+    "ParameterKey": "RootSize",
+    "ParameterValue": "50"
+  },
+  {
+    "ParameterKey": "RootVolumeType",
+    "ParameterValue": "General Purpose (SSD)"
+  },
+  {
+    "ParameterKey": "GenerateSSLCert",
+    "ParameterValue": "false"
+  },
+  {
+    "ParameterKey": "Subnet",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "VPC",
+    "ParameterValue": "vpc-00000000"
+  },
+  {
+    "ParameterKey": "SetPublic",
+    "ParameterValue": "false"
+  },
+  {
+    "ParameterKey": "InternalAccessSecurityGroup",
+    "ParameterValue": "sg-00000000"
+  }
+]
