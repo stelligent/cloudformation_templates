@@ -10,7 +10,7 @@
     "Project": {
       "Description": "Enter Project Name.",
       "Type": "String",
-      "Default": "Infrastructure Stack Creation"
+      "Default": "Bitbucket Server Lab Creation"
     },
     "DeleteAfter": {
       "Description": "Enter Date (MM/DD/YYYY). It's Ok to Delete the Stack or 'Never' if meant to be persistent.",
@@ -25,7 +25,7 @@
       "Default": "latest",
       "ConstraintDescription": "must be a valid Bitbucket version number, or 'latest' for the latest public release."
     },
-    "CidrBlock": {
+    "AllowedNetwork": {
       "Description": "The IP address range that is permitted to access the instance",
       "Type": "String",
       "MinLength": "9",
@@ -183,10 +183,6 @@
         "true",
         "false"
       ]
-    },
-    "InternalAccessSecurityGroup": {
-      "Description": "Security Group That Allows Chef Compliance Host Access to Instances.",
-      "Type": "AWS::EC2::SecurityGroup::Id"
     }
   },
   "Conditions": {
@@ -362,7 +358,7 @@
             "FromPort": "22",
             "ToPort": "22",
             "CidrIp": {
-              "Ref": "CidrBlock"
+              "Ref": "AllowedNetwork"
             }
           },
           {
@@ -370,7 +366,7 @@
             "FromPort": "80",
             "ToPort": "80",
             "CidrIp": {
-              "Ref": "CidrBlock"
+              "Ref": "AllowedNetwork"
             }
           },
           {
@@ -378,7 +374,7 @@
             "FromPort": "443",
             "ToPort": "443",
             "CidrIp": {
-              "Ref": "CidrBlock"
+              "Ref": "AllowedNetwork"
             }
           },
           {
@@ -386,7 +382,7 @@
             "FromPort": "7999",
             "ToPort": "7999",
             "CidrIp": {
-              "Ref": "CidrBlock"
+              "Ref": "AllowedNetwork"
             }
           }
         ],
@@ -455,10 +451,10 @@
                       "[cfn-auto-reloader-hook]\n",
                       "triggers=post.update\n",
                       "path=Resources.EC2Instance.Metadata.AWS::CloudFormation::Init\n",
-                      "action=/opt/aws/bin/cfn-init -v ",
+                      "action=/opt/aws/bin/cfn-init -v",
                       " --stack ",
                       {"Ref": "AWS::StackName"},
-                      " --resource EC2Instance ",
+                      " --resource EC2Instance",
                       " --region ",
                       {"Ref": "AWS::Region"},
                       "\n",
@@ -599,8 +595,7 @@
         "NetworkInterfaces": [
           {
             "GroupSet": [
-              {"Ref": "SecurityGroup"},
-              {"Ref": "InternalAccessSecurityGroup"}
+              {"Ref": "SecurityGroup"}
             ],
             "AssociatePublicIpAddress": "false",
             "DeviceIndex": "0",
@@ -765,13 +760,25 @@
       "Description": "Public Subnet the Bastion Host was Deployed on.",
       "Value": {"Ref": "Subnet"}
     },
+    "KeyPairLoaded": {
+      "Description": "Key Pair used.",
+      "Value": {"Ref": "KeyName"}
+    },
+    "SecurityGroup": {
+      "Description": "Security Group Created.",
+      "Value": {"Ref": "SecurityGroup"}
+    },
+    "EC2Instance": {
+      "Description": "EC2 Instance.",
+      "Value": {"Ref": "EC2Instance"}
+    },
     "InstanceType": {
       "Description": "Instance Type.",
       "Value": {"Ref": "InstanceType"}
     },
-    "KeyPairLoaded": {
-      "Description": "Key Pair used.",
-      "Value": {"Ref": "KeyName"}
+    "AllowedNetwork": {
+      "Description": "Allowed Network CIDR Block.",
+      "Value": {"Ref": "AllowedNetwork"}
     }
   },
   "Metadata": {
@@ -793,7 +800,7 @@
             "VPC",
             "Subnet",
             "SetPublic",
-            "CidrBlock"
+            "AllowedNetwork"
           ]
         },
         {
@@ -809,8 +816,7 @@
             "RootIops",
             "RootSize",
             "RootVolumeType",
-            "GenerateSSLCert",
-            "InternalAccessSecurityGroup"
+            "GenerateSSLCert"
           ]
         }
       ],
@@ -818,7 +824,6 @@
         "Owner" : { "default" : "Team or Individual Owner" },
         "DeleteAfter" : { "default" : "Delete After Date" },
         "Subnet" : { "default" : "Subnet" },
-        "InternalAccessSecurityGroup" : { "default" : "Instance Access SG" },
         "KeyName" : { "default" : "EC2 Access Keypair" }
       }
     }

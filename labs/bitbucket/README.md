@@ -42,6 +42,10 @@
              <li>IAM Instance Profile</li>
              <li>Security Group</li>
             </ol>
+            <h6>Notes</h6>
+            <ul>
+             <li>It takes 5 to 10 minutes after instance is created to complete the Bitbucket setup</li>
+            </ul>
         </td>
         <td  nowrap width="200" valign="top">
             <table>
