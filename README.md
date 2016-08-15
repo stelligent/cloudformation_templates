@@ -29,6 +29,8 @@ With a simple shell script and a customized parameter json file you can spin up 
 
 
 ### Orchestrators
+[Back to Top](#purpose)
+
 One template to rule them all... These are master templates that call nested templates.
 These are good to build out a full environment without having to run each template individually.
 Coupled with a custom parameters JSON file can give you a one command solution to a complex setup and eliminate the need to duplicate code.
@@ -127,6 +129,7 @@ command using various foundational templates that I've creates to be used togeth
 </table>
 
 ### Infrastructure
+[Back to Top](#purpose)
 
 <table>
     <tr>
@@ -533,6 +536,7 @@ command using various foundational templates that I've creates to be used togeth
 </table>
 
 ### Database
+[Back to Top](#purpose)
 
 <table>
     <tr>
@@ -634,6 +638,7 @@ command using various foundational templates that I've creates to be used togeth
 </table>
 
 ### Autoscaling
+[Back to Top](#purpose)
 
 <table>
     <tr>
@@ -836,6 +841,7 @@ command using various foundational templates that I've creates to be used togeth
 </table>
 
 ### Labs
+[Back to Top](#purpose)
 
 <table>
     <tr>
@@ -1422,3 +1428,5 @@ command using various foundational templates that I've creates to be used togeth
         </td>
     </tr>
 </table>
+
+[Back to Top](#purpose)
