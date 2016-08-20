@@ -47,7 +47,13 @@
               "autoscaling:Describe*",
               "cloudwatch:*",
               "logs:*",
-              "sns:*"
+              "sns:*",
+              "ec2:AttachVolume",
+              "ec2:CreateSnapshot",
+              "ec2:CreateTags",
+              "ec2:CreateVolume",
+              "ec2:DeleteSnapshot",
+              "ec2:DetachVolume"
             ],
             "Resource": "*"
           }]
@@ -75,6 +81,10 @@
     "DeleteAfter": {
       "Description": "It is ok to delete the Formation after this date",
       "Value": {"Ref": "DeleteAfter"}
+    },
+    "IamInstanceProfile": {
+      "Description": "IAM Instance Profile.",
+      "Value": {"Ref": "IamInstanceProfile"}
     },
     "IamRole": {
       "Description": "EC2 IAM Role.",
