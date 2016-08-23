@@ -1255,7 +1255,7 @@ command using various foundational templates that I've creates to be used togeth
             <p>Automates the integration between AWS Lambda and CodePipeline</p>
             <h6>Prerequisites</h6>
             <ol>
-             <li>EC2 Key Pair</li>
+             <li>N/A</li>
             </ol>
             <h6>Supported Regions</h6>
              <ol>
