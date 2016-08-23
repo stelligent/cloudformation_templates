@@ -1366,7 +1366,7 @@ command using various foundational templates that I've creates to be used togeth
                 <li>Elastic Load Balancer</li>
                 <li>IAM Instance Profile, IAM Roles</li>
                 <li>EC2 Instance (Jenkins, Docker)</li>
-                <li>CodePipeline (and integration with CodeCommit</li>
+                <li>CodePipeline with CodeCommit Integration</li>
             </ol>
         </td>
         <td  nowrap width="200" valign="top">
