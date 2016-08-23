@@ -1357,9 +1357,13 @@ command using various foundational templates that I've creates to be used togeth
              </ol>
             <h6>Create Details</h6>
             <ol>
-             <li>IAM InstanceProfile, Policy, and Roles</li>
-             <li>SecurityGroupIngress and SecurityGroup</li>
-             <li>CodePipeline</li>
+                <li>Virtual Private Cloud (VPC) (and associated resources)</li>
+                <li>Auto Scaling Group, Auto Scaling Launch Configuration</li>
+                <li>ECS Cluster, ECS Service, ECS Task Definition</li>
+                <li>Elastic Load Balancer</li>
+                <li>IAM Instance Profile, IAM Roles</li>
+                <li>EC2 Instance (Jenkins, Docker)</li>
+                <li>CodePipeline (and integration with CodeCommit</li>
             </ol>
         </td>
         <td  nowrap width="200" valign="top">
