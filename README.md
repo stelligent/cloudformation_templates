@@ -1247,6 +1247,99 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
             </table>
         </td>
+    <tr>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/opsworks">Lambda CodePipeline Lab</a></h4></th>
+    </tr>
+    <tr>
+        <td valign="top">
+            <p>Automates the integration between AWS OpsWorks, CodeCommit and CodePipeline</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>EC2 Key Pair</li>
+            </ol>
+            <h6>Supported Regions</h6>
+             <ol>
+               <li>us-east-1</li>
+             </ol>
+            <h6>Create Details</h6>
+            <ol>
+             <li>IAM InstanceProfile, Policy, and Roles</li>
+             <li>SecurityGroupIngress and SecurityGroup</li>
+             <li>OpsWorks Stack, Layer, App and Instance</li>
+             <li>CodePipeline</li>
+            </ol>
+        </td>
+        <td  nowrap width="200" valign="top">
+            <table>
+                <tr>
+                    <th align="left">Launch</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <p>us-east-1</p>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th align="left">View in Designer</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/opsworks_codepipeline.jpg" width:100% alt="View in Designer"></a>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th align="left">How To Video</th>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
+                        <p>COMING SOON</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <table>
+                <tr>
+                    <th align="left">AWS CLI Example</th>
+                </tr>
+                <tr>
+                    <td>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json"</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h5>Parameters</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/opsworks/example-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code> --parameters ParameterKey=KeyName,ParameterValue=stelligent-dev"</code>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
     </tr>
        <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/opsworks">OpsWorks CodePipeline Lab</a></h4></th>
