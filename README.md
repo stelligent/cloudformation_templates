@@ -1263,9 +1263,8 @@ command using various foundational templates that I've creates to be used togeth
              </ol>
             <h6>Create Details</h6>
             <ol>
-             <li>IAM InstanceProfile, Policy, and Roles</li>
-             <li>SecurityGroupIngress and SecurityGroup</li>
-             <li>OpsWorks Stack, Layer, App and Instance</li>
+             <li>IAM Policy and Roles</li>
+             <li>Lambda Function</li>
              <li>CodePipeline</li>
             </ol>
         </td>
