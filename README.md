@@ -1350,6 +1350,9 @@ command using various foundational templates that I've creates to be used togeth
             <h6>Prerequisites</h6>
             <ol>
              <li>EC2 Key Pair</li>
+             <li>Existing Docker Image</li>
+             <li>CodeCommit Repository</li>
+             <li>ECR Repository</li>
             </ol>
             <h6>Supported Regions</h6>
              <ol>
