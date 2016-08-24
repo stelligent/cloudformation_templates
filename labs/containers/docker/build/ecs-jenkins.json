@@ -32,7 +32,7 @@
     },
     "PublicAccessCIDR": {
       "Type": "String",
-      "Description": "CIDR block that will have access to AWS resources",
+      "Description": "CIDR block that will have access to AWS resources. Use http://checkip.amazonaws.com/ to get your current IP Address.",
       "AllowedPattern": "\\d+\\.\\d+\\.\\d+\\.\\d+/\\d+"
     }
   },
