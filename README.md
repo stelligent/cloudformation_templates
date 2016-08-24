@@ -1459,8 +1459,13 @@ command using various foundational templates that I've creates to be used togeth
              </ol>
             <h6>Create Details</h6>
             <ol>
-             <li>IAM InstanceProfile, Policy, and Roles</li>
-             <li>SecurityGroupIngress and SecurityGroup</li>
+             <li>VPC and associated resources</li>
+             <li>IAM</li>
+             <li>EFS</li>
+             <li>EC2 Instances</li>
+             <li>Auto Scaling</li>
+             <li>ELB</li>
+             <li>ECS Service, Cluster, Task Definition</li>
             </ol>
         </td>
         <td  nowrap width="200" valign="top">
