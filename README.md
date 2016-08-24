@@ -1343,9 +1343,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        Output | Description
----------- | ------------
-CodePipelineURL | URL for generated pipeline in CodePipeline console.
+                        <code>CodePipelineURL - URL for generated pipeline in CodePipeline console.</code>
                    </td>
                 </tr>
             </table>
