@@ -1,0 +1,26 @@
+[
+  {
+    "ParameterKey":"RepositoryName",
+    "ParameterValue":"ecs-demo"
+  },
+  {
+    "ParameterKey":"RepositoryBranch",
+    "ParameterValue":"master"
+  },
+  {
+    "ParameterKey":"KeyName",
+    "ParameterValue":"stelligent-dev"
+  },
+  {
+    "ParameterKey":"YourIP",
+    "ParameterValue":"192.168.1.19/32"
+  },
+  {
+    "ParameterKey":"ECSCFNURL",
+    "ParameterValue":"NOURL"
+  },
+  {
+    "ParameterKey":"AppName",
+    "ParameterValue":"youruniquevalue"
+  }
+]
