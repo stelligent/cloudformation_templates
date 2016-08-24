@@ -1,26 +1,22 @@
 [
   {
-    "ParameterKey":"RepositoryName",
-    "ParameterValue":"ecs-demo"
+    "ParameterKey":"AvailabilityZone1",
+    "ParameterValue":"us-east-1c"
   },
   {
-    "ParameterKey":"RepositoryBranch",
-    "ParameterValue":"master"
+    "ParameterKey":"AvailabilityZone2",
+    "ParameterValue":"us-east-1d"
   },
   {
-    "ParameterKey":"KeyName",
-    "ParameterValue":"stelligent-dev"
+    "ParameterKey":"InstanceType",
+    "ParameterValue":"t2.small"
   },
   {
-    "ParameterKey":"YourIP",
+    "ParameterKey":"KeyPair",
+    "ParameterValue":"pmd_useast1_training"
+  },
+  {
+    "ParameterKey":"PublicAccessCIDR",
     "ParameterValue":"192.168.1.19/32"
-  },
-  {
-    "ParameterKey":"ECSCFNURL",
-    "ParameterValue":"NOURL"
-  },
-  {
-    "ParameterKey":"AppName",
-    "ParameterValue":"youruniquevalue"
   }
 ]
