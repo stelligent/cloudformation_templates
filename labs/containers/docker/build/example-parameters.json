@@ -13,7 +13,7 @@
   },
   {
     "ParameterKey":"KeyPair",
-    "ParameterValue":"pmd_useast1_training"
+    "ParameterValue":"stelligent-dev"
   },
   {
     "ParameterKey":"PublicAccessCIDR",
