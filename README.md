@@ -1533,7 +1533,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <code> --parameters ParameterKey=AvailabilityZone1,ParameterValue=us-east-1c ParameterKey=AvailabilityZone2,ParameterValue=us-east-1d ParameterKey=KeyPair,ParameterValue=pmd_useast1_training ParameterKey=PublicAccessCIDR,ParameterValue=50.23.45.67/32"</code>
+                        <code> --parameters ParameterKey=AvailabilityZone1,ParameterValue=us-east-1c ParameterKey=AvailabilityZone2,ParameterValue=us-east-1d ParameterKey=KeyPair,ParameterValue=stelligent-dev ParameterKey=PublicAccessCIDR,ParameterValue=50.23.45.67/32"</code>
                     </td>
                 </tr>
             </table>
