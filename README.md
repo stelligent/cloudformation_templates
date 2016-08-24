@@ -1444,7 +1444,7 @@ command using various foundational templates that I've creates to be used togeth
         </td>
     </tr>
        <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/containers/docker/build">OpsWorks CodePipeline Lab</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/containers/docker/build">Containerized CI Solutions in AWS: Jenkins in ECS Lab</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
