@@ -1336,6 +1336,18 @@ command using various foundational templates that I've creates to be used togeth
                         <code> --parameters ParameterKey=KeyName,ParameterValue=stelligent-dev"</code>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <h5>Outputs</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Output | Description
+---------- | ------------
+CodePipelineURL | URL for generated pipeline in CodePipeline console.
+                   </td>
+                </tr>
             </table>
         </td>
     </tr>
