@@ -26,5 +26,9 @@
   {
     "ParameterKey": "PublicNetworkAcl",
     "ParameterValue": "acl-3d207459"
+  },
+  {
+    "ParameterKey": "AllowNatRuleNumber",
+    "ParameterValue": "120"
   }
 ]
