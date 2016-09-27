@@ -1,0 +1,22 @@
+[
+  {
+    "ParameterKey":"AvailabilityZone1",
+    "ParameterValue":"us-east-1c"
+  },
+  {
+    "ParameterKey":"AvailabilityZone2",
+    "ParameterValue":"us-east-1d"
+  },
+  {
+    "ParameterKey":"InstanceType",
+    "ParameterValue":"t2.small"
+  },
+  {
+    "ParameterKey":"KeyPair",
+    "ParameterValue":"stelligent-dev"
+  },
+  {
+    "ParameterKey":"PublicAccessCIDR",
+    "ParameterValue":"192.168.1.19/32"
+  }
+]

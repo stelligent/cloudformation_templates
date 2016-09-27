@@ -1,0 +1,10 @@
+[
+  {
+    "ParameterKey":"S3BucketLambdaFunction",
+    "ParameterValue":"stelligent-training-public"
+  },
+  {
+    "ParameterKey":"Version",
+    "ParameterValue":"1"
+  }
+]
