@@ -849,7 +849,7 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
     <tr>
         <td valign="top">
-            <p>Creates a Chef Complianc Web server in a Public Subnet with Internet Gatewayy attached on an existing VPC.
+            <p>Creates a Chef Complianc Web server in a Public Subnet with Internet Gateway attached on an existing VPC.
              It then attaches an EIP and finally adds the instance to an existing instance-to-instance security group.</p>
             <h6>Prerequisites</h6>
             <ol>
