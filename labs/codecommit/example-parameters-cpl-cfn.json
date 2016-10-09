@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey":"EC2KeyPairName",
+    "ParameterValue":"stelligent-dev"
+  },
+  {
+    "ParameterKey":"EmailAddress",
+    "ParameterValue":"jsmith@example.com"
+  },
+  {
+    "ParameterKey":"RepoName",
+    "ParameterValue":"my-cc-repo"
+  }
+]
