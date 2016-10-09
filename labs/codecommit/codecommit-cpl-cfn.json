@@ -382,7 +382,44 @@
           ]
         ]
       },
-      "Description":"Pipeline Url"
+      "Description":"Deployment Pipeline URL"
+    },
+    "CodeCommitURL":{
+      "Value":{
+        "Fn::Join":[
+          "",
+          [
+            "https://console.aws.amazon.com/codecommit/home?region=",
+            {
+              "Ref":"AWS::Region"
+            },
+            "#/repository/",
+            {
+              "Ref":"RepoName"
+            },
+            "/browse/HEAD/--/"
+          ]
+        ]
+      },
+      "Description":"Git Repository URL"
+    },
+    "CodeDeployURL":{
+      "Value":{
+        "Fn::Join":[
+          "",
+          [
+            "https://console.aws.amazon.com/codedeploy/home?region=",
+            {
+              "Ref":"AWS::Region"
+            },
+            "#/deployments/",
+            {
+              "Ref":"MyDeploymentGroup"
+            }
+          ]
+        ]
+      },
+      "Description":"CodeDeploy URL"
     },
     "MySNSTopic":{
       "Value":{
