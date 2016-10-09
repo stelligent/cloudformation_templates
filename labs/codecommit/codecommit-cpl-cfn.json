@@ -366,7 +366,7 @@
         ]
       }
     },
-    "PipelineUrl":{
+    "CodePipelineURL":{
       "Value":{
         "Fn::Join":[
           "",
