@@ -412,10 +412,7 @@
             {
               "Ref":"AWS::Region"
             },
-            "#/deployments/",
-            {
-              "Ref":"MyDeploymentGroup"
-            }
+            "#/deployments/"
           ]
         ]
       },
