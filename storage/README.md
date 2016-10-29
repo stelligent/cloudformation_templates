@@ -7,12 +7,12 @@ Collection of Storage Templates that can use various nested templates from this 
 ### Storage
 [Back to Top](#purpose)
 
-<table>
+<table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/storage/efs.yml">EFS</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Creates an Elastic File System with 3 Mounts</p>
             <h6>Prerequisites</h6>
             <ol>
