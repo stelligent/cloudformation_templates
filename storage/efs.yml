@@ -1,0 +1,173 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Create Elastic File System v20161029-1200
+Parameters:
+  # Ownership
+  Owner:
+    Type: String
+    Default: FirstName LastName
+  Project:
+    Type: String
+    Default: EFS Mount
+  DeleteAfter:
+    Type: String
+    Default: 00/00/201x
+  # Network
+  VPC:
+    Type: AWS::EC2::VPC::Id
+  Subnet1:
+    Type: AWS::EC2::Subnet::Id
+  Subnet2:
+    Type: AWS::EC2::Subnet::Id
+  Subnet3:
+    Type: AWS::EC2::Subnet::Id
+  # EFS
+  PerformanceMode:
+    Type: String
+    Default: generalPurpose
+    AllowedValues:
+    - generalPurpose
+    - maxIO
+Resources:
+  FileSystem:
+    Type: AWS::EFS::FileSystem
+    Properties:
+      FileSystemTags:
+      - Key: Name
+        Value: !Ref AWS::StackName
+      - Key: Owner
+        Value: !Ref Owner
+      - Key: Project
+        Value: !Ref Project
+      - Key: DeleteAfter
+        Value: !Ref DeleteAfter
+      PerformanceMode: !Ref PerformanceMode
+  MountTarget1:
+    Type: AWS::EFS::MountTarget
+    DependsOn:
+    - FileSystem
+    - SecurityGroup
+    Properties:
+      FileSystemId: !Ref FileSystem
+      SubnetId: !Ref Subnet1
+      SecurityGroups:
+      - !Ref SecurityGroup
+  MountTarget2:
+    Type: AWS::EFS::MountTarget
+    DependsOn:
+    - FileSystem
+    - SecurityGroup
+    Properties:
+      FileSystemId: !Ref FileSystem
+      SubnetId: !Ref Subnet2
+      SecurityGroups:
+      - !Ref SecurityGroup
+  MountTarget3:
+    Type: AWS::EFS::MountTarget
+    DependsOn:
+    - FileSystem
+    - SecurityGroup
+    Properties:
+      FileSystemId: !Ref FileSystem
+      SubnetId: !Ref Subnet3
+      SecurityGroups:
+      - !Ref SecurityGroup
+  EfsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Instance to EFS Mount Access
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: !Ref AWS::StackName
+      - Key: Owner
+        Value: !Ref Owner
+      - Key: Project
+        Value: !Ref Project
+      - Key: DeleteAfter
+        Value: !Ref DeleteAfter
+  SecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    DependsOn: EfsSecurityGroup
+    Properties:
+      GroupId: !Ref EfsSecurityGroup
+      IpProtocol: "-1"
+      SourceSecurityGroupId: !Ref EfsSecurityGroup
+Outputs:
+  Owner:
+    Description: Team or Individual that Owns this Formation.
+    Value: !Ref Owner
+  Project:
+    Description: The project name
+    Value: !Ref Project
+  VPC:
+    Description: Created VPC
+    Value: !Ref VPC
+  Subnet1:
+    Description: Subnet 1
+    Value: !Ref Subnet1
+  Subnet2:
+    Description: Subnet 2
+    Value: !Ref Subnet2
+  Subnet3:
+    Description: Subnet 3
+    Value: !Ref Subnet3
+  FileSystem:
+    Description: FileSystem
+    Value: !Ref FileSystem
+  PerformanceMode:
+    Description: PerformanceMode
+    Value: !Ref PerformanceMode
+  MountTarget1:
+    Description: MountTarget 1
+    Value: !Ref MountTarget1
+  MountTarget2:
+    Description: MountTarget 2
+    Value: !Ref MountTarget1
+  MountTarget3:
+    Description: MountTarget 3
+    Value: !Ref MountTarget1
+#  MountTargetDns1:
+#    Description: MountTarget 1
+#    Value: !GetAtt MountTarget1.DNSName
+#  MountTargetDns2:
+#    Description: MountTarget 2
+#    Value: !GetAtt MountTarget1.DNSName
+#  MountTargetDns3:
+#    Description: MountTarget 3
+#    Value: !GetAtt MountTarget1.DNSName
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Ownership
+      Parameters:
+      - Owner
+      - Project
+      - DeleteAfter
+    - Label:
+        default: Network Configuration
+      Parameters:
+      - VPC
+      - Subnet1
+      - Subnet2
+      - Subnet3
+    - Label:
+        default: EFS Configuration
+      Parameters:
+      - PerformanceMode
+    ParameterLabels:
+      Owner:
+        default: Team or Individual Owner
+      DeleteAfter:
+        default: Delete After Date
+      VPC:
+        default: VPC ID
+      Subnet1:
+        default: Subnet 1
+      Subnet2:
+        default: Subnet 2
+      Subnet3:
+        default: Subnet 3
+      PerformanceMode:
+        default: EFS Performance Mode
