@@ -46,32 +46,32 @@ Resources:
     Type: AWS::EFS::MountTarget
     DependsOn:
     - FileSystem
-    - SecurityGroup
+    - EfsSecurityGroup
     Properties:
       FileSystemId: !Ref FileSystem
       SubnetId: !Ref Subnet1
       SecurityGroups:
-      - !Ref SecurityGroup
+      - !Ref EfsSecurityGroup
   MountTarget2:
     Type: AWS::EFS::MountTarget
     DependsOn:
     - FileSystem
-    - SecurityGroup
+    - EfsSecurityGroup
     Properties:
       FileSystemId: !Ref FileSystem
       SubnetId: !Ref Subnet2
       SecurityGroups:
-      - !Ref SecurityGroup
+      - !Ref EfsSecurityGroup
   MountTarget3:
     Type: AWS::EFS::MountTarget
     DependsOn:
     - FileSystem
-    - SecurityGroup
+    - EfsSecurityGroup
     Properties:
       FileSystemId: !Ref FileSystem
       SubnetId: !Ref Subnet3
       SecurityGroups:
-      - !Ref SecurityGroup
+      - !Ref EfsSecurityGroup
   EfsSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
