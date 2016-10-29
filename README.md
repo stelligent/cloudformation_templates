@@ -23,6 +23,7 @@ With a simple shell script and a customized parameter json file you can spin up 
 ### Categories
 * [Orchestrators](#orchestrators)
 * [Infrastructure](#infrastructure)
+* [Storage](#storage)
 * [Database](#database)
 * [Autoscaling](#autoscaling)
 * [Labs](#labs)
@@ -528,6 +529,47 @@ command using various foundational templates that I've creates to be used togeth
                 <tr>
                     <td>
                         <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Bastion Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=OsType,ParameterValue="rhel" ParameterKey=NetworkAccessIP,ParameterValue="50.23.45.67/32" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev"</code>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+### Storage
+[Back to Top](#purpose)
+
+<table>
+    <tr>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/storage/efs.yml">EFS</a></h4></th>
+    </tr>
+    <tr>
+        <td valign="top">
+            <p>Creates an Elastic File System with 3 Mounts</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>VPC</li>
+             <ul>
+               <li>3 Subnets</li>
+             </ul>
+            </ol>
+            <h6>Create Details</h6>
+            <ol>
+             <li>EFS Filesystem</li>
+             <li>3 Mount Targets</li>
+            </ol>
+        </td>
+        <td  nowrap width="200" valign="top">
+            <table>
+                <tr>
+                    <th align="left">Launch</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/storage/efs.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <p>us-west-2</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/storage/efs.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <p>us-east-1</p>
                     </td>
                 </tr>
             </table>

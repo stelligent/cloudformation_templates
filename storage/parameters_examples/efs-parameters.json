@@ -1,0 +1,34 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Firstname Lastname"
+  },
+  {
+    "ParameterKey": "Project",
+    "ParameterValue": "EFS Creation"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "Never"
+  },
+  {
+    "ParameterKey": "VPC",
+    "ParameterValue": "vpc-00000000"
+  },
+  {
+    "ParameterKey": "Subnet1",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "Subnet2",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "Subnet3",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "PerformanceMode",
+    "ParameterValue": "generalPurpose"
+  }
+]
