@@ -64,6 +64,7 @@
     },
     "MyRepo":{
       "Type":"AWS::CodeCommit::Repository",
+      "DependsOn":"MySNSTopic",
       "Properties":{
         "RepositoryName":{
           "Ref":"RepoName"
