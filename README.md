@@ -1582,6 +1582,103 @@ command using various foundational templates that I've creates to be used togeth
         </td>
     </tr>
 
+       <tr>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codebuild">CodeBuild and AWS Developer Tools SuiteLab</a></h4></th>
+    </tr>
+    <tr>
+        <td valign="top">
+            <p>Automates the integration between AWS CodeBuild, CodeCommit, CodeDeploy, and CodePipeline</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>EC2 Key Pair</li>
+            </ol>
+            <h6>Supported Regions</h6>
+             <ol>
+               <li>us-east-1</li>
+             </ol>
+            <h6>Create Details</h6>
+            <ol>
+             <li>IAM Roles</li>
+             <li>EC2 instance (for CodeDeploy)</li>
+             <li>CodeCommit</li>
+             <li>CodeDeploy</li>
+             <li>CodePipeline</li>
+            </ol>
+        </td>
+        <td  nowrap width="200" valign="top">
+            <table>
+                <tr>
+                    <th align="left">Launch</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#cstack=sn%7ECodeBuildPipelineStack%7Cturl%7Ehttps://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codebuild/codebuild-cpl-cd-cc.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <p>us-east-1</p>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th align="left">View in Designer</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codebuild/codebuild-cpl-cd-cc.json" target="_blank"><img src="https://d2908q01vomqb2.cloudfront.net/77de68daecd823babbb58edb1c8e14d7106e83bb/2016/12/13/Figure_2_Post_2_Stelligent_CodeBuild-1024x738.png
+" width:100% alt="View in Designer"></a>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th align="left">How To Video</th>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="https://www.youtube.com/watch?v=8YLcNczTZkE" width:100% alt="HowTo Video"></a>
+                        <p>COMING SOON</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <table>
+                <tr>
+                    <th align="left">AWS CLI Example</th>
+                </tr>
+                <tr>
+                    <td>
+                        <h6>Base Command</h6>
+                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codebuild/codebuild-cpl-cd-cc.json"</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h5>Parameters</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codebuild/example-parameters.json">(Example Here)</a></h6>
+                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h6>Option 2 - Pass Parameters on CLI</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code> --parameters ParameterKey=KeyName,ParameterValue=stelligent-dev"</code>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/ecs">EC2 Container Service Lab</a></h4></th>
     </tr>
