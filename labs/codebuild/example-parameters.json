@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey":"EmailAddress",
+    "ParameterValue":"youremailaddress@example.com"
+  },
+  {
+    "ParameterKey":"RepositoryBranch",
+    "ParameterValue":"master"
+  },
+  {
+    "ParameterKey":"EC2KeyPairName",
+    "ParameterValue":"stelligent-key"
+  }
+]
