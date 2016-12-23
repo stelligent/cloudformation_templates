@@ -1623,8 +1623,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codebuild/codebuild-cpl-cd-cc.json" target="_blank"><img src="https://d2908q01vomqb2.cloudfront.net/77de68daecd823babbb58edb1c8e14d7106e83bb/2016/12/13/Figure_2_Post_2_Stelligent_CodeBuild-1024x738.png
-" width:100% alt="View in Designer"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codebuild/codebuild-cpl-cd-cc.json" target="_blank"><img src="https://d2908q01vomqb2.cloudfront.net/77de68daecd823babbb58edb1c8e14d7106e83bb/2016/12/13/Figure_2_Post_2_Stelligent_CodeBuild-1024x738.png" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
@@ -1634,8 +1633,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <img src="https://www.youtube.com/watch?v=8YLcNczTZkE" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
+                        <a href="https://www.youtube.com/watch?v=8YLcNczTZkE" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
                     </td>
                 </tr>
             </table>
