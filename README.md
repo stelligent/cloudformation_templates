@@ -1669,7 +1669,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <code> --parameters ParameterKey=KeyName,ParameterValue=stelligent-dev"</code>
+                        <code> --parameters ParameterKey=EC2KeyPairName,ParameterValue=stelligent-dev ParameterKey=RepositoryBranch,ParameterValue=master ParameterKey=EmailAddress,ParameterValue=youremailaddress@example.com</code>
                     </td>
                 </tr>
             </table>
