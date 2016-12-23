@@ -1705,7 +1705,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#cstack=sn%7ECodeBuildPipelineStack%7Cturl%7Ehttps://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codepipeline/codepipeline-updates-after.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#cstack=sn%7ECodePipelineApprovals%7Cturl%7Ehttps://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codepipeline/codepipeline-updates-after.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
                         <p>us-east-1</p>
                     </td>
                 </tr>
