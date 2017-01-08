@@ -222,6 +222,30 @@
                 "InputArtifacts":[
 
                 ],
+                "Name":"StoreDistro",
+                "ActionTypeId":{
+                  "Category":"Invoke",
+                  "Owner":"AWS",
+                  "Version":"1",
+                  "Provider":"Lambda"
+                },
+                "OutputArtifacts":[
+
+                ],
+                "Configuration":{
+                  "FunctionName":{
+                    "Ref":"CodePipelineLambdaDummy"
+                  },
+                  "UserParameters":{
+                    "Ref":"AWS::StackName"
+                  }
+                },
+                "RunOrder":3
+              },
+              {
+                "InputArtifacts":[
+
+                ],
                 "Name":"StaticAnalysis",
                 "ActionTypeId":{
                   "Category":"Invoke",
@@ -245,13 +269,13 @@
             ]
           },
           {
-            "Name":"Environment",
+            "Name":"AcceptanceTesting",
             "Actions":[
               {
                 "InputArtifacts":[
 
                 ],
-                "Name":"LaunchEnvironment",
+                "Name":"ProvisionEnvironment",
                 "ActionTypeId":{
                   "Category":"Invoke",
                   "Owner":"AWS",
@@ -275,7 +299,31 @@
                 "InputArtifacts":[
 
                 ],
-                "Name":"DeployApp",
+                "Name":"InfrastructureAnalysis",
+                "ActionTypeId":{
+                  "Category":"Invoke",
+                  "Owner":"AWS",
+                  "Version":"1",
+                  "Provider":"Lambda"
+                },
+                "OutputArtifacts":[
+
+                ],
+                "Configuration":{
+                  "FunctionName":{
+                    "Ref":"CodePipelineLambdaDummy"
+                  },
+                  "UserParameters":{
+                    "Ref":"AWS::StackName"
+                  }
+                },
+                "RunOrder":1
+              },
+              {
+                "InputArtifacts":[
+
+                ],
+                "Name":"ConfigureEnvironment",
                 "ActionTypeId":{
                   "Category":"Invoke",
                   "Owner":"AWS",
@@ -294,6 +342,78 @@
                   }
                 },
                 "RunOrder":2
+              },
+                           {
+                "InputArtifacts":[
+
+                ],
+                "Name":"AcceptanceTests",
+                "ActionTypeId":{
+                  "Category":"Invoke",
+                  "Owner":"AWS",
+                  "Version":"1",
+                  "Provider":"Lambda"
+                },
+                "OutputArtifacts":[
+
+                ],
+                "Configuration":{
+                  "FunctionName":{
+                    "Ref":"CodePipelineLambdaDummy"
+                  },
+                  "UserParameters":{
+                    "Ref":"AWS::StackName"
+                  }
+                },
+                "RunOrder":3
+              },
+              {
+                "InputArtifacts":[
+
+                ],
+                "Name":"IntegrationTests",
+                "ActionTypeId":{
+                  "Category":"Invoke",
+                  "Owner":"AWS",
+                  "Version":"1",
+                  "Provider":"Lambda"
+                },
+                "OutputArtifacts":[
+
+                ],
+                "Configuration":{
+                  "FunctionName":{
+                    "Ref":"CodePipelineLambdaDummy"
+                  },
+                  "UserParameters":{
+                    "Ref":"AWS::StackName"
+                  }
+                },
+                "RunOrder":3
+              },
+              {
+                "InputArtifacts":[
+
+                ],
+                "Name":"DeployApp",
+                "ActionTypeId":{
+                  "Category":"Invoke",
+                  "Owner":"AWS",
+                  "Version":"1",
+                  "Provider":"Lambda"
+                },
+                "OutputArtifacts":[
+
+                ],
+                "Configuration":{
+                  "FunctionName":{
+                    "Ref":"CodePipelineLambdaDummy"
+                  },
+                  "UserParameters":{
+                    "Ref":"AWS::StackName"
+                  }
+                },
+                "RunOrder":4
               },
               {
                 "InputArtifacts":[
@@ -317,18 +437,18 @@
                     "Ref":"AWS::StackName"
                   }
                 },
-                "RunOrder":3
+                "RunOrder":5
               }
             ]
           },
           {
-            "Name":"Test",
+            "Name":"Capacity",
             "Actions":[
               {
                 "InputArtifacts":[
 
                 ],
-                "Name":"AcceptanceTest",
+                "Name":"PenTest",
                 "ActionTypeId":{
                   "Category":"Invoke",
                   "Owner":"AWS",
@@ -372,11 +492,35 @@
                 },
                 "RunOrder":1
               },
+                            {
+                "InputArtifacts":[
+
+                ],
+                "Name":"ImageTests",
+                "ActionTypeId":{
+                  "Category":"Invoke",
+                  "Owner":"AWS",
+                  "Version":"1",
+                  "Provider":"Lambda"
+                },
+                "OutputArtifacts":[
+
+                ],
+                "Configuration":{
+                  "FunctionName":{
+                    "Ref":"CodePipelineLambdaDummy"
+                  },
+                  "UserParameters":{
+                    "Ref":"AWS::StackName"
+                  }
+                },
+                "RunOrder":1
+              },
               {
                 "InputArtifacts":[
 
                 ],
-                "Name":"SecurityTest",
+                "Name":"ResiliencyTests",
                 "ActionTypeId":{
                   "Category":"Invoke",
                   "Owner":"AWS",
@@ -432,7 +576,7 @@
                 "InputArtifacts":[
 
                 ],
-                "Name":"SwitchEnvironments",
+                "Name":"BlueGreenDeployment",
                 "ActionTypeId":{
                   "Category":"Invoke",
                   "Owner":"AWS",
@@ -451,6 +595,78 @@
                   }
                 },
                 "RunOrder":1
+              },
+              {
+                "InputArtifacts":[
+
+                ],
+                "Name":"OutofBandTests",
+                "ActionTypeId":{
+                  "Category":"Invoke",
+                  "Owner":"AWS",
+                  "Version":"1",
+                  "Provider":"Lambda"
+                },
+                "OutputArtifacts":[
+
+                ],
+                "Configuration":{
+                  "FunctionName":{
+                    "Ref":"CodePipelineLambdaDummy"
+                  },
+                  "UserParameters":{
+                    "Ref":"AWS::StackName"
+                  }
+                },
+                "RunOrder":1
+              },
+              {
+                "InputArtifacts":[
+
+                ],
+                "Name":"SecurityMetrics",
+                "ActionTypeId":{
+                  "Category":"Invoke",
+                  "Owner":"AWS",
+                  "Version":"1",
+                  "Provider":"Lambda"
+                },
+                "OutputArtifacts":[
+
+                ],
+                "Configuration":{
+                  "FunctionName":{
+                    "Ref":"CodePipelineLambdaDummy"
+                  },
+                  "UserParameters":{
+                    "Ref":"AWS::StackName"
+                  }
+                },
+                "RunOrder":1
+              },
+              {
+                "InputArtifacts":[
+
+                ],
+                "Name":"SwitchEndPoints",
+                "ActionTypeId":{
+                  "Category":"Invoke",
+                  "Owner":"AWS",
+                  "Version":"1",
+                  "Provider":"Lambda"
+                },
+                "OutputArtifacts":[
+
+                ],
+                "Configuration":{
+                  "FunctionName":{
+                    "Ref":"CodePipelineLambdaDummy"
+                  },
+                  "UserParameters":{
+                    "Ref":"AWS::StackName"
+                  }
+                },
+                "RunOrder":2
               }
             ]
           }
