@@ -1,0 +1,208 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Mock a pipeline using CodePipeline and Lambda. You will be billed for the AWS resources used if you create a stack from this template.
+Parameters:
+  S3Bucket:
+    Type: String
+    Default: stelligent-training-public
+  S3Key:
+    Type: String
+    Default: public/codepipeline/aws-codepipeline-s3-aws-codedeploy_linux.zip
+  EmailAddress:
+    Type: String
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Params to Modify
+        Parameters:
+          - EmailAddress
+Resources:
+  WebsiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+  WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: WebsiteBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal: "*"
+          Action: s3:GetObject
+          Resource:
+            Fn::Join:
+              - ""
+              - - "arn:aws:s3:::"
+                - Ref: WebsiteBucket
+                - "/*"
+  ArtifactStoreBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+      AccessControl: BucketOwnerFullControl
+  MySNSTopic:
+    Type: "AWS::SNS::Topic"
+    Properties: 
+      DisplayName: String
+      Subscription:
+        - Endpoint: !Ref EmailAddress
+          Protocol: "email"
+      TopicName: !Ref AWS::StackName
+  CodePipelineLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codebuild.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+  CodePipelineLambdaDummy:
+    Type: "AWS::Lambda::Function"
+    DependsOn: [CodePipelineLambdaRole, LambdaCodePipelineExecutionPolicy]
+    Properties:
+      Code: 
+        S3Bucket: !Ref S3Bucket
+        S3Key: "Archive.zip" 
+      Role: 
+        Fn::GetAtt: 
+          - "CodePipelineLambdaRole"
+          - "Arn"
+      Description: "Always return success"
+      Timeout: 20
+      Handler: lambdadummy.handler
+      Runtime: "nodejs4.3"
+      MemorySize: 128
+  LambdaCodePipelineExecutionPolicy:
+    Type: "AWS::IAM::Policy"
+    Properties: 
+      PolicyName: "LambdaRolePolicy"
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Effect: "Allow"
+            Action: 
+              - "cloudformation:*"
+              - "logs:*"
+            Resource: "*"
+      Roles: 
+        - 
+          Ref: "CodePipelineLambdaRole"     
+  CodeCommitJavaRepo:
+   Type: AWS::CodeCommit::Repository
+   Properties:
+     RepositoryName: !Ref AWS::StackName
+     RepositoryDescription: CodeCommit Repository
+     Triggers:
+     - Name: MasterTrigger
+       CustomData: Project ID 12345
+       DestinationArn:
+         Ref: MySNSTopic
+       Branches:
+       - Master
+       Events:
+       - all
+  CodePipelineStack:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: !GetAtt [CodePipelineRole, Arn]
+      ArtifactStore:
+        Location:
+          Ref:
+            ArtifactStoreBucket
+        Type: S3
+      Stages:
+        - Name: Source
+          Actions:
+            - InputArtifacts: []
+              Name: Source
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Version: 1
+                Provider: S3
+              OutputArtifacts:
+                - Name: MyApp
+              Configuration:
+                S3Bucket: !Ref S3Bucket
+                S3ObjectKey: !Ref S3Key
+              RunOrder: 1
+        - Name: Commit
+          Actions:
+            - InputArtifacts: []
+              Name: Build
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 1
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codepipeline.amazonaws.com
+          Action: sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+  CodeBuildJavaProject:
+    Type: AWS::CodeBuild::Project
+    DependsOn: CodeBuildRole
+    Properties:
+      Artifacts:
+        Type: no_artifacts
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/java:openjdk-8
+        Type: LINUX_CONTAINER
+      Name: !Sub ${AWS::StackName}CodeBuildJavaProject
+      ServiceRole: !Ref CodeBuildRole
+      Source:
+        Type: CODECOMMIT
+        Location:
+          Fn::Join:
+            - ""
+            - - "https://git-codecommit."
+              - Ref: AWS::Region
+              - ".amazonaws.com/v1/repos/"
+              - Ref: AWS::StackName
+Outputs:
+  CodePipelineURL:
+    Description: CodePipeline URL
+    Value:
+      Fn::Join:
+        - ""
+        - - "https://console.aws.amazon.com/codepipeline/home?region="
+          - Ref: AWS::Region
+          - "#/view/"
+          - Ref: CodePipelineStack
