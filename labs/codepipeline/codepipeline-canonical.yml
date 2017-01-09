@@ -17,6 +17,15 @@ Metadata:
         Parameters:
           - EmailAddress
 Resources:
+  MySNSTopic:
+    Type: "AWS::SNS::Topic"
+    Properties: 
+      DisplayName: String
+      Subscription:
+        - Endpoint: !Ref EmailAddress
+          Protocol: "email"
+      TopicName: 
+        Ref: AWS::StackName
   WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -240,7 +249,113 @@ Resources:
               Configuration:
                 FunctionName: !Ref CodePipelineLambdaDummy
                 UserParameters: !Ref AWS::StackName
-              RunOrder: 5                                    
+              RunOrder: 5
+        - Name: Capacity
+          Actions:
+            - InputArtifacts: []
+              Name: PenTest
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 1 
+            - InputArtifacts: []
+              Name: PerformanceTest
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 1 
+            - InputArtifacts: []
+              Name: ImageTests
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 1 
+            - InputArtifacts: []
+              Name: ResiliencyTests
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 1
+        - Name: ExploratoryTesting
+          Actions:
+            - InputArtifacts: []
+              Name: QA
+              ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Version: 1
+                Provider: Manual
+              Configuration:
+                NotificationArn:
+                  Ref: MySNSTopic
+                CustomData: "Approval or Reject this change after running Exploratory Tests"
+              RunOrder: 1 
+        - Name: Production
+          Actions:
+            - InputArtifacts: []
+              Name: BlueGreenDeployment
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 1 
+            - InputArtifacts: []
+              Name: OutofBandTests
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 1 
+            - InputArtifacts: []
+              Name: SecurityMetrics
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 1 
+            - InputArtifacts: []
+              Name: SwitchEndPoints
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 2                                                           
   CodePipelineRole:
     Type: AWS::IAM::Role
     Properties:
