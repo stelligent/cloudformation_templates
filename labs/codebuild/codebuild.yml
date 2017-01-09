@@ -59,11 +59,13 @@ Resources:
       Subscription:
         - Endpoint: !Ref EmailAddress
           Protocol: "email"
-      TopicName: !Ref AWS::StackName
+      TopicName: 
+        Ref: AWS::StackName
   CodeCommitJavaRepo:
    Type: AWS::CodeCommit::Repository
    Properties:
-     RepositoryName: !Ref AWS::StackName
+     RepositoryName:
+       Ref: AWS::StackName
      RepositoryDescription: CodeCommit Repository
      Triggers:
      - Name: MasterTrigger
