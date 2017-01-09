@@ -46,14 +46,6 @@ Resources:
       VersioningConfiguration:
         Status: Enabled
       AccessControl: BucketOwnerFullControl
-  MySNSTopic:
-    Type: "AWS::SNS::Topic"
-    Properties: 
-      DisplayName: String
-      Subscription:
-        - Endpoint: !Ref EmailAddress
-          Protocol: "email"
-      TopicName: !Ref AWS::StackName
   CodePipelineLambdaRole:
     Type: AWS::IAM::Role
     Properties:
@@ -110,20 +102,6 @@ Resources:
       Roles: 
         - 
           Ref: "CodePipelineLambdaRole"     
-  CodeCommitJavaRepo:
-   Type: AWS::CodeCommit::Repository
-   Properties:
-     RepositoryName: !Ref AWS::StackName
-     RepositoryDescription: CodeCommit Repository
-     Triggers:
-     - Name: MasterTrigger
-       CustomData: Project ID 12345
-       DestinationArn:
-         Ref: MySNSTopic
-       Branches:
-       - Master
-       Events:
-       - all
   CodePipelineStack:
     Type: AWS::CodePipeline::Pipeline
     Properties:
@@ -162,6 +140,107 @@ Resources:
                 FunctionName: !Ref CodePipelineLambdaDummy
                 UserParameters: !Ref AWS::StackName
               RunOrder: 1
+            - InputArtifacts: []
+              Name: StaticAnalysis
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 1
+            - InputArtifacts: []
+              Name: UnitTest
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 2
+        - Name: AcceptanceTesting
+          Actions:
+            - InputArtifacts: []
+              Name: ProvisionEnvironment
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 1
+            - InputArtifacts: []
+              Name: InfrastructureAnalysis
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 1
+            - InputArtifacts: []
+              Name: ConfigureEnvironment
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 2
+            - InputArtifacts: []
+              Name: AcceptanceTests
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 3
+            - InputArtifacts: []
+              Name: IntegrationTests
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 3
+            - InputArtifacts: []
+              Name: DeployApp
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 4
+            - InputArtifacts: []
+              Name: DeploymentTest
+              ActionTypeId:
+                Category: Invoke
+                Owner: AWS
+                Version: 1
+                Provider: Lambda
+              Configuration:
+                FunctionName: !Ref CodePipelineLambdaDummy
+                UserParameters: !Ref AWS::StackName
+              RunOrder: 5                                    
   CodePipelineRole:
     Type: AWS::IAM::Role
     Properties:
@@ -175,27 +254,6 @@ Resources:
       Path: /
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AdministratorAccess
-  CodeBuildJavaProject:
-    Type: AWS::CodeBuild::Project
-    DependsOn: CodeBuildRole
-    Properties:
-      Artifacts:
-        Type: no_artifacts
-      Environment:
-        ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/java:openjdk-8
-        Type: LINUX_CONTAINER
-      Name: !Sub ${AWS::StackName}CodeBuildJavaProject
-      ServiceRole: !Ref CodeBuildRole
-      Source:
-        Type: CODECOMMIT
-        Location:
-          Fn::Join:
-            - ""
-            - - "https://git-codecommit."
-              - Ref: AWS::Region
-              - ".amazonaws.com/v1/repos/"
-              - Ref: AWS::StackName
 Outputs:
   CodePipelineURL:
     Description: CodePipeline URL
