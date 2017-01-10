@@ -1365,7 +1365,7 @@ command using various foundational templates that I've creates to be used togeth
                 <tr>
                     <td>
                         <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codepipeline/example-parameters-lambda.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
+                        <code>--parameters file:///localpath/to/example-parameters-lambda.json</code>
                     </td>
                 </tr>
                 <tr>
