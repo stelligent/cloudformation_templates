@@ -1328,7 +1328,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codepipeline/codepipeline-canonical.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/codepipeline_mock_designer.jpg" width:100% alt="View in Designer"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codepipeline/codepipeline-canonical.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/codepipeline_mock_designer.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
