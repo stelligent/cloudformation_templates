@@ -1297,6 +1297,9 @@ command using various foundational templates that I've creates to be used togeth
         <td valign="top">
             <p>Creates a deployment pipeline in AWS CodePipeline using a pre-built Lambda function. It can be used to model a pipeline without initial implementation</p>
             <h6>Prerequisites</h6>
+              <ol>
+                <li>AWS Account</li>
+              </ol>
             <h6>Supported Regions</h6>
              <ol>
                <li>us-east-1</li>
