@@ -1291,11 +1291,11 @@ command using various foundational templates that I've creates to be used togeth
         </td>
     
    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codepipeline">Mock Stages and Actions in AWS CodePipeline</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codepipeline">Mock Stages and Actions in AWS CodePipeline and AWS Lambda</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
-            <p>Creates a deployment pipeline in AWS CodePipeline using pre-built Lambda function. It can be used to model a pipeline without initial implementation</p>
+            <p>Creates a deployment pipeline in AWS CodePipeline using a pre-built Lambda function. It can be used to model a pipeline without initial implementation</p>
             <h6>Prerequisites</h6>
             <h6>Supported Regions</h6>
              <ol>
@@ -1364,7 +1364,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/opsworks/example-parameters.json">(Example Here)</a></h6>
+                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codepipeline/example-parameters-lambda.json">(Example Here)</a></h6>
                         <code>--parameters file:///localpath/to/custom-parameters.json</code>
                     </td>
                 </tr>
@@ -1375,7 +1375,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <code> --parameters ParameterKey=KeyName,ParameterValue=stelligent-dev"</code>
+                        <code> --parameters ParameterKey=EmailAddress,ParameterValue=youremailaddress@example.com"</code>
                     </td>
                 </tr>
             </table>
