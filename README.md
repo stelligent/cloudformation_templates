@@ -12,11 +12,9 @@ By using the configured parameters from the console or CLI you should be able to
 The templates generally output all the information you may need for another template.
 So, be sure to examine the **Outputs** tab after creating the stack.
 
-The AWS CLI examples can be dropped in a shell script and/or added to your CI/CD solution to spin up solutions in a fully automated fashion.
-Of course logic around updating stacks, deleting and checking for success/failure should be addressed.
+The AWS CLI examples can be dropped in a shell script and/or added to your CI/CD solution to spin up solutions in a fully automated fashion. Of course, logic around updating stacks, deleting and checking for success/failure should be addressed.
 
-With a simple shell script and a customized parameter json file you can spin up stacks quickly and consistently.
- Furthermore it's just as easy to tear a CloudFormation stack versus if all the objects where created manually.
+With a simple shell script and a customized parameter json file you can spin up stacks quickly and consistently. Furthermore, it's just as easy to tear a CloudFormation stack versus if all the objects were created manually.
 
 ## Templates
 
