@@ -1289,7 +1289,7 @@ command using various foundational templates that I've creates to be used togeth
         </td>
     
    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codepipeline">Mock Stages and Actions in AWS CodePipeline and AWS Lambda</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codepipeline/codepipeline-canonical.yml">Mock Stages and Actions in AWS CodePipeline and AWS Lambda</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
