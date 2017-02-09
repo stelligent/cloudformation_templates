@@ -2058,7 +2058,7 @@ command using various foundational templates that I've creates to be used togeth
             <p>Creates an S3 bucket to host a single-page application and a continuous delivery pipeline with CodeBuild and CodePipeline.</p>
             <h6>Prerequisites</h6>
             <ol>
-             <li>[GitHub token](https://github.com/settings/tokens)</li>
+             <li><a href="https://github.com/settings/tokens">GitHub token</a>
             </ol>
             <h6>Supported Regions</h6>
             <ol>
