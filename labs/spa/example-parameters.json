@@ -1,0 +1,10 @@
+[
+  {
+    "ParameterKey": "SiteBucketName",
+    "ParameterValue": "sample-s3-website"
+  },
+  {
+    "ParameterKey": "GitHubToken",
+    "ParameterValue": "XXXXXXXXXXXXXXXXX"
+  }
+]
