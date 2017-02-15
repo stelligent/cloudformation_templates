@@ -1,0 +1,232 @@
+---
+Description: Deploy an Elastic Beanstalk app stored in CodeCommit via CodePipeline.
+  **WARNING** This template creates one or more Amazon EC2 instances and a CodePipeline
+  pipeline. You will be billed for the AWS resources used if you create a stack from
+  this template.
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  RepositoryName:
+    Description: The name of your CodeCommit repo. Go to https://console.aws.amazon.com/codecommit.
+    Type: String
+    AllowedPattern: "[\\x20-\\x7E]*"
+    ConstraintDescription: Can contain only ASCII characters.
+  RepositoryBranch:
+    Description: The name of the branch for the CodeCommit repo
+    Type: String
+    Default: master
+    AllowedPattern: "[\\x20-\\x7E]*"
+    ConstraintDescription: Can contain only ASCII characters.
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: CodeCommit Repository
+      Parameters:
+      - RepositoryName
+      - RepositoryBranch
+    ParameterLabels:
+      RepositoryName:
+        default: CodeCommit Repository Name
+      RepositoryBranch:
+        default: CodeCommit Repository Branch
+Resources:
+  nodeApplication:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      Description: AWS Elastic Beanstalk Sample Application
+  nodeApplicationVersion:
+    Type: AWS::ElasticBeanstalk::ApplicationVersion
+    Properties:
+      ApplicationName:
+        Ref: nodeApplication
+      Description: AWS ElasticBeanstalk Sample Application Version
+      SourceBundle:
+        S3Bucket:
+          Fn::Join:
+          - "-"
+          - - elasticbeanstalk-samples
+            - Ref: AWS::Region
+        S3Key: nodejs-sample.zip
+  nodeConfigurationTemplate:
+    Type: AWS::ElasticBeanstalk::ConfigurationTemplate
+    Properties:
+      ApplicationName:
+        Ref: nodeApplication
+      Description: AWS ElasticBeanstalk Sample Configuration Template
+      OptionSettings:
+      - Namespace: aws:autoscaling:asg
+        OptionName: MinSize
+        Value: '2'
+      - Namespace: aws:autoscaling:asg
+        OptionName: MaxSize
+        Value: '6'
+      - Namespace: aws:elasticbeanstalk:environment
+        OptionName: EnvironmentType
+        Value: LoadBalanced
+      SolutionStackName: 64bit Amazon Linux 2015.09 v2.0.5 running Node.js
+  nodeEnvironment:
+    Type: AWS::ElasticBeanstalk::Environment
+    DependsOn:
+    - nodeApplication
+    - nodeConfigurationTemplate
+    - nodeApplicationVersion
+    Properties:
+      ApplicationName:
+        Ref: nodeApplication
+      Description: AWS ElasticBeanstalk Sample Node Environment
+      TemplateName:
+        Ref: nodeConfigurationTemplate
+      VersionLabel:
+        Ref: nodeApplicationVersion
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - codepipeline.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: codepipeline-service
+        PolicyDocument:
+          Statement:
+          - Action:
+            - codecommit:GetBranch
+            - codecommit:GetCommit
+            - codecommit:UploadArchive
+            - codecommit:GetUploadArchiveStatus
+            - codecommit:CancelUploadArchive
+            Resource: "*"
+            Effect: Allow
+          - Action:
+            - s3:GetObject
+            - s3:GetObjectVersion
+            - s3:GetBucketVersioning
+            Resource: "*"
+            Effect: Allow
+          - Action:
+            - s3:PutObject
+            Resource:
+            - arn:aws:s3:::codepipeline*
+            - arn:aws:s3:::elasticbeanstalk*
+            Effect: Allow
+          - Action:
+            - codedeploy:CreateDeployment
+            - codedeploy:GetApplicationRevision
+            - codedeploy:GetDeployment
+            - codedeploy:GetDeploymentConfig
+            - codedeploy:RegisterApplicationRevision
+            Resource: "*"
+            Effect: Allow
+          - Action:
+            - elasticbeanstalk:*
+            - ec2:*
+            - elasticloadbalancing:*
+            - autoscaling:*
+            - cloudwatch:*
+            - s3:*
+            - sns:*
+            - cloudformation:*
+            - rds:*
+            - sqs:*
+            - ecs:*
+            - iam:PassRole
+            Resource: "*"
+            Effect: Allow
+          - Action:
+            - lambda:InvokeFunction
+            - lambda:ListFunctions
+            Resource: "*"
+            Effect: Allow
+          Version: '2012-10-17'
+  ArtifactBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+  CodePipelineStack:
+    Type: AWS::CodePipeline::Pipeline
+    DependsOn:
+    - nodeApplication
+    - nodeEnvironment
+    Properties:
+      RoleArn: !GetAtt CodePipelineRole.Arn
+      Stages:
+      - Name: Source
+        Actions:
+        - InputArtifacts: []
+          Name: Source
+          ActionTypeId:
+            Category: Source
+            Owner: AWS
+            Version: '1'
+            Provider: CodeCommit
+          OutputArtifacts:
+          - Name: MyApp
+          Configuration:
+            BranchName:
+              Ref: RepositoryBranch
+            RepositoryName:
+              Ref: RepositoryName
+          RunOrder: 1
+      - Name: Beta
+        Actions:
+        - InputArtifacts:
+          - Name: MyApp
+          Name: EbApp
+          ActionTypeId:
+            Category: Deploy
+            Owner: AWS
+            Version: '1'
+            Provider: ElasticBeanstalk
+          OutputArtifacts: []
+          Configuration:
+            ApplicationName:
+              Ref: nodeApplication
+            EnvironmentName:
+              Ref: nodeEnvironment
+          RunOrder: 1
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ArtifactBucket
+Outputs:
+  AppURL:
+    Value:
+      Fn::Join:
+      - ''
+      - - http://
+        - Fn::GetAtt:
+          - nodeEnvironment
+          - EndpointURL
+        - "/"
+    Description: URL for the working Node application
+  CodePipelineURL:
+    Value:
+      Fn::Join:
+      - ''
+      - - https://console.aws.amazon.com/codepipeline/home?region=
+        - Ref: AWS::Region
+        - "#/view/"
+        - Ref: CodePipelineStack
+    Description: Pipeline URL
+  nodeApplication:
+    Value:
+      Ref: nodeApplication
+  nodeApplicationVersion:
+    Value:
+      Ref: nodeApplicationVersion
+    Description: The Elastic Beanstalk application
+  nodeConfigurationTemplate:
+    Value:
+      Ref: nodeConfigurationTemplate
+    Description: The Elastic Beanstalk configuration
+  nodeEnvironment:
+    Value:
+      Ref: nodeEnvironment
+    Description: The Elastic Beanstalk environment on which the application runs
+  CodePipelineRole:
+    Value:
+      Ref: CodePipelineRole
+    Description: The IAM role associated with CodePipeline pipeline
