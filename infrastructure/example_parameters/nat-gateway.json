@@ -13,19 +13,19 @@
   },
   {
     "ParameterKey": "VPC",
-    "ParameterValue": "vpc-b9f488dd"
+    "ParameterValue": "vpc-00000000"
   },
   {
     "ParameterKey": "PublicSubnet",
-    "ParameterValue": "subnet-14197570"
+    "ParameterValue": "subnet-00000000"
   },
   {
     "ParameterKey": "PrivateRouteTable",
-    "ParameterValue": "rtb-d5cce3b1"
+    "ParameterValue": "rtb-00000000"
   },
   {
     "ParameterKey": "PublicNetworkAcl",
-    "ParameterValue": "acl-3d207459"
+    "ParameterValue": "acl-00000000"
   },
   {
     "ParameterKey": "AllowNatRuleNumber",

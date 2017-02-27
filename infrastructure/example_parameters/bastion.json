@@ -1,0 +1,74 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Levon Becker"
+  },
+  {
+    "ParameterKey": "Project",
+    "ParameterValue": "RHEL Bastion Creation"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "Never"
+  },
+  {
+    "ParameterKey": "VPC",
+    "ParameterValue": "vpc-00000000"
+  },
+  {
+    "ParameterKey": "PublicSubnet",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "PublicNetworkAcl",
+    "ParameterValue": "acl-00000000"
+  },
+  {
+    "ParameterKey": "InternalAccessSecurityGroup",
+    "ParameterValue": "sg-00000000"
+  },
+  {
+    "ParameterKey": "OsType",
+    "ParameterValue": "rhel"
+  },
+  {
+    "ParameterKey": "NetworkAccessIP",
+    "ParameterValue": "50.23.45.67/32"
+  },
+  {
+    "ParameterKey": "AllowSshRdpToBastionRuleNumber",
+    "ParameterValue": "200"
+  },
+  {
+    "ParameterKey": "AllowIcmpToBastionRuleNumber",
+    "ParameterValue": "205"
+  },
+  {
+    "ParameterKey": "PackageList",
+    "ParameterValue": "curl wget mlocate ca-certificates openssl vim git wireshark nmap mysql"
+  },
+  {
+    "ParameterKey": "InstallChefdk",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "ChefdkVersion",
+    "ParameterValue": "0.18.30-1"
+  },
+  {
+    "ParameterKey": "InstallChefClient",
+    "ParameterValue": "false"
+  },
+  {
+    "ParameterKey": "ChefClientVersion",
+    "ParameterValue": "12.14.89"
+  },
+  {
+    "ParameterKey": "Ec2KeyPair",
+    "ParameterValue": "bonusbits-dev"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "t2.small"
+  }
+]
