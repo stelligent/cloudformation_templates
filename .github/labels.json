@@ -1,0 +1,54 @@
+[
+  {
+    "name": "Priority: Critical",
+    "color": "e11d21"
+  },
+  {
+    "name": "Priority: High",
+    "color": "eb6420"
+  },
+  {
+    "name": "Priority: Low",
+    "color": "009800"
+  },
+  {
+    "name": "Priority: Medium",
+    "color": "fbca04"
+  },
+  {
+    "name": "Status: Backlog",
+    "color": "207de5"
+  },
+  {
+    "name": "Status: Done",
+    "color": "009800"
+  },
+  {
+    "name": "Status: In Progress",
+    "color": "c2e0c6"
+  },
+  {
+    "name": "Type: Bug",
+    "color": "e11d21"
+  },
+  {
+    "name": "Type: Documentation",
+    "color": "006b75"
+  },
+  {
+    "name": "Type: New Feature",
+    "color": "207de5"
+  },
+  {
+    "name": "Type: Question",
+    "color": "d4c5f9"
+  },
+  {
+    "name": "Type: Refactor",
+    "color": "bfdadc"
+  },
+  {
+    "name": "Type: Tests",
+    "color": "0c98bc"
+  }
+]
