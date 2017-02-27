@@ -4,8 +4,6 @@
 
 Collection of Orchestration Templates that use various nested templates from this repository.
 
-## Templates
-
 ### Orchestrators
 One template to rule them all... These are master templates that call nested templates.
 These are good to build out a full environment without having to run each template individually.

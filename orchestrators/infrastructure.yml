@@ -299,7 +299,7 @@ Resources:
   vpc:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/bonusbits-public/cloudformation-templates/github/vpc.json
+      TemplateURL: https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpc.yml
       TimeoutInMinutes: '15'
       Parameters:
         Owner:
@@ -350,7 +350,7 @@ Resources:
     - vpc
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/bonusbits-public/cloudformation-templates/github/nat-gateway.json
+      TemplateURL: https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/nat-gateway.yml
       TimeoutInMinutes: '15'
       Parameters:
         Owner:
@@ -381,7 +381,7 @@ Resources:
     - vpc
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/bonusbits-public/cloudformation-templates/github/vpn-bgp.json
+      TemplateURL: https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpn-bgp.yml
       TimeoutInMinutes: '15'
       Parameters:
         Owner:
@@ -428,7 +428,7 @@ Resources:
     - vpc
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/bonusbits-public/cloudformation-templates/github/bastion.json
+      TemplateURL: https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/bastion.yml
       TimeoutInMinutes: '15'
       Parameters:
         Owner:
