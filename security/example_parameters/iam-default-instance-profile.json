@@ -10,9 +10,5 @@
   {
     "ParameterKey": "DeleteAfter",
     "ParameterValue": "Never"
-  },
-  {
-    "ParameterKey": "PolicyName",
-    "ParameterValue": "default_ec2instance_policy"
   }
 ]
