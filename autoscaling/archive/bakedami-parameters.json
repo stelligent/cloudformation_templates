@@ -1,11 +1,11 @@
 [
   {
     "ParameterKey": "Owner",
-    "ParameterValue": "Levon Becker"
+    "ParameterValue": "First Last"
   },
   {
     "ParameterKey": "Project",
-    "ParameterValue": "Autoscaling Baked AMI RDS Backed Webapp Stack Creation"
+    "ParameterValue": "Autoscaling Baked AMI Webapp Stack Creation"
   },
   {
     "ParameterKey": "DeleteAfter",
@@ -13,39 +13,39 @@
   },
   {
     "ParameterKey": "VPC",
-    "ParameterValue": "vpc-b9f488dd"
+    "ParameterValue": "vpc-00000000"
   },
   {
     "ParameterKey": "PublicSubnet1",
-    "ParameterValue": "subnet-24197570"
+    "ParameterValue": "subnet-00000000"
   },
   {
     "ParameterKey": "PublicSubnet2",
-    "ParameterValue": "subnet-24197571"
+    "ParameterValue": "subnet-00000000"
   },
   {
     "ParameterKey": "PublicSubnet3",
-    "ParameterValue": "subnet-24197572"
+    "ParameterValue": "subnet-00000000"
   },
   {
     "ParameterKey": "PrivateSubnet1",
-    "ParameterValue": "subnet-14197570"
+    "ParameterValue": "subnet-00000000"
   },
   {
     "ParameterKey": "PrivateSubnet2",
-    "ParameterValue": "subnet-14197571"
+    "ParameterValue": "subnet-00000000"
   },
   {
     "ParameterKey": "PrivateSubnet3",
-    "ParameterValue": "subnet-14197572"
+    "ParameterValue": "subnet-00000000"
   },
   {
     "ParameterKey": "PublicNetworkAcl",
-    "ParameterValue": "acl-3d207459"
+    "ParameterValue": "acl-00000000"
   },
   {
     "ParameterKey": "InstanceType",
-    "ParameterValue": "t2.small"
+    "ParameterValue": "m3.medium"
   },
   {
     "ParameterKey": "AMI",
@@ -53,7 +53,7 @@
   },
   {
     "ParameterKey": "Ec2KeyPair",
-    "ParameterValue": "stelligent-dev"
+    "ParameterValue": "dev"
   },
   {
     "ParameterKey": "MinAutoScaleCount",
@@ -65,15 +65,11 @@
   },
   {
     "ParameterKey": "InternalAccessSecurityGroup",
-    "ParameterValue": "sg-69d8410f"
+    "ParameterValue": "sg-00000000"
   },
   {
     "ParameterKey": "RemoteSecurityGroup",
-    "ParameterValue": "sg-50d8410d"
-  },
-  {
-    "ParameterKey": "RDSAccessSecurityGroup",
-    "ParameterValue": "sg-40d8410e"
+    "ParameterValue": "sg-00000000"
   },
   {
     "ParameterKey": "ConfigureDns",
@@ -85,23 +81,15 @@
   },
   {
     "ParameterKey": "UseSsl",
-    "ParameterValue": "true"
-  },
-  {
-    "ParameterKey": "ElbSslCertArn",
-    "ParameterValue": "arn:aws:iam::0000000000000:server-certificate/www.hecklejeckle.com"
+    "ParameterValue": "false"
   },
   {
     "ParameterKey": "ElbHttpListeningPort",
-    "ParameterValue": "443"
+    "ParameterValue": "80"
   },
   {
     "ParameterKey": "InstanceHttpListeningPort",
-    "ParameterValue": "8443"
-  },
-  {
-    "ParameterKey": "ListenOnBothPorts",
-    "ParameterValue": "false"
+    "ParameterValue": "80"
   },
   {
     "ParameterKey": "SetupElbLogging",
