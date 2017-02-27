@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "Owner",
-    "ParameterValue": "Levon Becker"
+    "ParameterValue": "Firstname Lastname"
   },
   {
     "ParameterKey": "Project",
@@ -9,35 +9,19 @@
   },
   {
     "ParameterKey": "DeleteAfter",
-    "ParameterValue": "08/01/2016"
+    "ParameterValue": "Never"
+  },
+  {
+    "ParameterKey": "SnapshotArn",
+    "ParameterValue": "arn:aws:rds:us-west-2:000000000000:snapshot:rds:mydbname-2016-11-24-17-03"
   },
   {
     "ParameterKey": "VPC",
-    "ParameterValue": "vpc-b9f488dd"
+    "ParameterValue": "vpc-00000000"
   },
   {
-    "ParameterKey": "PrivateSubnet1",
-    "ParameterValue": "subnet-14197570"
-  },
-  {
-    "ParameterKey": "PrivateSubnet2",
-    "ParameterValue": "subnet-14197571"
-  },
-  {
-    "ParameterKey": "PrivateSubnet3",
-    "ParameterValue": "subnet-14197572"
-  },
-  {
-    "ParameterKey": "PublicNetworkAcl",
-    "ParameterValue": "acl-3d207459"
-  },
-  {
-    "ParameterKey": "MasterUsername",
-    "ParameterValue": "superman"
-  },
-  {
-    "ParameterKey": "MasterUserPassword",
-    "ParameterValue": "Kryptonite"
+    "ParameterKey": "SubnetIdList",
+    "ParameterValue": "subnet-00000000,subnet-00000000,subnet-00000000"
   },
   {
     "ParameterKey": "BackupRetentionPeriod",
@@ -68,10 +52,6 @@
     "ParameterValue": "arn:aws:sns:us-west-2:000000000000:rds-alerts"
   },
   {
-    "ParameterKey": "AllocatedStorage",
-    "ParameterValue": "30"
-  },
-  {
     "ParameterKey": "PreferredBackupWindow",
     "ParameterValue": "17:00-19:00"
   },
@@ -92,7 +72,11 @@
     "ParameterValue": "true"
   },
   {
+    "ParameterKey": "ProvisionedIopsValue",
+    "ParameterValue": "1000"
+  },
+  {
     "ParameterKey": "InstanceType",
-    "ParameterValue": "db.t2.medium"
+    "ParameterValue": "db.t2.small"
   }
 ]

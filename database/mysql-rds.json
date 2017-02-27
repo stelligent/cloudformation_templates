@@ -1,4 +1,4 @@
-{
+  {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "MySQL RDS by Levon Becker v20160410-0900",
   "Parameters": {
