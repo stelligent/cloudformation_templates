@@ -53,11 +53,7 @@
   },
   {
     "ParameterKey": "RemoteAccessNetwork",
-    "ParameterValue": "192.168.0.0/24"
-  },
-  {
-    "ParameterKey": "RemoteNetworkCidr",
-    "ParameterValue": "192.168.0.0/24"
+    "ParameterValue": "50.12.34.100/32"
   },
   {
     "ParameterKey": "AllowHttpToPublicRuleNumber",

@@ -324,7 +324,7 @@
     "vpc":{
       "Type":"AWS::CloudFormation::Stack",
       "Properties":{
-        "TemplateURL":"https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpc.template",
+        "TemplateURL":"https://s3.amazonaws.com/bonusbits-public/cloudformation-templates/github/vpc.json",
         "TimeoutInMinutes":"15",
         "Parameters" : {
           "Owner" : {"Ref": "Owner"},
@@ -356,7 +356,7 @@
       "DependsOn": ["vpc"],
       "Type":"AWS::CloudFormation::Stack",
       "Properties":{
-        "TemplateURL":"https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/nat-gateway.template",
+        "TemplateURL":"https://s3.amazonaws.com/bonusbits-public/cloudformation-templates/github/nat-gateway.json",
         "TimeoutInMinutes":"15",
         "Parameters" : {
           "Owner" : {"Ref": "Owner"},
@@ -374,7 +374,7 @@
       "DependsOn": ["vpc"],
       "Type":"AWS::CloudFormation::Stack",
       "Properties":{
-        "TemplateURL":"https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpn-bgp.template",
+        "TemplateURL":"https://s3.amazonaws.com/bonusbits-public/cloudformation-templates/github/vpn-bgp.json",
         "TimeoutInMinutes":"15",
         "Parameters" : {
           "Owner" : {"Ref": "Owner"},
@@ -401,7 +401,7 @@
       ],
       "Type":"AWS::CloudFormation::Stack",
       "Properties":{
-        "TemplateURL":"https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/bastion.template",
+        "TemplateURL":"https://s3.amazonaws.com/bonusbits-public/cloudformation-templates/github/bastion.json",
         "TimeoutInMinutes":"15",
         "Parameters" : {
           "Owner" : {"Ref": "Owner"},
