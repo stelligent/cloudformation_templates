@@ -39,7 +39,7 @@ Coupled with a custom parameters JSON file can give you a one command solution t
 For instance you could have a VPC, NAT, RDS and Autoscaling Webapp behind an ELB and Update DNS all in one
 command using various foundational templates that I've creates to be used together.
 
-<table>
+<table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/infrastructure.yml">Infrastructure</a></h4></th>
     </tr>
@@ -156,7 +156,7 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 </table>
 
-<table>
+<table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat-gateway.yml">NAT Gateway (Network Addresss Translation)</a></h4></th>
     </tr>
@@ -223,7 +223,7 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 </table>
 
-<table>
+<table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpn-bgp.yml">VPN BGP (Virtual Private Network using Border Gateway Protocol)</a></h4></th>
     </tr>
@@ -294,7 +294,7 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 </table>
 
-<table>
+<table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion.yml">Bastion</a></h4></th>
     </tr>
@@ -398,7 +398,7 @@ command using various foundational templates that I've creates to be used togeth
 ### Storage
 [Back to Top](#purpose)
 
-<table width="100%" >
+<table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/storage/efs.yml">EFS</a></h4></th>
     </tr>
@@ -567,7 +567,7 @@ command using various foundational templates that I've creates to be used togeth
 ### Autoscaling
 [Back to Top](#purpose)
 
-<table>
+<table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/autoscaling/bakedami-elb-rdsbackend.yml">Baked AMI, ELB, RDS Backend</a></h4></th>
     </tr>
@@ -626,8 +626,8 @@ command using various foundational templates that I've creates to be used togeth
 ### Labs
 [Back to Top](#purpose)
     
-<table>    
-<tr>
+<table width="100%">  
+    <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/lambda">AWS Lambda CodePipeline Lab</a></h4></th>
     </tr>
     <tr>
@@ -674,7 +674,7 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 </table>    
 
-<table>    
+<table width="100%">   
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/bitbucket/bitbucket.yml">Bitbucket Lab</a></h4></th>
     </tr>
@@ -746,7 +746,7 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 </table> 
 
-<table>
+<table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef">Chef Compliance Lab</a></h4></th>
     </tr>
@@ -806,7 +806,7 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 </table> 
 
-<table>
+<table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codebuild">CodeBuild and AWS Developer Tools SuiteLab</a></h4></th>
     </tr>
@@ -866,8 +866,8 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 </table>
 
-<table>
-<tr>
+<table width="100%">
+    <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codecommit">CodeCommit CodePipeline Lab</a></h4></th>
     </tr>
     <tr>
@@ -916,8 +916,8 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 </table>    
     
-<table>
-<tr>
+<table width="100%">
+    <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codepipeline">CodePipeline Approvals Labs</a></h4></th>
     </tr>
     <tr>
@@ -975,8 +975,8 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 </table>
 
-<table>
-  <tr>
+<table width="100%">
+     <tr>
          <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/containers/docker/build">Containerized CI Solutions in AWS: Jenkins in ECS Lab</a></h4></th>
      </tr>
      <tr>
@@ -1027,7 +1027,7 @@ command using various foundational templates that I've creates to be used togeth
      </tr>
 </table>  
 
-<table>
+<table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/ecs">EC2 Container Service Lab</a></h4></th>
     </tr>
@@ -1082,7 +1082,7 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 </table>
 
-<table>
+<table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/eb">Elastic Beanstalk CodePipeline Lab</a></h4></th>
     </tr>
@@ -1179,7 +1179,7 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 </table>
   
-<table>  
+<table width="100%"> 
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codepipeline/codepipeline-canonical.yml">Mock Stages and Actions in AWS CodePipeline and AWS Lambda</a></h4></th>
     </tr>
@@ -1229,99 +1229,99 @@ command using various foundational templates that I've creates to be used togeth
     </tr>
 </table> 
     
-<table>
-        <tr>
-            <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/opsworks">OpsWorks CodePipeline Lab</a></h4></th>
-        </tr>
-        <tr>
-            <td valign="top">
-                <p>Automates the integration between AWS OpsWorks, CodeCommit and CodePipeline</p>
-                <h6>Prerequisites</h6>
-                <ol>
-                 <li>EC2 Key Pair</li>
-                </ol>
-                <h6>Supported Regions</h6>
-                 <ol>
-                   <li>us-east-1</li>
-                 </ol>
-                <h6>Create Details</h6>
-                <ol>
-                 <li>IAM InstanceProfile, Policy, and Roles</li>
-                 <li>SecurityGroupIngress and SecurityGroup</li>
-                 <li>OpsWorks Stack, Layer, App and Instance</li>
-                 <li>CodePipeline</li>
-                </ol>
-            </td>
-            <td  nowrap width="200" valign="top">
-                <table>
-                    <tr>
-                        <th align="left">Launch</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                            <p>us-east-1</p>
-                        </td>
-                    </tr>
-                </table>
-                <table>
-                    <tr>
-                        <th align="left">View in Designer</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/opsworks_codepipeline.jpg" width:100% alt="View in Designer"></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+<table width="100%">
+    <tr>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/opsworks">OpsWorks CodePipeline Lab</a></h4></th>
+    </tr>
+    <tr>
+        <td valign="top">
+            <p>Automates the integration between AWS OpsWorks, CodeCommit and CodePipeline</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>EC2 Key Pair</li>
+            </ol>
+            <h6>Supported Regions</h6>
+             <ol>
+               <li>us-east-1</li>
+             </ol>
+            <h6>Create Details</h6>
+            <ol>
+             <li>IAM InstanceProfile, Policy, and Roles</li>
+             <li>SecurityGroupIngress and SecurityGroup</li>
+             <li>OpsWorks Stack, Layer, App and Instance</li>
+             <li>CodePipeline</li>
+            </ol>
+        </td>
+        <td  nowrap width="200" valign="top">
+            <table>
+                <tr>
+                    <th align="left">Launch</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <p>us-east-1</p>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th align="left">View in Designer</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/opsworks_codepipeline.jpg" width:100% alt="View in Designer"></a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
 </table> 
    
-<table>
-       <tr>
-           <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/spa/pipeline.yml">Pipeline for Single-Page Appliation</a></h4></th>
-       </tr>
-       <tr>
-           <td valign="top">
-               <p>Creates an S3 bucket to host a single-page application and a continuous delivery pipeline with CodeBuild and CodePipeline.</p>
-               <h6>Prerequisites</h6>
-               <ol>
-                <li><a href="https://github.com/settings/tokens">GitHub token</a> (with access to repo and admin:repo_hook) 
-               </ol>
-               <h6>Supported Regions</h6>
-               <ol>
-                <li>us-east-1</li>
-                <li>us-west-2</li>
-               </ol>
-               <h6>Create Details</h6>
-               <ol>
-                <li>IAM Role for CodePipeline</li>
-                <li>IAM Role for CodeBuild</li>
-                <li>S3 Bucket</li>
-                <li>CodeBuild Project</li>
-                <li>CodePipeline Project</li>
-               </ol>
-           </td>
-           <td  nowrap width="200" valign="top">
-               <table>
-                   <tr>
-                       <th align="left">Launch</th>
-                   </tr>
-                   <tr>
-                       <td>
-                           <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/spa/pipeline.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                           <p>us-west-2</p>
-                           <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/spa/pipeline.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                           <p>us-east-1</p>
-                       </td>
-                   </tr>
-               </table>
-           </td>
-       </tr>
+<table width="100%">
+    <tr>
+       <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/spa/pipeline.yml">Pipeline for Single-Page Appliation</a></h4></th>
+    </tr>
+    <tr>
+       <td valign="top">
+           <p>Creates an S3 bucket to host a single-page application and a continuous delivery pipeline with CodeBuild and CodePipeline.</p>
+           <h6>Prerequisites</h6>
+           <ol>
+            <li><a href="https://github.com/settings/tokens">GitHub token</a> (with access to repo and admin:repo_hook) 
+           </ol>
+           <h6>Supported Regions</h6>
+           <ol>
+            <li>us-east-1</li>
+            <li>us-west-2</li>
+           </ol>
+           <h6>Create Details</h6>
+           <ol>
+            <li>IAM Role for CodePipeline</li>
+            <li>IAM Role for CodeBuild</li>
+            <li>S3 Bucket</li>
+            <li>CodeBuild Project</li>
+            <li>CodePipeline Project</li>
+           </ol>
+       </td>
+       <td  nowrap width="200" valign="top">
+           <table>
+               <tr>
+                   <th align="left">Launch</th>
+               </tr>
+               <tr>
+                   <td>
+                       <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/spa/pipeline.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                       <p>us-west-2</p>
+                       <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/spa/pipeline.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                       <p>us-east-1</p>
+                   </td>
+               </tr>
+           </table>
+       </td>
+    </tr>
 </table>
    
-<table>   
+<table width="100%">   
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.yml">Test Instances</a></h4></th>
     </tr>
