@@ -12,9 +12,11 @@ By using the configured parameters from the console or CLI you should be able to
 The templates generally output all the information you may need for another template.
 So, be sure to examine the **Outputs** tab after creating the stack.
 
-The AWS CLI examples can be dropped in a shell script and/or added to your CI/CD solution to spin up solutions in a fully automated fashion. Of course, logic around updating stacks, deleting and checking for success/failure should be addressed.
+The AWS CLI examples can be dropped in a shell script and/or added to your CI/CD solution to spin up solutions in a fully automated fashion.
+Of course logic around updating stacks, deleting and checking for success/failure should be addressed.
 
-With a simple shell script and a customized parameter json file you can spin up stacks quickly and consistently. Furthermore, it's just as easy to tear a CloudFormation stack versus if all the objects were created manually.
+With a simple shell script and a customized parameter json file you can spin up stacks quickly and consistently.
+ Furthermore it's just as easy to tear a CloudFormation stack versus if all the objects where created manually.
 
 ## Templates
 
@@ -39,7 +41,7 @@ command using various foundational templates that I've creates to be used togeth
 
 <table>
     <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/infrastructure.template">Infrastructure</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/infrastructure.yml">Infrastructure</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
@@ -48,8 +50,12 @@ command using various foundational templates that I've creates to be used togeth
             <ol>
              <li>VPC</li>
              <li>Nat Gateway (Optional)</li>
-             <li>Bastion Host (Optional)</li>
+             <li>Bastion Host (Optinoal)</li>
              <li>VPN (Optional)</li></li>
+            </ol>
+            <h6>Public S3 URL</h6>
+            <ol>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure.yml</li>
             </ol>
         </td>
         <td  nowrap width="200" valign="top">
@@ -59,10 +65,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/orchestrators/infrastructure.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/orchestrators/infrastructure.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>
@@ -72,54 +75,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/orchestrators/infrastructure.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/infra-orchestrator-600x600.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/orchestrators/infrastructure.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/parameters_examples/infrastructure-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters COMING SOON</code>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/infra-orchestrator-600x600.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
@@ -130,48 +86,49 @@ command using various foundational templates that I've creates to be used togeth
 ### Infrastructure
 [Back to Top](#purpose)
 
-<table>
+<table width="100%">
     <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template">VPC (Virtual Private Cloud)</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.yml">VPC (Virtual Private Cloud)</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
-            <p>Creates an entire VPC from scratch for Lab or Permanent.</p>
-            <h6>Create Details</h6>
+        <td width="100%" valign="top">
+           <p>Creates an entire VPC from scratch for Lab or Permanent.</p>
+           <h6>Create Details</h6>
+           <ol>
+            <li>Single VPC</li>
+            <li>3 Public Subnets</li>
+            <li>3 Private Subnets</li>
+            <li>Public Route Table</li>
+            <li>Private Route Table</li>
+            <li>Internet Gateway</li>
+            <ul>
+              <li>Attached to the Public Route Table</li>
+            </ul>
+            <li>Public Network ACL</li>
+            <li>Private Network ACL</li>
+            <li>VPC Endpoint</li>
+            <li>Instance Access Security Group</li>
+            <ul>
+              <li>Instance to Instance Access</li>
+            </ul>
+            <li>Remote Access Security Group</li>
+            <ul>
+              <li>This can be used for to allow site-to-site VPN or Direct Connect Networks access to instances.</li>
+            </ul>
+           </ol>
+            <h6>Public S3 URL</h6>
             <ol>
-             <li>Single VPC</li>
-             <li>3 Public Subnets</li>
-             <li>3 Private Subnets</li>
-             <li>Public Route Table</li>
-             <li>Private Route Table</li>
-             <li>Internet Gateway</li>
-             <ul>
-               <li>Attached to the Public Route Table</li>
-             </ul>
-             <li>Public Network ACL</li>
-             <li>Private Network ACL</li>
-             <li>VPC Endpoint</li>
-             <li>Instance Access Security Group</li>
-             <ul>
-               <li>Instance to Instance Access</li>
-             </ul>
-             <li>Remote Access Security Group</li>
-             <ul>
-               <li>This can be used for to allow site-to-site VPN or Direct Connect Networks access to instances.</li>
-             </ul>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpc.yml</li>
             </ol>
         </td>
-        <td  nowrap width="200" valign="top">
+        <td nowrap width="200" valign="top">
             <table>
                 <tr>
                     <th align="left">Launch</th>
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpc.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpc.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpc.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>
@@ -181,7 +138,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpc.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/vpc-200x200.jpg" width:100% alt="View in Designer"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpc.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/vpc-200x200.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
@@ -191,50 +148,17 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://youtu.be/0bf2w0zSsWM" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
+                        <a href="https://youtu.be/0bf2w0zSsWM" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/howto_stelligent_youtube_144x81.jpg" width:100% alt="HowTo Video"></a>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
+</table>
+
+<table>
     <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpc.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpc-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPC Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPCSubnetCidrBlock,ParameterValue="10.20.0.0/16" ParameterKey=AvailabilityZone1,ParameterValue="a" ParameterKey=AvailabilityZone2,ParameterValue="b" ParameterKey=AvailabilityZone3,ParameterValue="c" ParameterKey=PublicSubnetCidrBlock1,ParameterValue="10.20.1.0/24" ParameterKey=PublicSubnetCidrBlock2,ParameterValue="10.20.2.0/24" ParameterKey=PublicSubnetCidrBlock3,ParameterValue="10.20.3.0/24" ParameterKey=PrivateSubnetCidrBlock1,ParameterValue="10.20.4.0/24" ParameterKey=PrivateSubnetCidrBlock2,ParameterValue="10.20.5.0/24" ParameterKey=PrivateSubnetCidrBlock3,ParameterValue="10.20.6.0/24" ParameterKey=RemoteAccessNetwork,ParameterValue="50.12.34.56/32"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat-gateway.template">NAT Gateway (Network Addresss Translation)</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat-gateway.yml">NAT Gateway (Network Addresss Translation)</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
@@ -244,7 +168,7 @@ command using various foundational templates that I've creates to be used togeth
              <li>VPC</li>
              <ul>
                <li>Public Subnet, IGW, Private Subnet/s.</li>
-               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
+               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
              </ul>
             <li>AWS Privileges</li>
             </ol>
@@ -259,6 +183,10 @@ command using various foundational templates that I've creates to be used togeth
              <li>Redundancy built in.</li>
              <li>Easier setup and management.</li>
             </ol>
+            <h6>Public S3 URL</h6>
+            <ol>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/nat-gateway.yml</li>
+            </ol>
         </td>
         <td  nowrap width="200" valign="top">
             <table>
@@ -267,10 +195,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/nat-gateway.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/nat-gateway.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/nat-gateway.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>
@@ -280,7 +205,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/nat-gateway.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/nat-gateway-200x200.jpg" width:100% alt="View in Designer"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/nat-gateway.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/nat-gateway-200x200.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
@@ -290,50 +215,17 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://youtu.be/YElJ_mI2-Ng" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
+                        <a href="https://youtu.be/YElJ_mI2-Ng" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/howto_stelligent_youtube_144x81.jpg" width:100% alt="HowTo Video"></a>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
+</table>
+
+<table>
     <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/nat-gateway.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/nat-gateway-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="NAT Gateway Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpn-bgp.template">VPN BGP (Virtual Private Network using Border Gateway Protocol)</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpn-bgp.yml">VPN BGP (Virtual Private Network using Border Gateway Protocol)</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
@@ -342,14 +234,14 @@ command using various foundational templates that I've creates to be used togeth
              Simply select false for the 'Include Public Subnets', leave default value in Public Network ACL and Route Table.
              The values will just be ignored. This only sets up the AWS side of the VPN.
              After the CloudFormation creates the objects you'll then need to configure your remote VPN Device.
-             <a href="https://www.bonusbits.com/wiki/HowTo:Setup_Site_to_Site_VPN_from_AWS_VPC_to_Sophos_UTM" target="_blank">Here's</a> an article that gives the configuration steps for configuring a Sophos UTM v9 VPN endpoint.
+             <a href="https://www.stelligent.com/wiki/HowTo:Setup_Site_to_Site_VPN_from_AWS_VPC_to_Sophos_UTM" target="_blank">Here's</a> an article that gives the configuration steps for configuring a Sophos UTM v9 VPN endpoint.
              This assumes that the Private Network ACL allows all outbound. Lastly, the Private Network ACL inbound is updated to allow the remote network block specified.</p>
              <h6>Prerequisites</h6>
              <ol>
                 <li>VPC</li>
                 <ul>
                   <li>Public Subnet, IGW, Private Subnet/s.</li>
-                  <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
+                  <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
                 </ul>
               <li>Remote Network (Office) VPN Device WAN IP</li>
               <li>Remote Network CIDR Block to Allow Access and Propagate.</li>
@@ -362,6 +254,10 @@ command using various foundational templates that I've creates to be used togeth
              <li>Enable Route Propagation on Route Table/s</li>
              <li>Add Network ACL to Allow Remote Network</li>
             </ol>
+            <h6>Public S3 URL</h6>
+            <ol>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpn-bgp.yml</li>
+            </ol>
         </td>
         <td  nowrap width="200" valign="top">
             <table>
@@ -370,10 +266,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpn-bgp.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>
@@ -383,7 +276,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/vpn-bgp-200x200.jpg" width:100% alt="View in Designer"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpn-bgp.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/vpn-bgp-200x200.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
@@ -393,50 +286,17 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://youtu.be/DCprX10Xaco" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
+                        <a href="https://youtu.be/DCprX10Xaco" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/howto_stelligent_youtube_144x81.jpg" width:100% alt="HowTo Video"></a>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
+</table>
+
+<table>
     <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpn-bgp.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpn-bgp-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPN Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicRouteTable,ParameterValue="rtb-d6cce3b2" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=PrivateNetworkAcl,ParameterValue="acl-3c207458" ParameterKey=RemoteVpnDeviceIp,ParameterValue="50.23.45.67" ParameterKey=RemoteNetworkCidr,ParameterValue="192.168.100.0/24" ParameterKey=IncludePublicSubnets,ParameterValue="true"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion.template">Bastion</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion.yml">Bastion</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
@@ -446,7 +306,7 @@ command using various foundational templates that I've creates to be used togeth
              <li>VPC</li>
              <ul>
                <li>Public Subnet, IGW, Private Subnet/s.</li>
-               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
+               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
              </ul>
             <li>Available EIP</li>
             </ol>
@@ -458,6 +318,10 @@ command using various foundational templates that I've creates to be used togeth
              <li>IAM Instance Profile</li>
              <li>Security Group</li>
             </ol>
+            <h6>Public S3 URL</h6>
+            <ol>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/bastion.yml</li>
+            </ol>
         </td>
         <td  nowrap width="200" valign="top">
             <table>
@@ -466,10 +330,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/bastion.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png" width:144 alt="us-west-2"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/bastion.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/bastion.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png" width:144 alt="us-west-2"></a>
                     </td>
                 </tr>
             </table>
@@ -479,54 +340,54 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/bastion.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/bastion-200x200.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/bastion.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/bastion-200x200.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
+</table>
+
+<table width="100%">
     <tr>
-        <td colspan="2">
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/proxy-awsapi-devops-access.yml">Proxy AWSAPI & DevOps Sites Access for Private Instances</a></h4></th>
+    </tr>
+    <tr>
+        <td width="100%" valign="top">
+            <p>Create EC2 Single Proxy Instance</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>VPC</li>
+             <li>1 Public Subnet</li>
+            </ol>
+            <h6>CloudFormation Tasks</h6>
+            <ol>
+             <li>Create Single EC2 Instance on Public Network with Public IP</li>
+             <li>Create Autoscaling Group of 1 for DR</li>
+             <li>Create Proxy Access Security Group</li>
+             <li>Install Chef Client</li>
+             <li>Create Chef Configurations Files (environment, roles, etc.)</li>
+             <li>Download Cookbooks from Github Repo</li>
+             <li>Checkout Specific Version of Cookbook</li>
+             <li>Run Chef Client using Chef Zero</li>
+             <li>Warm EBS Volume</li>
+            </ol>
+            <h6>Chef Cookbook Tasks</h6>
+            <ol>
+             <li>Install, Configure and Start Squid Proxy</li>
+             <li>Setup CloudWatch Logs</li>
+             <li>Create Route53 DNS Update Script</li>
+             <li>Configure DNS Update Cron Job</li>
+            </ol>
+        </td>
+        <td nowrap width="200" valign="top">
             <table>
                 <tr>
-                    <th align="left">AWS CLI Example</th>
+                    <th align="left">Launch</th>
                 </tr>
                 <tr>
                     <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/bastion.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/bastion-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Bastion Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=OsType,ParameterValue="rhel" ParameterKey=NetworkAccessIP,ParameterValue="50.23.45.67/32" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev"</code>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/proxy-awsapi-devops-access.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>
@@ -537,7 +398,7 @@ command using various foundational templates that I've creates to be used togeth
 ### Storage
 [Back to Top](#purpose)
 
-<table width="100%">
+<table width="100%" >
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/storage/efs.yml">EFS</a></h4></th>
     </tr>
@@ -547,14 +408,16 @@ command using various foundational templates that I've creates to be used togeth
             <h6>Prerequisites</h6>
             <ol>
              <li>VPC</li>
-             <ul>
-               <li>3 Subnets</li>
-             </ul>
+             <li>3 Subnets</li>
             </ol>
             <h6>Create Details</h6>
             <ol>
              <li>EFS Filesystem</li>
              <li>3 Mount Targets</li>
+            </ol>
+            <h6>Public S3 URL</h6>
+            <ol>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/efs.yml</li>
             </ol>
         </td>
         <td  nowrap width="200" valign="top">
@@ -564,10 +427,42 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/storage/efs.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/storage/efs.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/efs.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table width="100%">
+    <tr>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/storage/s3-backup-bucket-delete-previous.yml">S3 Backup Bucket</a></h4></th>
+    </tr>
+    <tr>
+        <td width="100%" valign="top">
+            <p>Create S3 Backup Bucket</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>VPC</li>
+             <li>VPC Endpoint</li>
+            </ol>
+            <h6>Create Details</h6>
+            <ol>
+             <li>Single S3 Bucket</li>
+             <li>Enabled Versioning</li>
+             <li>Enforced Encryption</li>
+             <li>Creates LifeCycle to Delete Previous Versions after X Days</li>
+            </ol>
+        </td>
+        <td nowrap width="200" valign="top">
+            <table>
+                <tr>
+                    <th align="left">Launch</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/s3-backup-bucket-delete-previous.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>
@@ -578,98 +473,90 @@ command using various foundational templates that I've creates to be used togeth
 ### Database
 [Back to Top](#purpose)
 
-<table>
+<table width="100%">
     <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/database/mysql-rds.template">MySQL RDS</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/storage/mysql-rds.yml">MySQL RDS</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
-            <p>Creates a MySQL RDS Database Instance.</p>
-            <h6>Prerequisites</h6>
+        <td width="100%" valign="top">
+           <p>Creates a MySQL RDS Database Instance.</p>
+           <h6>Prerequisites</h6>
+           <ol>
+            <li>VPC</li>
+            <ul>
+              <li>Public Subnet, IGW, Private Subnet/s.</li>
+              <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
+            </ul>
+           </ol>
+           <h6>Create Details</h6>
+           <ol>
+            <li>DB Instance</li>
+            <li>DB Subnet Group</li>
+            <li>Security Group</li>
+            <li>Cloud Watch Alarms</li>
+            <li>Route 53 Record Set (Optional)</li>
+           </ol>
+            <h6>Public S3 URL</h6>
             <ol>
-             <li>VPC</li>
-             <ul>
-               <li>Public Subnet, IGW, Private Subnet/s.</li>
-               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/database/mysql-rds.template" target="_blank">VPC Template</a> to create a one.</li>
-             </ul>
-            </ol>
-            <h6>Create Details</h6>
-            <ol>
-             <li>DB Instance</li>
-             <li>DB Subnet Group</li>
-             <li>Security Group</li>
-             <li>Cloud Watch Alarms</li>
-             <li>Route 53 Record Set (Optional)</li>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/mysql-rds.yml</li>
             </ol>
         </td>
-        <td  nowrap width="200" valign="top">
+        <td nowrap width="200" valign="top">
             <table>
                 <tr>
                     <th align="left">Launch</th>
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/database/mysql-rds.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/database/mysql-rds.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">View in Designer</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/database/mysql-rds.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/mysql-rds-200x200.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/mysql-rds.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
+</table>
+    
+<table width="100%">    
     <tr>
-        <td colspan="2">
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/storage/create-rds-from-snapshot.yml">Create RDS From Snapshot</a></h4></th>
+    </tr>
+    <tr>
+        <td width="100%" valign="top">
+            <p>Creates an RDS Instance From Snapshot. Can be great for Blue/Green or pull Prd DB to Nonprod for testing.</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>RDS Snapshot in Same Region</li>
+             <li>2+ Subnets if Enabling Multi AZ</li>
+            </ol>
+            <h6>Create Details</h6>
+            <ol>
+             <li>Create RDS Instance from Snapshot</li>
+             <li>Create Subnet Group</li>
+             <li>Create Access Security Group</li>
+             <li>Optionally Configure DNS Record in Route53</li>
+            </ol>
+            <h6>Notes</h6>
+            <ol>
+             <li>Because it's a restore several options are not available. Such as:</li>
+             <ol>
+                 <li>Can't set Master User and Password</li>
+                 <li>Can't select what DB Engine</li>
+                 <li>Can't set allocated storage</li>
+                </ol>
+            </ol>
+            <h6>Public S3 URL</h6>
+            <ol>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/create-rds-from-snapshot.yml</li>
+            </ol>
+        </td>
+        <td nowrap width="200" valign="top">
             <table>
                 <tr>
-                    <th align="left">AWS CLI Example</th>
+                    <th align="left">Launch</th>
                 </tr>
                 <tr>
                     <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/database/mysql-rds.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/database/parameters_examples/mysql-rds-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="MySQL RDS Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=MasterUsername,ParameterValue="superman" ParameterKey=MasterUserPassword,ParameterValue="Kryptonite" ParameterKey=BackupRetentionPeriod,ParameterValue="30" ParameterKey=MultiAvailabilityZone,ParameterValue="true" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Cname,ParameterValue="justice.league.com" ParameterKey=R53HostedZoneName,ParameterValue="league.com" ParameterKey=AlertSnsTopicArn,ParameterValue="arn:aws:sns:us-west-2:000000000000:rds-alerts" ParameterKey=AllocatedStorage,ParameterValue="30" ParameterKey=InstanceType,ParameterValue="db.t2.medium"</code>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/create-rds-from-snapshot.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>
@@ -682,7 +569,7 @@ command using various foundational templates that I've creates to be used togeth
 
 <table>
     <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/webapp/autoscaling-bakedami-rdsbackend.template">Baked AMI, RDS Backend</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/autoscaling/bakedami-elb-rdsbackend.yml">Baked AMI, ELB, RDS Backend</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
@@ -706,103 +593,9 @@ command using various foundational templates that I've creates to be used togeth
              <li>S3 Bucket (Optional)</li>
              <li>S3 Bucket Policy (Optional)</li>
             </ol>
-        </td>
-        <td  nowrap width="200" valign="top">
-            <table>
-                <tr>
-                    <th align="left">Launch</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/webapp/autoscaling-bakedami-rdsbackend.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/webapp/autoscaling-bakedami-rdsbackend.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">View in Designer</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/webapp/autoscaling-bakedami-rdsbackend.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/autoscaling-bakedami-rdsbackend-200x181.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/webapp/autoscaling-bakedami-rdsbackend.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/webapp/parameters_examples/autoscaling-bakedami-rdsbackend-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Autoscaling Baked AMI Webapp Stack Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet1,ParameterValue="subnet-24197570" ParameterKey=PublicSubnet2,ParameterValue="subnet-24197571" ParameterKey=PublicSubnet3,ParameterValue="subnet-24197572" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=AMI,ParameterValue="ami-00000000" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev" ParameterKey=MinAutoScaleCount,ParameterValue="3" ParameterKey=MaxAutoScaleCount,ParameterValue="6" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=RemoteSecurityGroup,ParameterValue="sg-50d8410d" ParameterKey=RDSAccessSecurityGroup,ParameterValue="sg-40d8410e" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Route53ElbAlias,ParameterValue="www.hecklejeckle.com" ParameterKey=UseSsl,ParameterValue="true" ParameterKey=ElbSslCertArn,ParameterValue="arn:aws:iam::0000000000000:server-certificate/www.hecklejeckle.com" ParameterKey=ElbHttpListeningPort,ParameterValue="443" ParameterKey=InstanceHttpListeningPort,ParameterValue="8443" ParameterKey=ListenOnBothPorts,ParameterValue="false" ParameterKey=SetupElbLogging,ParameterValue="true"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/webapp/autoscaling-bakedami.template">Baked AMI</a></h4></th>
-    </tr>
-    <tr>
-        <td valign="top">
-            <p>Create an Autoscaling group in 3 private subnets from a baked AMI, an Elastic Load Balancer in 3 public subnets and S3 ELB Logging Bucket.
-            Option to use SSL/TLS on ELB. Option to update Route 53 Hosted DNS alias to point to the ELB.</p>
-            <h6>Create Details</h6>
+            <h6>Public S3 URL</h6>
             <ol>
-             <li>EC2 Instances</li>
-             <li>AutoScaling</li>
-             <li>Launch Configuration</li>
-             <li>Elastic Load Balancer</li>
-             <li>IAM Role</li>
-             <li>IAM Instance Profile</li>
-             <li>Security Group</li>
-             <li>Scale Up Policy</li>
-             <li>Scale Down Policy</li>
-             <li>Cloud Watch Alarm</li>
-             <li>Network ACL Entry</li>
-             <li>Route 53 Record Set (Optional)</li>
-             <li>S3 Bucket (Optional)</li>
-             <li>S3 Bucket Policy (Optional)</li>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/autoscaling-bakedami-rdsbackend.yml</li>
             </ol>
         </td>
         <td  nowrap width="200" valign="top">
@@ -812,10 +605,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/webapp/autoscaling-bakedami.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/webapp/autoscaling-bakedami.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/autoscaling-bakedami-rdsbackend.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>
@@ -825,566 +615,19 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/webapp/autoscaling-bakedami.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/autoscaling-bakedami-200x181.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/autoscaling-bakedami-rdsbackend.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/autoscaling-bakedami-rdsbackend-200x181.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/webapp/autoscaling-bakedami.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/webapp/parameters_examples/autoscaling-bakedami-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Autoscaling Baked AMI Webapp Stack Creation" ParameterKey=DeleteAfter,ParameterValue="08/01/2016" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet1,ParameterValue="subnet-24197570" ParameterKey=PublicSubnet2,ParameterValue="subnet-24197571" ParameterKey=PublicSubnet3,ParameterValue="subnet-24197572" ParameterKey=PrivateSubnet1,ParameterValue="subnet-14197570" ParameterKey=PrivateSubnet2,ParameterValue="subnet-14197571" ParameterKey=PrivateSubnet3,ParameterValue="subnet-14197572" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=AMI,ParameterValue="ami-00000000" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev" ParameterKey=MinAutoScaleCount,ParameterValue="3" ParameterKey=MaxAutoScaleCount,ParameterValue="6" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=RemoteSecurityGroup,ParameterValue="sg-50d8410d" ParameterKey=ConfigureDns,ParameterValue="true" ParameterKey=Route53ElbAlias,ParameterValue="www.hecklejeckle.com" ParameterKey=UseSsl,ParameterValue="true" ParameterKey=ElbSslCertArn,ParameterValue="arn:aws:iam::0000000000000:server-certificate/www.hecklejeckle.com" ParameterKey=ElbHttpListeningPort,ParameterValue="443" ParameterKey=InstanceHttpListeningPort,ParameterValue="8443" ParameterKey=ListenOnBothPorts,ParameterValue="false" ParameterKey=SetupElbLogging,ParameterValue="true"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
+</table>    
 
 ### Labs
 [Back to Top](#purpose)
-
-<table>
-    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance">Chef Compliance Lab</a></h4></th>
-    </tr>
-    <tr>
-        <td valign="top">
-            <p>Creates a Chef Compliance Web server in a Public Subnet with Internet Gateway attached on an existing VPC.
-             It then attaches an EIP and finally adds the instance to an existing instance-to-instance security group.</p>
-            <h6>Prerequisites</h6>
-            <ol>
-             <li>VPC</li>
-             <ul>
-               <li>Public Subnet, IGW, Private Subnet/s.</li>
-               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
-             </ul>
-            <li>Available EIP</li>
-            </ol>
-            <h6>Supported Regions</h6>
-             <ol>
-               <li>us-west-2</li>
-               <li>us-east-1</li>
-             </ol>
-            <h6>Create Details</h6>
-            <ol>
-             <li>EC2 Instance</li>
-             <li>EIP</li>
-             <li>IAM Role</li>
-             <li>IAM Instance Profile</li>
-             <li>Security Group</li>
-            </ol>
-        </td>
-        <td  nowrap width="200" valign="top">
-            <table>
-                <tr>
-                    <th align="left">Launch</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/chef_compliance/chef-compliance.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/chef_compliance/chef-compliance.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">View in Designer</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/chef_compliance/chef-compliance.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/chef-compliance-lab-200x200.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/chef_compliance/chef-compliance.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef_compliance/example-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ... COMING SOON</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/bitbucket/bitbucket.template">Bitbucket Lab</a></h4></th>
-    </tr>
-    <tr>
-        <td valign="top">
-            <p>Creates a Bitbucket Server in a private or public subnet in an existing VPC.</p>
-            <h6>Prerequisites</h6>
-            <ol>
-             <li>VPC</li>
-              <ul>
-                <li>Public or Private Subnet</li>
-                <li>Internal Instance Access Security Group</li>
-                <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
-              </ul>
-              <li>Internet Access from the EC2 Instance or Yum access solution</li>
-              <li>EC2 Key Pair</li>
-              <li>Available EIP if Selected Public Facing</li>
-              <li>IAM Role Creation Permissions</li>
-            </ol>
-            <h6>Supported Regions</h6>
-             <ol>
-               <li>cn-north-1</li>
-               <li>us-east-1</li>
-               <li>us-west-1</li>
-               <li>us-west-2</li>
-               <li>eu-west-1</li>
-               <li>eu-central-1</li>
-               <li>ap-northeast-1</li>
-               <li>ap-northeast-2</li>
-               <li>ap-southeast-1</li>
-               <li>ap-southeast-2</li>
-               <li>sa-east-1</li>
-             </ol>
-            <h6>Create Details</h6>
-            <ol>
-             <li>EC2 Instance (Amazon Linux)</li>
-             <li>EIP (Optional)</li>
-             <li>IAM Role</li>
-             <li>IAM Instance Profile</li>
-             <li>Security Group</li>
-            </ol>
-        </td>
-        <td  nowrap width="200" valign="top">
-            <table>
-                <tr>
-                    <th align="left">Launch</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/bitbucket/bitbucket.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/bitbucket/bitbucket.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">View in Designer</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/bitbucket/bitbucket.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/bitbucket-200x200.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/bitbucket/bitbucket.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/bitbucket/bitbucket-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ... COMING SOON</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/eb">Elastic Beanstalk CodePipeline Lab</a></h4></th>
-    </tr>
-    <tr>
-        <td valign="top">
-            <p>Automates the integration between AWS Elastic Beanstalk and CodePipeline</p>
-            <h6>Prerequisites</h6>
-            <ol>
-             <li>CodeCommit Repo</li>
-            </ol>
-            <h6>Supported Regions</h6>
-             <ol>
-               <li>us-east-1</li>
-             </ol>
-            <h6>Create Details</h6>
-            <ol>
-             <li>IAM InstanceProfile, Policy, and Roles</li>
-             <li>Elastic Beanstalk - ConfigurationTemplate, Environment</li>
-             <li>CodePipeline with CodeCommit Integration</li>
-            </ol>
-        </td>
-        <td  nowrap width="200" valign="top">
-            <table>
-                <tr>
-                    <th align="left">Launch</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/eb/elasticbeanstalk-codepipeline.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">View in Designer</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/eb/elasticbeanstalk-codepipeline.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/elasticbeanstalk-codepipeline-labs.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/eb/elasticbeanstalk-codepipeline.json"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/eb/example-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code> --parameters ParameterKey=RepositoryName,ParameterValue=codecommit-demo"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-       <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codecommit">CodeCommit CodePipeline Lab</a></h4></th>
-    </tr>
-    <tr>
-        <td valign="top">
-            <p>Automates the integration between AWS CodeCommit and CodePipeline</p>
-            <h6>Prerequisites</h6>
-            <ol>
-             <li>EC2 Key Pair</li>
-             <li>CodeCommit Repo</li>
-            </ol>
-            <h6>Supported Regions</h6>
-             <ol>
-               <li>us-east-1</li>
-             </ol>
-            <h6>Create Details</h6>
-            <ol>
-             <li>IAM InstanceProfile, Policy, and Roles</li>
-             <li>EC2 Instance for CodeDeploy</li>
-             <li>CodeDeploy</li>
-             <li>CodePipeline with CodeCommit Integration</li>
-            </ol>
-        </td>
-        <td  nowrap width="200" valign="top">
-            <table>
-                <tr>
-                    <th align="left">Launch</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codecommit/codepipeline-codecommit.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">View in Designer</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codecommit/codepipeline-codecommit.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/codecommit-codepipeline-lab.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codecommit/codepipeline-codecommit.json"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codecommit/example-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code> --parameters ParameterKey=EC2KeyPairName,ParameterValue=stelligent-dev"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
     
-   <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codepipeline/codepipeline-canonical.yml">Mock Stages and Actions in AWS CodePipeline and AWS Lambda</a></h4></th>
-    </tr>
-    <tr>
-        <td valign="top">
-            <p>Creates a deployment pipeline in AWS CodePipeline using a pre-built Lambda function. It can be used to model a pipeline without initial implementation</p>
-            <h6>Prerequisites</h6>
-              <ol>
-                <li>AWS Account</li>
-              </ol>
-            <h6>Supported Regions</h6>
-             <ol>
-               <li>us-east-1</li>
-             </ol>
-            <h6>Create Details</h6>
-            <ol>
-             <li>Amazon S3 bucket for CodePipeline artifacts</li>
-             <li>AWS SNS Topic</li>
-             <li>AWS IAM Policy and Roles</li>
-             <li>AWS Lambda Function</li>
-             <li>AWS CodePipeline Stages and Actions</li>
-            </ol>
-        </td>
-        <td  nowrap width="200" valign="top">
-            <table>
-                <tr>
-                    <th align="left">Launch</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codepipeline/codepipeline-canonical.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">View in Designer</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codepipeline/codepipeline-canonical.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/codepipeline_mock_designer.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codepipeline/codepipeline-canonical.yml"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codepipeline/example-parameters-lambda.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/example-parameters-lambda.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code> --parameters ParameterKey=EmailAddress,ParameterValue=youremailaddress@example.com"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-
-
-    <tr>
+<table>    
+<tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/lambda">AWS Lambda CodePipeline Lab</a></h4></th>
     </tr>
     <tr>
@@ -1427,256 +670,143 @@ command using various foundational templates that I've creates to be used togeth
                     </td>
                 </tr>
             </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
-                    </td>
-                </tr>
-            </table>
         </td>
     </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/lambda/lambda-codepipeline.json"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/lambda/example-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code> --parameters ParameterKey=KeyName,ParameterValue=stelligent-dev"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Outputs</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>CodePipelineURL - URL for generated pipeline in CodePipeline console.</code>
-                   </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    </tr>
-       <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/opsworks">OpsWorks CodePipeline Lab</a></h4></th>
-    </tr>
-    <tr>
-        <td valign="top">
-            <p>Automates the integration between AWS OpsWorks, CodeCommit and CodePipeline</p>
-            <h6>Prerequisites</h6>
-            <ol>
-             <li>EC2 Key Pair</li>
-            </ol>
-            <h6>Supported Regions</h6>
-             <ol>
-               <li>us-east-1</li>
-             </ol>
-            <h6>Create Details</h6>
-            <ol>
-             <li>IAM InstanceProfile, Policy, and Roles</li>
-             <li>SecurityGroupIngress and SecurityGroup</li>
-             <li>OpsWorks Stack, Layer, App and Instance</li>
-             <li>CodePipeline</li>
-            </ol>
-        </td>
-        <td  nowrap width="200" valign="top">
-            <table>
-                <tr>
-                    <th align="left">Launch</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">View in Designer</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/opsworks_codepipeline.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/opsworks/example-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code> --parameters ParameterKey=KeyName,ParameterValue=stelligent-dev"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-       <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/containers/docker/build">Containerized CI Solutions in AWS: Jenkins in ECS Lab</a></h4></th>
-    </tr>
-    <tr>
-        <td valign="top">
-            <p>Containerized CI Solutions in AWS: Jenkins in ECS</p>
-            <h6>Prerequisites</h6>
-            <ol>
-             <li>EC2 Key Pair</li>
-            </ol>
-            <h6>Supported Regions</h6>
-             <ol>
-               <li>us-east-1</li>
-             </ol>
-            <h6>Create Details</h6>
-            <ol>
-             <li>VPC and associated resources</li>
-             <li>IAM</li>
-             <li>EFS</li>
-             <li>EC2 Instances</li>
-             <li>Auto Scaling</li>
-             <li>ELB</li>
-             <li>ECS Service, Cluster, Task Definition</li>
-            </ol>
-        </td>
-        <td  nowrap width="200" valign="top">
-            <table>
-                <tr>
-                    <th align="left">Launch</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/containers/docker/build/ecs-jenkins.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">View in Designer</th>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/containers/docker/build/ecs-jenkins.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/ecs-jenkins.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/containers/docker/build/ecs-jenkins.json"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/containers/docker/build/example-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code> --parameters ParameterKey=AvailabilityZone1,ParameterValue=us-east-1c ParameterKey=AvailabilityZone2,ParameterValue=us-east-1d ParameterKey=KeyPair,ParameterValue=stelligent-dev ParameterKey=PublicAccessCIDR,ParameterValue=50.23.45.67/32"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
+</table>    
 
+<table>    
+    <tr>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/bitbucket/bitbucket.yml">Bitbucket Lab</a></h4></th>
+    </tr>
+    <tr>
+        <td valign="top">
+            <p>Creates a Bitbucket Server in a private or public subnet in an existing VPC.</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>VPC</li>
+              <ul>
+                <li>Public or Private Subnet</li>
+                <li>Internal Instance Access Security Group</li>
+                <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
+              </ul>
+              <li>Internet Access from the EC2 Instance or Yum access solution</li>
+              <li>EC2 Key Pair</li>
+              <li>Available EIP if Selected Public Facing</li>
+              <li>IAM Role Creation Permissions</li>
+            </ol>
+            <h6>Supported Regions</h6>
+             <ol>
+               <li>cn-north-1</li>
+               <li>us-east-1</li>
+               <li>us-west-1</li>
+               <li>us-west-2</li>
+               <li>eu-west-1</li>
+               <li>eu-central-1</li>
+               <li>ap-northeast-1</li>
+               <li>ap-northeast-2</li>
+               <li>ap-southeast-1</li>
+               <li>ap-southeast-2</li>
+               <li>sa-east-1</li>
+             </ol>
+            <h6>Create Details</h6>
+            <ol>
+             <li>EC2 Instance (Amazon Linux)</li>
+             <li>EIP (Optional)</li>
+             <li>IAM Role</li>
+             <li>IAM Instance Profile</li>
+             <li>Security Group</li>
+            </ol>
+            <h6>Public S3 URL</h6>
+            <ol>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/bitbucket.yml</li>
+            </ol>
+        </td>
+        <td  nowrap width="200" valign="top">
+            <table>
+                <tr>
+                    <th align="left">Launch</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/bitbucket.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th align="left">View in Designer</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/bitbucket.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/bitbucket-200x200.jpg" width:100% alt="View in Designer"></a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table> 
+
+<table>
+    <tr>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef">Chef Compliance Lab</a></h4></th>
+    </tr>
+    <tr>
+        <td valign="top">
+            <p>Creates a Chef Complianc Web server in a Public Subnet with Internet Gatewayy attached on an existing VPC.
+             It then attaches an EIP and finally adds the instance to an existing instance-to-instance security group.</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>VPC</li>
+             <ul>
+               <li>Public Subnet, IGW, Private Subnet/s.</li>
+               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
+             </ul>
+            <li>Available EIP</li>
+            </ol>
+            <h6>Supported Regions</h6>
+             <ol>
+               <li>us-west-2</li>
+               <li>us-east-1</li>
+             </ol>
+            <h6>Create Details</h6>
+            <ol>
+             <li>EC2 Instance</li>
+             <li>EIP</li>
+             <li>IAM Role</li>
+             <li>IAM Instance Profile</li>
+             <li>Security Group</li>
+            </ol>
+            <h6>Public S3 URL</h6>
+            <ol>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/chef-compliance.yml</li>
+            </ol>
+        </td>
+        <td  nowrap width="200" valign="top">
+            <table>
+                <tr>
+                    <th align="left">Launch</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/chef-compliance.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th align="left">View in Designer</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/chef-compliance.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/chef-compliance-lab-200x200.jpg" width:100% alt="View in Designer"></a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table> 
+
+<table>
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codebuild">CodeBuild and AWS Developer Tools SuiteLab</a></h4></th>
     </tr>
@@ -1734,44 +864,60 @@ command using various foundational templates that I've creates to be used togeth
             </table>
         </td>
     </tr>
+</table>
+
+<table>
+<tr>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codecommit">CodeCommit CodePipeline Lab</a></h4></th>
+    </tr>
     <tr>
-        <td colspan="2">
+        <td valign="top">
+            <p>Automates the integration between AWS CodeCommit and CodePipeline</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>EC2 Key Pair</li>
+             <li>CodeCommit Repo</li>
+            </ol>
+            <h6>Supported Regions</h6>
+             <ol>
+               <li>us-east-1</li>
+             </ol>
+            <h6>Create Details</h6>
+            <ol>
+             <li>IAM InstanceProfile, Policy, and Roles</li>
+             <li>EC2 Instance for CodeDeploy</li>
+             <li>CodeDeploy</li>
+             <li>CodePipeline with CodeCommit Integration</li>
+            </ol>
+        </td>
+        <td  nowrap width="200" valign="top">
             <table>
                 <tr>
-                    <th align="left">AWS CLI Example</th>
+                    <th align="left">Launch</th>
                 </tr>
                 <tr>
                     <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codebuild/codebuild-cpl-cd-cc.json"</code>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codecommit/codepipeline-codecommit.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <p>us-east-1</p>
                     </td>
                 </tr>
+            </table>
+            <table>
                 <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
+                    <th align="left">View in Designer</th>
                 </tr>
                 <tr>
                     <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codebuild/example-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code> --parameters ParameterKey=EC2KeyPairName,ParameterValue=stelligent-dev ParameterKey=RepositoryBranch,ParameterValue=master ParameterKey=EmailAddress,ParameterValue=youremailaddress@example.com</code>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codecommit/codepipeline-codecommit.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/codecommit-codepipeline-lab.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
-
-    <tr>
+</table>    
+    
+<table>
+<tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codepipeline">CodePipeline Approvals Labs</a></h4></th>
     </tr>
     <tr>
@@ -1827,44 +973,61 @@ command using various foundational templates that I've creates to be used togeth
             </table>
         </td>
     </tr>
-    <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codepipeline/codepipeline-updates-after.json"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codepipeline/example-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code> --parameters ParameterKey=EmailAddress,ParameterValue=youremail@example.com ParameterKey=RepositoryBranch,ParameterValue=master ParameterKey=RepositoryName,ParameterValue=codecommit-demo</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
+</table>
 
+<table>
+  <tr>
+         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/containers/docker/build">Containerized CI Solutions in AWS: Jenkins in ECS Lab</a></h4></th>
+     </tr>
+     <tr>
+         <td valign="top">
+             <p>Containerized CI Solutions in AWS: Jenkins in ECS</p>
+             <h6>Prerequisites</h6>
+             <ol>
+              <li>EC2 Key Pair</li>
+             </ol>
+             <h6>Supported Regions</h6>
+              <ol>
+                <li>us-east-1</li>
+              </ol>
+             <h6>Create Details</h6>
+             <ol>
+              <li>VPC and associated resources</li>
+              <li>IAM</li>
+              <li>EFS</li>
+              <li>EC2 Instances</li>
+              <li>Auto Scaling</li>
+              <li>ELB</li>
+              <li>ECS Service, Cluster, Task Definition</li>
+             </ol>
+         </td>
+         <td  nowrap width="200" valign="top">
+             <table>
+                 <tr>
+                     <th align="left">Launch</th>
+                 </tr>
+                 <tr>
+                     <td>
+                         <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/containers/docker/build/ecs-jenkins.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                         <p>us-east-1</p>
+                     </td>
+                 </tr>
+             </table>
+             <table>
+                 <tr>
+                     <th align="left">View in Designer</th>
+                 </tr>
+                 <tr>
+                     <td>
+                         <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/containers/docker/build/ecs-jenkins.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/ecs-jenkins.jpg" width:100% alt="View in Designer"></a>
+                     </td>
+                 </tr>
+             </table>
+         </td>
+     </tr>
+</table>  
 
+<table>
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/ecs">EC2 Container Service Lab</a></h4></th>
     </tr>
@@ -1915,66 +1078,30 @@ command using various foundational templates that I've creates to be used togeth
                     </td>
                 </tr>
             </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
-                    </td>
-                </tr>
-            </table>
         </td>
     </tr>
+</table>
+
+<table>
     <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/ecs/ecs-pipeline.json"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/ecs/example-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code> --parameters ParameterKey=RepositoryName,ParameterValue=YOURCCREPO ParameterKey=RepositoryBranch,ParameterValue=master ParameterKey=KeyName,ParameterValue=YOUREC2KEYPAIR ParameterKey=YourIP,ParameterValue=YOURIP/32 ParameterKey=ECSRepoName,ParameterValue=YOURECRREPO ParameterKey=ECSCFNURL,ParameterValue=NOURL ParameterKey=AppName,ParameterValue=app-name-1648"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.template">Test Instances</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/eb">Elastic Beanstalk CodePipeline Lab</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
-            <p>Creates three test instances in an existing VPC. Each instance is a different operating system. They are; Red Hat Enterprise Linux 7, Ubuntu 14 and Windows 2012 R2.</p>
+            <p>Automates the integration between AWS Elastic Beanstalk and CodePipeline</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>CodeCommit Repo</li>
+            </ol>
+            <h6>Supported Regions</h6>
+             <ol>
+               <li>us-east-1</li>
+             </ol>
             <h6>Create Details</h6>
             <ol>
-             <li>3 EC2 Instances</li>
-             <li>IAM Role</li>
-             <li>IAM Instance Profile</li>
+             <li>IAM InstanceProfile, Policy, and Roles</li>
+             <li>Elastic Beanstalk - ConfigurationTemplate, Environment</li>
+             <li>CodePipeline with CodeCommit Integration</li>
             </ol>
         </td>
         <td  nowrap width="200" valign="top">
@@ -1984,9 +1111,7 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/test_instances/rhel-ubuntu-win2012.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/test_instances/rhel-ubuntu-win2012.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/eb/elasticbeanstalk-codepipeline.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
                         <p>us-east-1</p>
                     </td>
                 </tr>
@@ -1997,83 +1122,86 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/test_instances/rhel-ubuntu-win2012.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/test-instances-200x200.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/eb/elasticbeanstalk-codepipeline.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/elasticbeanstalk-codepipeline-labs.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
+</table> 
+
+<table width="100%">
     <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/test_instances/rhel-ubuntu-win2012.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/example-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ... COMING SOON</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/mediawiki">Mediawiki on Nginx</a></h4></th>
     </tr>
     <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/spa/pipeline.yml">Pipeline for Single-Page Appliation</a></h4></th>
-    </tr>
-    <tr>
-        <td valign="top">
-            <p>Creates an S3 bucket to host a single-page application and a continuous delivery pipeline with CodeBuild and CodePipeline.</p>
+        <td width="100%" valign="top">
+            <p>Create S3 Backup Bucket</p>
             <h6>Prerequisites</h6>
             <ol>
-             <li><a href="https://github.com/settings/tokens">GitHub token</a> (with access to repo and admin:repo_hook) 
-            </ol>
-            <h6>Supported Regions</h6>
-            <ol>
-             <li>us-east-1</li>
-             <li>us-west-2</li>
+             <li>VPC</li>
+             <li>Public Subnet</li>
+             <li>Internal Access Security Group</li>
+             <li>RDS Security Group</li>
+             <li>EFS Security Group</li>
             </ol>
             <h6>Create Details</h6>
             <ol>
-             <li>IAM Role for CodePipeline</li>
-             <li>IAM Role for CodeBuild</li>
-             <li>S3 Bucket</li>
-             <li>CodeBuild Project</li>
-             <li>CodePipeline Project</li>
+             <li>Single Amazon Linux EC2 Instance</li>
+             <li>Create Web Access Security Group</li>
+             <li>Create IAM Instance Profile Role</li>
+             <li>Create CloudWatch Logs Group</li>
+             <li>No External IP</li>
             </ol>
-
+            <h6>Deploy Details</h6>
+            <ol>
+             <li>Installs Nginx</li>
+             <li>Installs PHP-FPM 7.0</li>
+             <li>Installs MySQL 5.6 Client</li>
+             <li>Installs Specfic Release of Mediawiki (Default REL1_28)</li>
+             <li>Installs Creates Nginx Config for Mediawiki</li>
+             <li>Assumes RDS Backend</li>
+             <li>Assumes EFS Shared Content Mount</li>
+            </ol>
+        </td>
+        <td nowrap width="200" valign="top">
+            <table>
+                <tr>
+                    <th align="left">Launch</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/mediawiki-nginx.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+  
+<table>  
+    <tr>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codepipeline/codepipeline-canonical.yml">Mock Stages and Actions in AWS CodePipeline and AWS Lambda</a></h4></th>
+    </tr>
+    <tr>
+        <td valign="top">
+            <p>Creates a deployment pipeline in AWS CodePipeline using a pre-built Lambda function. It can be used to model a pipeline without initial implementation</p>
+            <h6>Prerequisites</h6>
+              <ol>
+                <li>AWS Account</li>
+              </ol>
+            <h6>Supported Regions</h6>
+             <ol>
+               <li>us-east-1</li>
+             </ol>
+            <h6>Create Details</h6>
+            <ol>
+             <li>Amazon S3 bucket for CodePipeline artifacts</li>
+             <li>AWS SNS Topic</li>
+             <li>AWS IAM Policy and Roles</li>
+             <li>AWS Lambda Function</li>
+             <li>AWS CodePipeline Stages and Actions</li>
+            </ol>
         </td>
         <td  nowrap width="200" valign="top">
             <table>
@@ -2082,57 +1210,202 @@ command using various foundational templates that I've creates to be used togeth
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/spa/pipeline.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/spa/pipeline.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codepipeline/codepipeline-canonical.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
                         <p>us-east-1</p>
                     </td>
                 </tr>
             </table>
             <table>
                 <tr>
-                    <th align="left">How To Video</th>
+                    <th align="left">View in Designer</th>
                 </tr>
                 <tr>
                     <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codepipeline/codepipeline-canonical.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/codepipeline_mock_designer.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
+</table> 
+    
+<table>
+        <tr>
+            <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/opsworks">OpsWorks CodePipeline Lab</a></h4></th>
+        </tr>
+        <tr>
+            <td valign="top">
+                <p>Automates the integration between AWS OpsWorks, CodeCommit and CodePipeline</p>
+                <h6>Prerequisites</h6>
+                <ol>
+                 <li>EC2 Key Pair</li>
+                </ol>
+                <h6>Supported Regions</h6>
+                 <ol>
+                   <li>us-east-1</li>
+                 </ol>
+                <h6>Create Details</h6>
+                <ol>
+                 <li>IAM InstanceProfile, Policy, and Roles</li>
+                 <li>SecurityGroupIngress and SecurityGroup</li>
+                 <li>OpsWorks Stack, Layer, App and Instance</li>
+                 <li>CodePipeline</li>
+                </ol>
+            </td>
+            <td  nowrap width="200" valign="top">
+                <table>
+                    <tr>
+                        <th align="left">Launch</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                            <p>us-east-1</p>
+                        </td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <th align="left">View in Designer</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-east-1&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/opsworks/codepipeline-opsworks.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/opsworks_codepipeline.jpg" width:100% alt="View in Designer"></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+</table> 
+   
+<table>
+       <tr>
+           <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/spa/pipeline.yml">Pipeline for Single-Page Appliation</a></h4></th>
+       </tr>
+       <tr>
+           <td valign="top">
+               <p>Creates an S3 bucket to host a single-page application and a continuous delivery pipeline with CodeBuild and CodePipeline.</p>
+               <h6>Prerequisites</h6>
+               <ol>
+                <li><a href="https://github.com/settings/tokens">GitHub token</a> (with access to repo and admin:repo_hook) 
+               </ol>
+               <h6>Supported Regions</h6>
+               <ol>
+                <li>us-east-1</li>
+                <li>us-west-2</li>
+               </ol>
+               <h6>Create Details</h6>
+               <ol>
+                <li>IAM Role for CodePipeline</li>
+                <li>IAM Role for CodeBuild</li>
+                <li>S3 Bucket</li>
+                <li>CodeBuild Project</li>
+                <li>CodePipeline Project</li>
+               </ol>
+           </td>
+           <td  nowrap width="200" valign="top">
+               <table>
+                   <tr>
+                       <th align="left">Launch</th>
+                   </tr>
+                   <tr>
+                       <td>
+                           <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/spa/pipeline.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                           <p>us-west-2</p>
+                           <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/spa/pipeline.yml" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
+                           <p>us-east-1</p>
+                       </td>
+                   </tr>
+               </table>
+           </td>
+       </tr>
+</table>
+   
+<table>   
     <tr>
-        <td colspan="2">
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.yml">Test Instances</a></h4></th>
+    </tr>
+    <tr>
+        <td valign="top">
+            <p>Creates three test instances in an existing VPC. Each instance is a different operating system. They are; Red Hat Enterprise Linux 7, Ubuntu 14 and Windows 2012 R2.</p>
+            <h6>Create Details</h6>
+            <ol>
+             <li>3 EC2 Instances</li>
+             <li>IAM Role</li>
+             <li>IAM Instance Profile</li>
+            </ol>
+            <h6>Public S3 URL</h6>
+            <ol>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/rhel-ubuntu-win2012.yml</li>
+            </ol>
+        </td>
+        <td  nowrap width="200" valign="top">
             <table>
                 <tr>
-                    <th align="left">AWS CLI Example</th>
+                    <th align="left">Launch</th>
                 </tr>
                 <tr>
                     <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --capabilities CAPABILITY_IAM --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/spa/pipeline.yml"</code>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/rhel-ubuntu-win2012.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
+            </table>
+            <table>
                 <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
+                    <th align="left">View in Designer</th>
                 </tr>
                 <tr>
                     <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/spa/example-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/rhel-ubuntu-win2012.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/test-instances-200x200.jpg" width:100% alt="View in Designer"></a>
                     </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table width="100%">
+    <tr>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/wordpress">Wordpress on Nginx</a></h4></th>
+    </tr>
+    <tr>
+        <td width="100%" valign="top">
+            <p>Create S3 Backup Bucket</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>VPC</li>
+             <li>Public Subnet</li>
+             <li>Internal Access Security Group</li>
+             <li>RDS Security Group</li>
+             <li>EFS Security Group</li>
+            </ol>
+            <h6>Create Details</h6>
+            <ol>
+             <li>Single Amazon Linux EC2 Instance</li>
+             <li>Create Web Access Security Group</li>
+             <li>Create IAM Instance Profile Role</li>
+             <li>Create CloudWatch Logs Group</li>
+             <li>No External IP</li>
+            </ol>
+            <h6>Deploy Details</h6>
+            <ol>
+             <li>Installs Nginx</li>
+             <li>Installs PHP-FPM 7.0</li>
+             <li>Installs MySQL 5.6 Client</li>
+             <li>Installs Latest Wordpress</li>
+             <li>Installs Creates Nginx Config for Wordpress</li>
+             <li>Assumes RDS Backend</li>
+             <li>Assumes EFS Shared Content Mount</li>
+            </ol>
+        </td>
+        <td nowrap width="200" valign="top">
+            <table>
+                <tr>
+                    <th align="left">Launch</th>
                 </tr>
                 <tr>
                     <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ParameterKey=SiteBucketName,ParameterValue=my-bucket-name ParameterKey=GitHubToken,ParameterValue=XXXXXXXXX</code>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/wordpress-nginx.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>

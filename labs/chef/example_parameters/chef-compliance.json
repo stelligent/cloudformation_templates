@@ -29,6 +29,6 @@
   },
   {
     "ParameterKey": "Ec2KeyPair",
-    "ParameterValue": "stelligent-dev"
+    "ParameterValue": "bonusbits-dev"
   }
 ]

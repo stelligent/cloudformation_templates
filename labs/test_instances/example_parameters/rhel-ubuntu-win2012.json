@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "Owner",
-    "ParameterValue": "Levon Becker"
+    "ParameterValue": "First Last"
   },
   {
     "ParameterKey": "Project",
@@ -13,27 +13,27 @@
   },
   {
     "ParameterKey": "VPC",
-    "ParameterValue": "vpc-b9f488dd"
+    "ParameterValue": "vpc-00000000"
   },
   {
     "ParameterKey": "RHELSubnet",
-    "ParameterValue": "subnet-14197570"
+    "ParameterValue": "subnet-00000000"
   },
   {
     "ParameterKey": "UbuntuSubnet",
-    "ParameterValue": "subnet-14197570"
+    "ParameterValue": "subnet-00000000"
   },
   {
     "ParameterKey": "WindowsSubnet",
-    "ParameterValue": "subnet-14197570"
+    "ParameterValue": "subnet-00000000"
   },
   {
     "ParameterKey": "InternalAccessSecurityGroup",
-    "ParameterValue": "sg-69d8410f"
+    "ParameterValue": "sg-00000000"
   },
   {
     "ParameterKey": "RemoteSecurityGroup",
-    "ParameterValue": "sg-69d8410g"
+    "ParameterValue": "sg-00000000"
   },
   {
     "ParameterKey": "InstanceTypeRHEL7",

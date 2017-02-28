@@ -1,0 +1,551 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: RHEL, Ubuntu and Windows 2012 Lab Test Instances by Levon Becker v20160504-1500
+Parameters:
+  Ec2KeyPair:
+    Description: Select Keypair to Assign to EC2 Instances
+    Type: AWS::EC2::KeyPair::KeyName
+  Owner:
+    Description: Enter Team or Individual Name Responsible for the Stack.
+    Type: String
+    Default: FirstName LastName
+  Project:
+    Description: Enter Project Name.
+    Type: String
+    Default: Continuous Security
+  DeleteAfter:
+    Description: Enter Date It's Ok to Delete the Stack or 'Never' if meant to be
+      persistent.
+    Type: String
+    Default: 00/00/201x
+  VPC:
+    Description: Select VPC.
+    Type: AWS::EC2::VPC::Id
+  RHELSubnet:
+    Description: Private Subnet to Deploy RHEL 7 Instances.
+    Type: AWS::EC2::Subnet::Id
+  UbuntuSubnet:
+    Description: Private Subnet to Deploy Ubuntu 14 Instances.
+    Type: AWS::EC2::Subnet::Id
+  WindowsSubnet:
+    Description: Private Subnet to Deploy Windows 2012 R2 Instances.
+    Type: AWS::EC2::Subnet::Id
+  InternalAccessSecurityGroup:
+    Description: Security Group That Allows Instance to Instance Access.
+    Type: AWS::EC2::SecurityGroup::Id
+  RemoteSecurityGroup:
+    Description: Remote Network or IP that can Access the instances of VPN or Direct
+      Connect.
+    Type: AWS::EC2::SecurityGroup::Id
+  InstanceTypeRHEL7:
+    Description: Select Instance Type for RHEL 7.
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+    - t2.nano
+    - t2.micro
+    - t2.small
+    - t2.medium
+    - t2.large
+    - m1.small
+    - m1.medium
+    - m1.large
+    - m1.xlarge
+    - m2.xlarge
+    - m2.2xlarge
+    - m2.4xlarge
+    - m3.medium
+    - m3.large
+    - m3.xlarge
+    - m3.2xlarge
+    - m4.large
+    - m4.xlarge
+    - m4.2xlarge
+    - m4.4xlarge
+    - m4.10xlarge
+    - c1.medium
+    - c1.xlarge
+    - c3.large
+    - c3.xlarge
+    - c3.2xlarge
+    - c3.4xlarge
+    - c3.8xlarge
+    - c4.large
+    - c4.xlarge
+    - c4.2xlarge
+    - c4.4xlarge
+    - c4.8xlarge
+    - g2.2xlarge
+    - g2.8xlarge
+    - r3.large
+    - r3.xlarge
+    - r3.2xlarge
+    - r3.4xlarge
+    - r3.8xlarge
+    - i2.xlarge
+    - i2.2xlarge
+    - i2.4xlarge
+    - i2.8xlarge
+    - d2.xlarge
+    - d2.2xlarge
+    - d2.4xlarge
+    - d2.8xlarge
+    - hi1.4xlarge
+    - hs1.8xlarge
+    - cr1.8xlarge
+    - cc2.8xlarge
+    - cg1.4xlarge
+    ConstraintDescription: Must be a valid EC2 instance type.
+  InstanceTypeUbuntu14:
+    Description: Select Instance Type for Ubuntu 14.
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+    - t2.nano
+    - t2.micro
+    - t2.small
+    - t2.medium
+    - t2.large
+    - m1.small
+    - m1.medium
+    - m1.large
+    - m1.xlarge
+    - m2.xlarge
+    - m2.2xlarge
+    - m2.4xlarge
+    - m3.medium
+    - m3.large
+    - m3.xlarge
+    - m3.2xlarge
+    - m4.large
+    - m4.xlarge
+    - m4.2xlarge
+    - m4.4xlarge
+    - m4.10xlarge
+    - c1.medium
+    - c1.xlarge
+    - c3.large
+    - c3.xlarge
+    - c3.2xlarge
+    - c3.4xlarge
+    - c3.8xlarge
+    - c4.large
+    - c4.xlarge
+    - c4.2xlarge
+    - c4.4xlarge
+    - c4.8xlarge
+    - g2.2xlarge
+    - g2.8xlarge
+    - r3.large
+    - r3.xlarge
+    - r3.2xlarge
+    - r3.4xlarge
+    - r3.8xlarge
+    - i2.xlarge
+    - i2.2xlarge
+    - i2.4xlarge
+    - i2.8xlarge
+    - d2.xlarge
+    - d2.2xlarge
+    - d2.4xlarge
+    - d2.8xlarge
+    - hi1.4xlarge
+    - hs1.8xlarge
+    - cr1.8xlarge
+    - cc2.8xlarge
+    - cg1.4xlarge
+    ConstraintDescription: Must be a valid EC2 instance type.
+  InstanceTypeWin2012:
+    Description: Instance Type for Windows 2012 R2.
+    Type: String
+    Default: t2.medium
+    AllowedValues:
+    - t2.nano
+    - t2.micro
+    - t2.small
+    - t2.medium
+    - t2.large
+    - m1.small
+    - m1.medium
+    - m1.large
+    - m1.xlarge
+    - m2.xlarge
+    - m2.2xlarge
+    - m2.4xlarge
+    - m3.medium
+    - m3.large
+    - m3.xlarge
+    - m3.2xlarge
+    - m4.large
+    - m4.xlarge
+    - m4.2xlarge
+    - m4.4xlarge
+    - m4.10xlarge
+    - c1.medium
+    - c1.xlarge
+    - c3.large
+    - c3.xlarge
+    - c3.2xlarge
+    - c3.4xlarge
+    - c3.8xlarge
+    - c4.large
+    - c4.xlarge
+    - c4.2xlarge
+    - c4.4xlarge
+    - c4.8xlarge
+    - g2.2xlarge
+    - g2.8xlarge
+    - r3.large
+    - r3.xlarge
+    - r3.2xlarge
+    - r3.4xlarge
+    - r3.8xlarge
+    - i2.xlarge
+    - i2.2xlarge
+    - i2.4xlarge
+    - i2.8xlarge
+    - d2.xlarge
+    - d2.2xlarge
+    - d2.4xlarge
+    - d2.8xlarge
+    - hi1.4xlarge
+    - hs1.8xlarge
+    - cr1.8xlarge
+    - cc2.8xlarge
+    - cg1.4xlarge
+    ConstraintDescription: Must be a valid EC2 instance type.
+Mappings:
+  RegionMap:
+    us-west-2:
+      AMIRHEL7: ami-775e4f16
+      AMIUbuntu14: ami-9abea4fb
+      AMIWin2012: ami-1719f677
+    us-east-1:
+      AMIRHEL7: ami-2051294a
+      AMIUbuntu14: ami-fce3c696
+      AMIWin2012: ami-3d787d57
+  bootstrap:
+    rhel:
+      warmebs: 'echo ''ACTION: Performing EBS Warming'' && dd if=/dev/xvda of=/dev/xvda
+        conv=notrunc bs=1M status=progress'
+      installpackages: yum install -y curl wget mlocate ca-certificates openssl vim
+    ubuntu:
+      warmebs: 'echo ''ACTION: Performing EBS Warming'' && dd if=/dev/xvda of=/dev/xvda
+        conv=notrunc bs=1M status=progress'
+      installpackages: apt-get update && apt-get install curl wget cloud-utils ca-certificates
+        vim
+Resources:
+  IamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+  IamPolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName:
+        Fn::Join:
+        - ''
+        - - Ref: AWS::StackName
+          - "-instance-policy"
+      PolicyDocument:
+        Statement:
+        - Effect: Allow
+          Action:
+          - s3:*
+          - ec2:Describe*
+          - elasticloadbalancing:Describe*
+          - autoscaling:Describe*
+          - cloudwatch:*
+          - logs:*
+          - sns:*
+          Resource: "*"
+      Roles:
+      - Ref: IamRole
+  IamInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+      - Ref: IamRole
+  EC2InstanceRHEL7:
+    DependsOn:
+    - IamInstanceProfile
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType:
+        Ref: InstanceTypeRHEL7
+      IamInstanceProfile:
+        Ref: IamInstanceProfile
+      ImageId:
+        Fn::FindInMap:
+        - RegionMap
+        - Ref: AWS::Region
+        - AMIRHEL7
+      NetworkInterfaces:
+      - GroupSet:
+        - Ref: InternalAccessSecurityGroup
+        - Ref: RemoteSecurityGroup
+        AssociatePublicIpAddress: 'false'
+        DeviceIndex: '0'
+        DeleteOnTermination: 'true'
+        SubnetId:
+          Ref: RHELSubnet
+      KeyName:
+        Ref: Ec2KeyPair
+      BlockDeviceMappings:
+      - DeviceName: "/dev/sda1"
+        Ebs:
+          DeleteOnTermination: 'true'
+          VolumeType: gp2
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+          - ''
+          - - |
+              #!/bin/bash
+            - Fn::FindInMap:
+              - bootstrap
+              - rhel
+              - warmebs
+            - |2+
+
+            - Fn::FindInMap:
+              - bootstrap
+              - rhel
+              - installpackages
+            - |2+
+
+      Tags:
+      - Key: Name
+        Value:
+          Fn::Join:
+          - ''
+          - - Ref: AWS::StackName
+            - "-rhel7"
+      - Key: Owner
+        Value:
+          Ref: Owner
+      - Key: Project
+        Value:
+          Ref: Project
+      - Key: DeleteAfter
+        Value:
+          Ref: DeleteAfter
+  EC2InstanceUbuntu14:
+    DependsOn:
+    - IamInstanceProfile
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType:
+        Ref: InstanceTypeUbuntu14
+      IamInstanceProfile:
+        Ref: IamInstanceProfile
+      ImageId:
+        Fn::FindInMap:
+        - RegionMap
+        - Ref: AWS::Region
+        - AMIUbuntu14
+      NetworkInterfaces:
+      - GroupSet:
+        - Ref: InternalAccessSecurityGroup
+        - Ref: RemoteSecurityGroup
+        AssociatePublicIpAddress: 'false'
+        DeviceIndex: '0'
+        DeleteOnTermination: 'true'
+        SubnetId:
+          Ref: UbuntuSubnet
+      KeyName:
+        Ref: Ec2KeyPair
+      BlockDeviceMappings:
+      - DeviceName: "/dev/sda1"
+        Ebs:
+          DeleteOnTermination: 'true'
+          VolumeType: gp2
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+          - ''
+          - - |
+              #!/bin/bash
+            - Fn::FindInMap:
+              - bootstrap
+              - ubuntu
+              - warmebs
+            - |2+
+
+            - Fn::FindInMap:
+              - bootstrap
+              - ubuntu
+              - installpackages
+            - |2+
+
+      Tags:
+      - Key: Name
+        Value:
+          Fn::Join:
+          - ''
+          - - Ref: AWS::StackName
+            - "-ubuntu14"
+      - Key: Owner
+        Value:
+          Ref: Owner
+      - Key: Project
+        Value:
+          Ref: Project
+      - Key: DeleteAfter
+        Value:
+          Ref: DeleteAfter
+  EC2InstanceWin2012:
+    DependsOn:
+    - IamInstanceProfile
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType:
+        Ref: InstanceTypeWin2012
+      IamInstanceProfile:
+        Ref: IamInstanceProfile
+      ImageId:
+        Fn::FindInMap:
+        - RegionMap
+        - Ref: AWS::Region
+        - AMIWin2012
+      NetworkInterfaces:
+      - GroupSet:
+        - Ref: InternalAccessSecurityGroup
+        - Ref: RemoteSecurityGroup
+        AssociatePublicIpAddress: 'false'
+        DeviceIndex: '0'
+        DeleteOnTermination: 'true'
+        SubnetId:
+          Ref: WindowsSubnet
+      KeyName:
+        Ref: Ec2KeyPair
+      BlockDeviceMappings:
+      - DeviceName: "/dev/sda1"
+        Ebs:
+          DeleteOnTermination: 'true'
+          VolumeType: gp2
+      Tags:
+      - Key: Name
+        Value:
+          Fn::Join:
+          - ''
+          - - Ref: AWS::StackName
+            - "-win2012"
+      - Key: Owner
+        Value:
+          Ref: Owner
+      - Key: Project
+        Value:
+          Ref: Project
+      - Key: DeleteAfter
+        Value:
+          Ref: DeleteAfter
+Outputs:
+  Owner:
+    Description: Team or Individual that Owns this Formation.
+    Value:
+      Ref: Owner
+  Project:
+    Description: The project name
+    Value:
+      Ref: Project
+  DeleteAfter:
+    Description: It is ok to delete the Formation after this date
+    Value:
+      Ref: DeleteAfter
+  RhelInstancePrivateIp:
+    Description: RHEL Instance Private IP Address.
+    Value:
+      Fn::GetAtt:
+      - EC2InstanceRHEL7
+      - PrivateIp
+  UbuntuInstancePrivateIp:
+    Description: RHEL Instance Private IP Address.
+    Value:
+      Fn::GetAtt:
+      - EC2InstanceUbuntu14
+      - PrivateIp
+  WindowsInstancePrivateIp:
+    Description: RHEL Instance Private IP Address.
+    Value:
+      Fn::GetAtt:
+      - EC2InstanceWin2012
+      - PrivateIp
+  KeyPairLoaded:
+    Description: Key Pair used.
+    Value:
+      Ref: Ec2KeyPair
+  VPC:
+    Description: VPC Used
+    Value:
+      Ref: VPC
+  IAMRole:
+    Description: IAM Instance Profile Role Created.
+    Value:
+      Ref: IamRole
+  RHELSubnet:
+    Description: Private Subnet RHEL Instance Deployed to.
+    Value:
+      Ref: RHELSubnet
+  UbuntuSubnet:
+    Description: Private Subnet Ubuntu Instance Deployed to.
+    Value:
+      Ref: UbuntuSubnet
+  WindowsSubnet:
+    Description: Private Subnet Windows Instance Deployed to.
+    Value:
+      Ref: WindowsSubnet
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Ownership
+      Parameters:
+      - Owner
+      - Project
+      - DeleteAfter
+    - Label:
+        default: Instance Settings
+      Parameters:
+      - VPC
+      - Ec2KeyPair
+      - RHELSubnet
+      - UbuntuSubnet
+      - WindowsSubnet
+      - InternalAccessSecurityGroup
+      - RemoteSecurityGroup
+      - InstanceTypeRHEL7
+      - InstanceTypeUbuntu14
+      - InstanceTypeWin2012
+    ParameterLabels:
+      Owner:
+        default: Team or Individual Owner
+      DeleteAfter:
+        default: Delete After Date
+      RHELSubnet:
+        default: Subnet for RHEL
+      UbuntuSubnet:
+        default: Subnet for Ubuntu
+      WindowsSubnet:
+        default: Subnet for Windows
+      InternalAccessSecurityGroup:
+        default: Instance Security Group
+      RemoteSecurityGroup:
+        default: Remote Security Group
+      Ec2KeyPair:
+        default: EC2 Access Keypair
+      InstanceTypeRHEL7:
+        default: Instance Type for RHEL
+      InstanceTypeUbuntu14:
+        default: Instance Type for Ubuntu
+      InstanceTypeWin2012:
+        default: Instance Type for Windows

@@ -1,0 +1,122 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Levon Becker"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "00/00/201x"
+  },
+  {
+    "ParameterKey": "VPC",
+    "ParameterValue": "vpc-00000000"
+  },
+  {
+    "ParameterKey": "SubnetId",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "InternalAccessSecurityGroup",
+    "ParameterValue": "sg-0000000"
+  },
+  {
+    "ParameterKey": "RemoteSecurityGroup",
+    "ParameterValue": "sg-0000000"
+  },
+  {
+    "ParameterKey": "RdsSecurityGroup",
+    "ParameterValue": "sg-0000000"
+  },
+  {
+    "ParameterKey": "EfsSecurityGroup",
+    "ParameterValue": "sg-0000000"
+  },
+  {
+    "ParameterKey": "HostedZoneId",
+    "ParameterValue": "Z1234567890"
+  },
+  {
+    "ParameterKey": "RecordName",
+    "ParameterValue": "www.example.com"
+  },
+  {
+    "ParameterKey": "KeyPairName",
+    "ParameterValue": "stack-uswest2-dev"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "t2.micro"
+  },
+  {
+    "ParameterKey": "EfsMountPoint",
+    "ParameterValue": "/path/to/mount1"
+  },
+  {
+    "ParameterKey": "EfsFileSystemId",
+    "ParameterValue": "fs-00000000"
+  },
+  {
+    "ParameterKey": "DbHost",
+    "ParameterValue": "db.domain.com"
+  },
+  {
+    "ParameterKey": "DbName",
+    "ParameterValue": "mediawiki"
+  },
+  {
+    "ParameterKey": "DbUser",
+    "ParameterValue": "mediawiki"
+  },
+  {
+    "ParameterKey": "DbPassword",
+    "ParameterValue": "secret"
+  },
+  {
+    "ParameterKey": "MediawikiMajorRelease",
+    "ParameterValue": "1"
+  },
+  {
+    "ParameterKey": "MediawikiMinorRelease",
+    "ParameterValue": "28"
+  },
+  {
+    "ParameterKey": "SiteTitle",
+    "ParameterValue": "My Site"
+  },
+  {
+    "ParameterKey": "SiteURL",
+    "ParameterValue": "https://www.example.com"
+  },
+  {
+    "ParameterKey": "VirtaulServerNames",
+    "ParameterValue": "example.com www.example.com"
+  },
+  {
+    "ParameterKey": "LbLanIp",
+    "ParameterValue": "10.0.0.1"
+  },
+  {
+    "ParameterKey": "ContactEmail",
+    "ParameterValue": "first.last@domain.com"
+  },
+  {
+    "ParameterKey": "SecretKey",
+    "ParameterValue": "0000000000"
+  },
+  {
+    "ParameterKey": "UpgradeKey",
+    "ParameterValue": "0000000000"
+  },
+  {
+    "ParameterKey": "GoogleAnalyticsAccount",
+    "ParameterValue": "UD-0000000"
+  },
+  {
+    "ParameterKey": "Environment",
+    "ParameterValue": "dev"
+  },
+  {
+    "ParameterKey": "S3ContentPath",
+    "ParameterValue": "bucket-name/web-content/mediawiki"
+  }
+]
