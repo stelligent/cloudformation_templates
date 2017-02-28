@@ -1,0 +1,54 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Firstname Lastname"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "Never"
+  },
+  {
+    "ParameterKey": "AMI",
+    "ParameterValue": "autodetect"
+  },
+  {
+    "ParameterKey": "LicenseType",
+    "ParameterValue": "BYOL"
+  },
+  {
+    "ParameterKey": "VpcId",
+    "ParameterValue": "vpc-0000000"
+  },
+  {
+    "ParameterKey": "PrivateSubnetId",
+    "ParameterValue": "sg-0000000"
+  },
+  {
+    "ParameterKey": "PublicSubnetId",
+    "ParameterValue": "sg-0000000"
+  },
+  {
+    "ParameterKey": "PrivateNetworkCIDR",
+    "ParameterValue": "0.0.0.0/0"
+  },
+  {
+    "ParameterKey": "PublicNetworkCIDR",
+    "ParameterValue": "0.0.0.0/0"
+  },
+  {
+    "ParameterKey": "OptTrustedNetworkCIDR",
+    "ParameterValue": "192.168.0.0/24"
+  },
+  {
+    "ParameterKey": "InstanceSize",
+    "ParameterValue": "default"
+  },
+  {
+    "ParameterKey": "KeyName",
+    "ParameterValue": ""
+  },
+  {
+    "ParameterKey": "OptExistingElasticIpId",
+    "ParameterValue": ""
+  }
+]

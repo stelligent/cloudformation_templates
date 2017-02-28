@@ -1,0 +1,26 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Firstname Lastname"
+  },
+  {
+    "ParameterKey": "Project",
+    "ParameterValue": "EFS Creation"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "Never"
+  },
+  {
+    "ParameterKey": "VpcE",
+    "ParameterValue": "vpce-00000000"
+  },
+  {
+    "ParameterKey": "BucketName",
+    "ParameterValue": "my-backup-bucket"
+  },
+  {
+    "ParameterKey": "PreviousLifeCycle",
+    "ParameterValue": "30"
+  }
+]

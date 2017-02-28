@@ -1,0 +1,82 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Firstname Lastname"
+  },
+  {
+    "ParameterKey": "Project",
+    "ParameterValue": "MySQL RDS Creation"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "Never"
+  },
+  {
+    "ParameterKey": "SnapshotArn",
+    "ParameterValue": "arn:aws:rds:us-west-2:000000000000:snapshot:rds:mydbname-2016-11-24-17-03"
+  },
+  {
+    "ParameterKey": "VPC",
+    "ParameterValue": "vpc-00000000"
+  },
+  {
+    "ParameterKey": "SubnetIdList",
+    "ParameterValue": "subnet-00000000,subnet-00000000,subnet-00000000"
+  },
+  {
+    "ParameterKey": "BackupRetentionPeriod",
+    "ParameterValue": "30"
+  },
+  {
+    "ParameterKey": "MultiAvailabilityZone",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "TcpPort",
+    "ParameterValue": "3306"
+  },
+  {
+    "ParameterKey": "ConfigureDns",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "Cname",
+    "ParameterValue": "justice.league.com"
+  },
+  {
+    "ParameterKey": "R53HostedZoneName",
+    "ParameterValue": "league.com"
+  },
+  {
+    "ParameterKey": "AlertSnsTopicArn",
+    "ParameterValue": "arn:aws:sns:us-west-2:000000000000:rds-alerts"
+  },
+  {
+    "ParameterKey": "PreferredBackupWindow",
+    "ParameterValue": "17:00-19:00"
+  },
+  {
+    "ParameterKey": "PreferredMaintenanceWindow",
+    "ParameterValue": "Sun:19:00-Sun:23:00"
+  },
+  {
+    "ParameterKey": "ConfigureProvisionedIops",
+    "ParameterValue": "false"
+  },
+  {
+    "ParameterKey": "SnapshotOnDelete",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "SetupAlarms",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "ProvisionedIopsValue",
+    "ParameterValue": "1000"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "db.t2.small"
+  }
+]

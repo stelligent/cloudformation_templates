@@ -1,0 +1,642 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Single EC2 Running Wordpress on Nginx, RDS Backed, Behind LB by Levon Becker v20170124-1600
+Parameters:
+  # Ownership
+  Owner:
+    Type: String
+    Default: FirstName LastName
+  DeleteAfter:
+    Type: String
+    Default: 00/00/201x
+
+  # Network
+  VPC:
+    Type: AWS::EC2::VPC::Id
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+  InternalAccessSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+  RemoteSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+  RdsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+  EfsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+
+  # DNS
+  HostedZoneId:
+    Type: String
+    Description: Route53 Hosted Zone ID (Z1234567890).
+    Default: Z1234567890
+  RecordName:
+    Type: String
+    Description: DNS Record Name (www.example.com)
+    Default: www.example.com
+
+  # EFS Mount
+  EfsMountPoint:
+    Type: String
+    Default: /path/to/mount1
+  EfsFileSystemId:
+    Type: String
+    Default: fs-00000000
+
+  # Instance
+  KeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+  InstanceType:
+    Type: String
+    AllowedValues:
+    - t2.nano
+    - t2.micro
+    - t2.small
+    - t2.medium
+    - m3.medium
+    - m4.large
+    - c3.medium
+    - c4.medium
+    Default: t2.small
+
+  # Database
+  DbHost:
+    Type: String
+  DbName:
+    Type: String
+  DbUser:
+    Type: String
+  DbPassword:
+    Type: String
+    NoEcho: 'true'
+    MinLength: '8'
+    AllowedPattern: "[a-zA-Z0-9!?]*"
+    ConstraintDescription: Must only contain upper and lowercase letters, numbers and contain a minimum of 8 characters
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+     # Ownership
+      - Label:
+          default: Ownership
+        Parameters:
+          - Owner
+          - DeleteAfter
+
+      # Network
+      - Label:
+          default: Network
+        Parameters:
+          - VPC
+          - SubnetId
+          - SecurityGroup
+          - InternalAccessSecurityGroup
+          - RemoteSecurityGroup
+          - RdsSecurityGroup
+          - EfsSecurityGroup
+
+      # Instance Settings
+      - Label:
+          default: Instance
+        Parameters:
+          - KeyPairName
+          - InstanceType
+
+      # DNS
+      - Label:
+          default: DNS
+        Parameters:
+          - RecordName
+          - HostedZoneId
+
+      # EFS
+      - Label:
+          default: EFS
+        Parameters:
+          - EfsMountPoint
+          - EfsFileSystemId
+
+      # Database
+      - Label:
+          default: Database Config
+        Parameters:
+          - DbHost
+          - DbName
+          - DbUser
+          - DbPassword
+
+    ParameterLabels:
+      # Ownership
+      Owner:
+        default: Team or Individual Owner
+      DeleteAfter:
+        default: Delete After Date
+
+      # Network
+      VPC:
+        default: VPC ID
+      SubnetId:
+        default: Subnet ID
+      InternalAccessSecurityGroup:
+        default: Internal Access Security Group
+      RemoteSecurityGroup:
+        default: Remote Security Group
+      RdsSecurityGroup:
+        default: RDS Security Group
+      EfsSecurityGroup:
+        default: EFS Security Group
+
+      # Instance Settings
+      KeyPairName:
+        default: EC2 Key Pair Name
+      InstanceType:
+        default: Instance Type
+
+      # DNS
+      RecordName:
+        default: Record Name
+      HostedZoneId:
+        default: Hosted Zone ID
+
+      # EFS
+      EfsMountPoint:
+        default: EFS Mount Point
+      EfsFileSystemId:
+        default: EFS File System Id
+
+      # Database
+      DbHost:
+        default: Database Host
+      DbName:
+        default: Database Name
+      DbUser:
+        default: Database User
+      DbPassword:
+        default: Database Password
+
+Mappings:
+  RegionMap:
+    # Amazon Linux AMI 2016.09.0 was released on 2016-09-27
+    us-east-1:
+      InstanceStore: ami-de3860c9
+      EBS: ami-b73b63a0
+    us-west-2:
+      InstanceStore: ami-44c36524
+      EBS: ami-5ec1673e
+    us-west-1:
+      InstanceStore: ami-34e9a254
+      EBS: ami-23e8a343
+    eu-west-1:
+      InstanceStore: ami-d998d3aa
+      EBS: ami-9398d3e0
+    eu-central-1:
+      InstanceStore: ami-0f639b60
+      EBS: ami-f9619996
+    ap-southeast-1:
+      InstanceStore: ami-7a54f519
+      EBS: ami-b953f2da
+    ap-northeast-1:
+      InstanceStore: ami-0a12b16b
+      EBS: ami-0c11b26d
+    ap-northeast-2:
+      InstanceStore: ami-ba35e1d4
+      EBS: ami-983ce8f6
+    ap-southeast-2:
+      InstanceStore: ami-41754922
+      EBS: ami-db704cb8
+    sa-east-1:
+      InstanceStore: ami-59bd2135
+      EBS: ami-97831ffb
+    us-gov-west-1:
+      InstanceStore: ami-e0b10981
+      EBS: ami-7cb1091d
+    cn-north-1:
+      InstanceStore: ami-81eb3fec
+      EBS: ami-7c15c111
+
+Resources:
+  # CloudWatch
+  CloudWatchLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref "AWS::StackName"
+      RetentionInDays: '30'
+
+  # IAM
+  IamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref AWS::StackName
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+
+  IamPolicies:
+    Type: AWS::IAM::Policy
+    DependsOn: IamRole
+    Properties:
+      PolicyName: !Join [ '', [ !Ref "AWS::StackName", -instance-policy ] ]
+      Roles: [!Ref IamRole]
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        # Allow Full S3 Access
+        - Effect: Allow
+          Action:
+          - s3:*
+          Resource: "*"
+        # Allow Read/Write Route53 for Userdata Script DNS A Record Set
+        - Effect: Allow
+          Action:
+          - route53:ChangeResourceRecordSets
+          - route53:Get*
+          - route53:List*
+          Resource: "*"
+        # Allow Write CloudWatch Logs
+        - Effect: Allow
+          Action:
+          - cloudwatch:PutMetricData
+          Resource: "*"
+        - Effect: Allow
+          Action:
+          - logs:PutLogEvents
+          - logs:CreateLogStream
+          - logs:DescribeLogStreams
+          - logs:CreateLogGroup
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:logs:'
+              - !Ref AWS::Region
+              - ":"
+              - !Ref AWS::AccountId
+              - ":log-group:"
+              - !Ref CloudWatchLogsGroup
+              - ":log-stream:*"
+
+  IamInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    DependsOn: IamRole
+    Properties:
+      Path: "/"
+      Roles: [!Ref IamRole]
+
+  # Security Groups
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow Web Traffic to Instance
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 443
+        ToPort: 443
+        CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+      - IpProtocol: "-1"
+        FromPort: "-1"
+        ToPort: "-1"
+        CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Ref "AWS::StackName"
+        - Key: Owner
+          Value: !Ref Owner
+        - Key: DeleteAfter
+          Value: !Ref DeleteAfter
+
+  # EC2 Instance
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - SecurityGroup
+      - IamInstanceProfile
+    Properties:
+      IamInstanceProfile: !Ref IamInstanceProfile
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyPairName
+      SubnetId: !Ref SubnetId
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+        - !Ref InternalAccessSecurityGroup
+        - !Ref RemoteSecurityGroup
+        - !Ref RdsSecurityGroup
+        - !Ref EfsSecurityGroup
+      ImageId: !FindInMap [ RegionMap, !Ref "AWS::Region", EBS ]
+      Monitoring: false
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            DeleteOnTermination: true
+            VolumeType: gp2
+            VolumeSize: 8
+      Tags:
+        - Key: Name
+          Value: !Ref "AWS::StackName"
+        - Key: Owner
+          Value: !Ref Owner
+        - Key: DeleteAfter
+          Value: !Ref DeleteAfter
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum update -y
+          yum install -y aws-cfn-bootstrap cloud-init aws-cli
+          /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region} --configsets ec2_setup
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
+
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          ec2_setup:
+            - config_cfn
+            - install_packages
+            - setup_uploads_efs
+            - config_wordpress
+            - config_php_fpm
+            - start_services
+            - dns_update_script
+            - update_dns
+            - warm_ebs
+        config_cfn:
+          files:
+            "/etc/cfn/cfn-hup.conf":
+              content: !Sub |
+                [main]
+                stack=${AWS::StackId}
+                region=${AWS::Region}
+              mode: '000400'
+              owner: root
+              group: root
+            "/etc/cfn/hooks.d/cfn-auto-reloader.conf":
+              content: !Sub |
+                [cfn-auto-reloader-hook]
+                triggers=post.update
+                path=Resources.EC2Instance.Metadata.AWS::CloudFormation::Init
+                action=/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region} --configsets ec2_setup
+                runas=root
+          services:
+            sysvinit:
+              cfn-hup:
+                enabled: true
+                ensureRunning: true
+                files:
+                  - /etc/cfn/cfn-hup.conf
+                  - /etc/cfn/hooks.d/cfn-auto-reloader.conf
+        install_packages:
+          commands:
+            01_install_nginx:
+              command: "yum install -y htop vim mlocate git nginx mysql56 php70-fpm php70-mysqlnd php70-gd php70-mbstring php70-mcrypt"
+            02_download_wordpress:
+              cwd: /tmp/
+              command: "wget https://wordpress.org/latest.tar.gz"
+            03_create_www:
+              command: "mkdir -p /var/www/html"
+            04_extract_wordpress:
+              cwd: /tmp/
+              command: "tar -xvzf latest.tar.gz -C /var/www/html/"
+            05_chmod_wordpress:
+              cwd: /var/www/html/
+              command: "chown -R nginx:nginx /var/www/html/wordpress"
+        setup_uploads_efs:
+          commands:
+            01_make_mount_dir:
+              cwd: /var/www/html
+              command: !Sub "mkdir -p ${EfsMountPoint}"
+            02_update_fstab:
+              cwd: /var/www/html
+              command: !Sub |
+                echo "${EfsFileSystemId}.efs.${AWS::Region}.amazonaws.com:/ ${EfsMountPoint} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
+            03_mount_efs:
+              command: "mount -a -t nfs4"
+        config_wordpress:
+          files:
+            "/etc/nginx/conf.d/wordpress.conf":
+              content: !Sub |
+                server {
+                        listen 80;
+                        server_name ${RecordName};
+                        root   /var/www/html/wordpress;
+                        index index.php index.html index.htm;
+                        #access_log /var/log/nginx/wordpress_access.log;
+                        #error_log /var/log/nginx/wordpress_error.log;
+
+                        location / {
+                            if ($http_x_forwarded_proto != 'https') {
+                                    rewrite ^ https://$host$request_uri? permanent;
+                            }
+                            try_files $uri $uri/ @handler;
+                        }
+
+                        location @handler {
+                            fastcgi_pass 127.0.0.1:9000;
+                            fastcgi_param SCRIPT_FILENAME /var/www/html/wordpress/index.php;
+                            include /etc/nginx/fastcgi_params;
+                            fastcgi_param SCRIPT_NAME /index.php;
+                        }
+
+                        location ~ .php$ {
+                            try_files $uri @handler;
+                            fastcgi_pass    127.0.0.1:9000;
+                            fastcgi_index   index.php;
+                            fastcgi_param SCRIPT_FILENAME /var/www/html/wordpress$fastcgi_script_name;
+                            include fastcgi_params;
+                        }
+
+                        # Plugin Handles This
+                        #location = /favicon.ico { access_log off; log_not_found off; }
+
+                        # Plugin Handles This
+                        #location = /robots.txt { access_log off; log_not_found off; allow all; }
+
+                        #    Prevent access to any files starting with a dot, like .htaccess or text editor temp files
+                        location ~ /\. { access_log off; log_not_found off; deny all; }
+
+                        location ~* /(?:uploads|files)/.*\.php$ {
+                            deny all;
+                        }
+                }
+            "/var/www/html/wordpress/wp-config.php":
+              mode: "000444"
+              content: !Sub |
+                <?php
+
+                // Override Site URL Links So can Change if Lose Access
+                define('WP_HOME','https://${RecordName}');
+                define('WP_SITEURL','https://${RecordName}');
+
+                // Use X-Forwarded-For HTTP Header to Get Visitor's Real IP Address
+                if ( isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+                    $http_x_headers = explode( ',', $_SERVER['HTTP_X_FORWARDED_FOR'] );
+                    $_SERVER['REMOTE_ADDR'] = $http_x_headers[0];
+                };
+
+                // Important for HTTPS with Reverse Proxy (WAF) !!!!
+                if ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+                    $_SERVER['HTTPS']='on';
+                    define('FORCE_SSL_ADMIN', true);
+                };
+
+                //** MySQL settings **//
+
+                //define('WP_CACHE', true); //Added by WP-Cache Manager
+                //define( 'WPCACHEHOME', '/var/www/html/fitnessjerk/wordpress/wp-content/plugins/wp-super-cache/' ); //Added by WP-Cache Manager
+                define('DB_NAME', '${DbName}');
+                define('DB_USER', '${DbUser}');
+                define('DB_PASSWORD', '${DbPassword}');
+                define('DB_HOST', '${DbHost}');
+                define('DB_CHARSET', 'utf8');
+                define('DB_COLLATE', '');
+
+                // Authentication Unique Keys and Salts.
+                // !! GENERATE NEW KEYS HERE https://api.wordpress.org/secret-key/1.1/salt/ !!
+                // * You can change these at any point in time to invalidate all existing cookies. This will force all users to have to log in again.
+                define('AUTH_KEY',         '*Hr_p^*t]Udv,#h5Gkr8lmH305x|]zY|8FPq@W;o1+F3:1$il2riUD]xDa<5!-Dm');
+                define('SECURE_AUTH_KEY',  'pPR%Ko>mcxArjx|~R4>(d,m|j8CHbC=[H,?H-u}+AUe-r+z|yN5RCX4u#wxv~-3w');
+                define('LOGGED_IN_KEY',    '0,4qFm(U 1z$KgvO7O3Jw`WFQ^|9S,ncWU~}**CcLEp.NKS$-X>8t~Qs}^k &Xw}');
+                define('NONCE_KEY',        'K{Jqq;1Ht|Dvb8h:8VU+0c~SX:>6{tov>;|5r6_Ion HnC*Z{[(DF2~Cj8oNaRS-');
+                define('AUTH_SALT',        'X,!UHJ|*T-Q|ETI18<E^g,iwj*DR~T4tPaycs8g0SpKK/n!a=}=Qm<GT-U!;xvpY');
+                define('SECURE_AUTH_SALT', 'Q5AyCu^VXmSF:J$RkjLdXR7a2Wzue_,1u=c8e[~>y#BH;5WLvdt|tZIhd@SWJZG&');
+                define('LOGGED_IN_SALT',   'e-l|RXjB03R5n|S-;C4AV;jjrUA>B%| (g0E+-6{hei%D:OiARo+T@Pa=Rv}V+R8');
+                define('NONCE_SALT',       '<evTKny<laV}0i%RJ2`OL;FqUb&?([0rciK|r1>,,-<!R-Ex&vGNVlV_DXjJpx^Q');
+
+                $table_prefix  = 'wp_';
+
+                define('WP_DEBUG', false);
+
+                // Absolute path to the WordPress directory.
+                if ( !defined('ABSPATH') )
+                    define('ABSPATH', dirname(__FILE__) . '/');
+
+                define('WP_MEMORY_LIMIT', '128M');
+
+                // Sets up WordPress vars and included files.
+                require_once(ABSPATH . 'wp-settings.php');
+
+                // Disable Automatic Updating
+                define('WP_AUTO_UPDATE_CORE', false);
+                add_filter( 'auto_update_plugin', '__return_false' );
+                add_filter( 'auto_update_theme', '__return_false' );
+
+                ?>
+        config_php_fpm:
+          commands:
+            01_replace_apache_with_nginx_user:
+              command: "sed -i 's/apache/nginx/g' /etc/php-fpm-7.0.d/www.conf"
+            02_set_ownership_logs_dir:
+              command: "chown -R nginx:nginx /var/log/php-fpm"
+            03_set_ownership_session_dir:
+              command: "chown -R root:nginx /var/lib/php/7.0/"
+        start_services:
+          commands:
+            01_start_php_fpm:
+              command: "service php-fpm-7.0 restart"
+            02_start_nginx:
+              command: "service nginx restart"
+            03_onboot_php_fpm:
+              command: "chkconfig nginx on"
+            04_onboot_nginx:
+              command: "chkconfig php-fpm-7.0 on"
+        dns_update_script:
+          files:
+            "/usr/sbin/update-dns":
+              mode: "000755"
+              content: !Sub |
+                #!/bin/bash
+
+                cat <<EOF > /tmp/route53-upsert.json
+                {
+                  "Comment": "string",
+                  "Changes": [
+                    {
+                      "Action": "UPSERT",
+                      "ResourceRecordSet": {
+                        "Name": "${RecordName}",
+                        "Type": "A",
+                        "TTL": 60,
+                        "ResourceRecords": [
+                          {
+                            "Value": "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+                EOF
+
+                aws route53 change-resource-record-sets --hosted-zone-id "${HostedZoneId}" --change-batch "file:///tmp/route53-upsert.json"
+        update_dns:
+          commands:
+            01_run_script:
+              command: "/usr/sbin/update-dns"
+        warm_ebs:
+          commands:
+            01_warm_ebs:
+              command: "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress"
+      CreationPolicy:
+        ResourceSignal:
+          Count: 1
+          Timeout: PT20M
+
+Outputs:
+  # Ownership
+  Owner:
+    Description: Team or Individual that Owns this Formation.
+    Value: !Ref Owner
+  DeleteAfter:
+    Description: It is ok to delete the Formation after this date.
+    Value: !Ref DeleteAfter
+
+  # Network
+  VPC:
+    Value: !Ref VPC
+  SubnetId:
+    Value: !Ref SubnetId
+  SecurityGroup:
+    Value: !Ref SecurityGroup
+  InternalAccessSecurityGroup:
+    Value: !Ref InternalAccessSecurityGroup
+  RemoteSecurityGroup:
+    Value: !Ref RemoteSecurityGroup
+  RdsSecurityGroup:
+    Value: !Ref RdsSecurityGroup
+  EfsSecurityGroup:
+    Value: !Ref EfsSecurityGroup
+  InstanceURL:
+    Value: !Join [ "", [ "http://", !GetAtt EC2Instance.PrivateDnsName ] ]
+  DnsURL:
+    Value: !Join [ "", [ "http://", !Ref RecordName ] ]
+
+  # Instance Settings
+  AMI:
+    Description: AMI Used.
+    Value: !FindInMap [ RegionMap, !Ref "AWS::Region", EBS ]
+  InstanceType:
+    Description: Instance Type Used.
+    Value: !Ref InstanceType
+  KeyPairName:
+    Description: Key Pair Name Used.
+    Value: !Ref KeyPairName
+  IAMRole:
+    Description: IAM Instance Profile Role Created.
+    Value: !Ref IamRole
+
+  # DNS
+  RecordName:
+    Description: Record Name.
+    Value: !Ref RecordName
+  HostedZoneId:
+    Description: Hosted Zone ID.
+    Value: !Ref HostedZoneId

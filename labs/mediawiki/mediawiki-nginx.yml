@@ -1,0 +1,1572 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Single EC2 Running Mediawiki on Nginx, RDS Backed, Behind LB by Levon Becker v20170210-1430
+Parameters:
+  # Ownership
+  Owner:
+    Type: String
+    Default: FirstName LastName
+  DeleteAfter:
+    Type: String
+    Default: 00/00/201x
+
+  # Network
+  VPC:
+    Type: AWS::EC2::VPC::Id
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+  InternalAccessSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+  RemoteSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+  RdsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+  EfsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+  LbLanIp:
+    Type: String
+    Description: Load Balancer LAN IP for Reverse Proxy
+    Default: "10.0.0.1"
+
+
+  # DNS
+  HostedZoneId:
+    Type: String
+    Description: Route53 Hosted Zone ID (Z1234567890).
+    Default: Z1234567890
+  RecordName:
+    Type: String
+    Description: DNS Alias Record Name (web01.example.com)
+    Default: web01.example.com
+
+  # EFS Mount
+  EfsMountPoint:
+    Type: String
+    Default: /path/to/mount1
+  EfsFileSystemId:
+    Type: String
+    Default: fs-00000000
+
+  # Instance
+  KeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+  InstanceType:
+    Type: String
+    AllowedValues:
+    - t2.nano
+    - t2.micro
+    - t2.small
+    - t2.medium
+    - m3.medium
+    - m4.large
+    - c3.medium
+    - c4.medium
+    Default: t2.small
+
+  # Database
+  DbHost:
+    Type: String
+  DbName:
+    Type: String
+  DbUser:
+    Type: String
+  DbPassword:
+    Type: String
+    NoEcho: 'true'
+    MinLength: '6'
+    AllowedPattern: "[a-zA-Z0-9!?]*"
+    ConstraintDescription: Must only contain upper and lowercase letters, numbers and contain a minimum of 6 characters
+
+  # MediaWiki
+  MediawikiMajorRelease:
+    Type: String
+    Default: 1
+  MediawikiMinorRelease:
+    Type: String
+    Default: 28
+  SiteTitle:
+    Type: String
+  SiteURL:
+    Type: String
+    Default: https://www.example.com
+  VirtaulServerNames:
+    Type: String
+    Description: Load Balancer Alias
+    Default: "example.com www.example.com"
+  ContactEmail:
+    Type: String
+    Default: first.last@domain.com
+  SecretKey:
+    Type: String
+  UpgradeKey:
+    Type: String
+  GoogleAnalyticsAccount:
+    Type: String
+  ReCaptchaSiteKey:
+    Type: String
+  ReCaptchaSecretKey:
+    Type: String
+
+  # Deployment
+  Environment:
+    Type: String
+    Default: 'dev'
+    AllowedValues:
+      - 'dev'
+      - 'prd'
+  S3ContentPath:
+    Type: String
+    Default: bucket-name
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      # Ownership
+      - Label:
+          default: Ownership
+        Parameters:
+          - Owner
+          - DeleteAfter
+
+      # Network
+      - Label:
+          default: Network
+        Parameters:
+          - VPC
+          - SubnetId
+          - SecurityGroup
+          - InternalAccessSecurityGroup
+          - RemoteSecurityGroup
+          - RdsSecurityGroup
+          - EfsSecurityGroup
+          - LbLanIp
+
+      # Instance Settings
+      - Label:
+          default: Instance
+        Parameters:
+          - KeyPairName
+          - InstanceType
+
+      # DNS
+      - Label:
+          default: DNS
+        Parameters:
+          - RecordName
+          - HostedZoneId
+
+      # EFS
+      - Label:
+          default: EFS
+        Parameters:
+          - EfsMountPoint
+          - EfsFileSystemId
+
+      # Database
+      - Label:
+          default: Database Config
+        Parameters:
+          - DbHost
+          - DbName
+          - DbUser
+          - DbPassword
+
+      # Mediawiki
+      - Label:
+          default: Mediawiki
+        Parameters:
+          - MediawikiMajorRelease
+          - MediawikiMinorRelease
+          - SiteTitle
+          - SiteURL
+          - VirtaulServerNames
+          - ContactEmail
+          - SecretKey
+          - UpgradeKey
+          - GoogleAnalyticsAccount
+
+      # Deployment
+      - Label:
+          default: Deployment
+        Parameters:
+          - Environment
+          - S3ContentPath
+
+    ParameterLabels:
+      # Ownership
+      Owner:
+        default: Team or Individual Owner
+      DeleteAfter:
+        default: Delete After Date
+
+      # Network
+      VPC:
+        default: VPC ID
+      SubnetId:
+        default: Subnet ID
+      InternalAccessSecurityGroup:
+        default: Internal Access Security Group
+      RemoteSecurityGroup:
+        default: Remote Security Group
+      RdsSecurityGroup:
+        default: RDS Security Group
+      EfsSecurityGroup:
+        default: EFS Security Group
+      LbLanIp:
+        default: Load Balancer LAN IP
+
+      # Instance Settings
+      KeyPairName:
+        default: EC2 Key Pair Name
+      InstanceType:
+        default: Instance Type
+
+      # DNS
+      RecordName:
+        default: Record Name
+      HostedZoneId:
+        default: Hosted Zone ID
+
+      # EFS
+      EfsMountPoint:
+        default: EFS Mount Point
+      EfsFileSystemId:
+        default: EFS File System Id
+
+      # Database
+      DbHost:
+        default: Database Host
+      DbName:
+        default: Database Name
+      DbUser:
+        default: Database User
+      DbPassword:
+        default: Database Password
+
+      # MediaWiki
+      MediawikiMajorRelease:
+        default: Mediawiki Major Release
+      MediawikiMinorRelease:
+        default: Mediawiki Minor Release
+      SiteTitle:
+        default: Site Title
+      SiteURL:
+        default: Site URL
+      VirtaulServerNames:
+        default: Virtual Server Names
+      ContactEmail:
+        default: Contact Email
+      SecretKey:
+        default: Secret Key
+      UpgradeKey:
+        default: Upgrade Key
+      GoogleAnalyticsAccount:
+        default: Google Analytics Account
+
+      # Deployment
+      Environment:
+        default: Environment
+      S3ContentPath:
+        default: "S3 Deploy Bucket Name"
+
+Mappings:
+  RegionMap:
+    # Amazon Linux AMI 2016.09.0 was released on 2016-09-27
+    us-east-1:
+      InstanceStore: ami-de3860c9
+      EBS: ami-b73b63a0
+    us-west-2:
+      InstanceStore: ami-44c36524
+      EBS: ami-5ec1673e
+    us-west-1:
+      InstanceStore: ami-34e9a254
+      EBS: ami-23e8a343
+    eu-west-1:
+      InstanceStore: ami-d998d3aa
+      EBS: ami-9398d3e0
+    eu-central-1:
+      InstanceStore: ami-0f639b60
+      EBS: ami-f9619996
+    ap-southeast-1:
+      InstanceStore: ami-7a54f519
+      EBS: ami-b953f2da
+    ap-northeast-1:
+      InstanceStore: ami-0a12b16b
+      EBS: ami-0c11b26d
+    ap-northeast-2:
+      InstanceStore: ami-ba35e1d4
+      EBS: ami-983ce8f6
+    ap-southeast-2:
+      InstanceStore: ami-41754922
+      EBS: ami-db704cb8
+    sa-east-1:
+      InstanceStore: ami-59bd2135
+      EBS: ami-97831ffb
+    us-gov-west-1:
+      InstanceStore: ami-e0b10981
+      EBS: ami-7cb1091d
+    cn-north-1:
+      InstanceStore: ami-81eb3fec
+      EBS: ami-7c15c111
+
+Resources:
+  # CloudWatch
+  CloudWatchLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Ref "AWS::StackName"
+      RetentionInDays: '30'
+
+  # IAM
+  IamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref AWS::StackName
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/ReadOnlyAccess
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+
+  IamPolicies:
+    Type: AWS::IAM::Policy
+    DependsOn: IamRole
+    Properties:
+      PolicyName: !Join [ '', [ !Ref "AWS::StackName", -instance-policy ] ]
+      Roles: [!Ref IamRole]
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        # Allow Full S3 Access
+        - Effect: Allow
+          Action:
+          - s3:*
+          Resource: "*"
+        # Allow Read/Write Route53 for Userdata Script DNS A Record Set
+        - Effect: Allow
+          Action:
+          - route53:ChangeResourceRecordSets
+          - route53:Get*
+          - route53:List*
+          Resource: "*"
+        # Allow Write CloudWatch Logs
+        - Effect: Allow
+          Action:
+          - cloudwatch:PutMetricData
+          Resource: "*"
+        - Effect: Allow
+          Action:
+          - logs:PutLogEvents
+          - logs:CreateLogStream
+          - logs:DescribeLogStreams
+          - logs:CreateLogGroup
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:logs:'
+              - !Ref AWS::Region
+              - ":"
+              - !Ref AWS::AccountId
+              - ":log-group:"
+              - !Ref CloudWatchLogsGroup
+              - ":log-stream:*"
+
+  IamInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    DependsOn: IamRole
+    Properties:
+      Path: "/"
+      Roles: [!Ref IamRole]
+
+  # Security Groups
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow Web Traffic to Instance
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 443
+        ToPort: 443
+        CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+      - IpProtocol: "-1"
+        FromPort: "-1"
+        ToPort: "-1"
+        CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Ref "AWS::StackName"
+        - Key: Owner
+          Value: !Ref Owner
+        - Key: DeleteAfter
+          Value: !Ref DeleteAfter
+
+  # EC2 Instance
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - SecurityGroup
+      - IamInstanceProfile
+    Properties:
+      IamInstanceProfile: !Ref IamInstanceProfile
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyPairName
+      SubnetId: !Ref SubnetId
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+        - !Ref InternalAccessSecurityGroup
+        - !Ref RemoteSecurityGroup
+        - !Ref RdsSecurityGroup
+        - !Ref EfsSecurityGroup
+      ImageId: !FindInMap [ RegionMap, !Ref "AWS::Region", EBS ]
+      Monitoring: false
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            DeleteOnTermination: true
+            VolumeType: gp2
+            VolumeSize: 8
+      Tags:
+        - Key: Name
+          Value: !Ref "AWS::StackName"
+        - Key: Owner
+          Value: !Ref Owner
+        - Key: DeleteAfter
+          Value: !Ref DeleteAfter
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          yum update -y
+          yum install -y aws-cfn-bootstrap cloud-init aws-cli
+          /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region} --configsets ec2_setup
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region}
+
+    # CFN INIT
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          ec2_setup:
+            - config_cfn
+            - install_packages
+            - install_mediawiki
+            - setup_uploads_efs
+            - set_backlog_sockets
+            - install_mediawiki_extensions
+            - mediawiki_customizations
+            - config_mediawiki
+            - config_php_fpm
+            - start_services
+            - deploy_dns_update_script
+            - run_update_dns
+            - install_yum_cron
+            - setup_yum_cron
+            - warm_ebs
+        config_cfn:
+          files:
+            "/etc/cfn/cfn-hup.conf":
+              content: !Sub |
+                [main]
+                stack=${AWS::StackId}
+                region=${AWS::Region}
+              mode: '000400'
+              owner: root
+              group: root
+            "/etc/cfn/hooks.d/cfn-auto-reloader.conf":
+              content: !Sub |
+                [cfn-auto-reloader-hook]
+                triggers=post.update
+                path=Resources.EC2Instance.Metadata.AWS::CloudFormation::Init
+                action=/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource EC2Instance --region ${AWS::Region} --configsets ec2_setup
+                runas=root
+          services:
+            sysvinit:
+              cfn-hup:
+                enabled: true
+                ensureRunning: true
+                files:
+                  - /etc/cfn/cfn-hup.conf
+                  - /etc/cfn/hooks.d/cfn-auto-reloader.conf
+        install_packages:
+          commands:
+            01_install_nginx:
+              command: "yum install -y git vim htop mlocate nginx mysql56 php70-fpm php70-mysqlnd php70-gd php70-mbstring php70-mcrypt php70-cli php70-common php70-enchant php70-gd php70-intl php70-jsonc php70-mbstring php70-mcrypt php70-mysqlnd php70-pdo php70-pecl-apcu php70-pecl-http php70-pecl-imagick php70-pecl-raphf php70-process php70-xml apr apr-util enchant ImageMagick json-c mysql56 nfs-utils openssl openssl-devel perl-core perl-CPAN perl-Crypt-SSLeay perl-DateTime perl-libwww-perl perl-Sys-Syslog"
+        install_mediawiki:
+          commands:
+            01_create_www:
+              command: "mkdir -p /var/www/html"
+            02_download_mediawiki:
+              cwd: /var/www/html
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/core.git"
+            03_rename_dir:
+              cwd: /var/www/html
+              command: "mv core mediawiki"
+            04_chmod_site:
+              cwd: /var/www/html
+              command: "chown -R nginx:nginx mediawiki"
+        setup_uploads_efs:
+          commands:
+            01_make_mount_dir:
+              cwd: /var/www/html
+              command: !Sub "mkdir -p ${EfsMountPoint}"
+            02_update_fstab:
+              cwd: /var/www/html
+              command: !Sub |
+                echo "${EfsFileSystemId}.efs.${AWS::Region}.amazonaws.com:/ ${EfsMountPoint} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0" >> /etc/fstab
+            03_mount_efs:
+              command: "mount -a -t nfs4"
+        set_backlog_sockets:
+          commands:
+            01_set_somaxconn_in_memory:
+              cwd: /var/www/html
+              command: "sysctl -w net.core.somaxconn=1024"
+            02_set_somaxcoon_for_reboot:
+              cwd: /var/www/html
+              command: "echo 'net.core.somaxconn = 1024' >> /etc/sysctl.conf"
+            03_set_syncookies_in_memory:
+              cwd: /var/www/html
+              command: "sysctl -w net.ipv4.tcp_syncookies=4096"
+            04_set_syncookies_for_reboot:
+              cwd: /var/www/html
+              command: "echo 'net.ipv4.tcp_syncookies = 4096' >> /etc/sysctl.conf"
+        install_mediawiki_extensions:
+          commands:
+            001_MobileFrontend:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/MobileFrontend.git"
+            002_SyntaxHighlight_GeSHi:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/SyntaxHighlight_GeSHi.git"
+            003_UploadWizard:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/UploadWizard.git"
+            004_News:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/News.git"
+            005_MultiBoilerplate:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/MultiBoilerplate.git"
+            006_ReplaceText:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/ReplaceText.git"
+            007_YouTube:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/YouTube.git"
+            008_AntiBot:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/AntiBot.git"
+            009_AntiSpoof:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/AntiSpoof.git"
+            010_SimpleAntiSpam:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/SimpleAntiSpam.git"
+            011_SpamBlacklist:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/SpamBlacklist.git"
+            012_googleAnalytics:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/googleAnalytics.git"
+            013_Mantle:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Mantle.git"
+            015_Cite:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Cite.git"
+            016_ConfirmEdit:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/ConfirmEdit.git"
+            017_Gadgets:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Gadgets.git"
+            018_ImageMap:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/ImageMap.git"
+            019_InputBox:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/InputBox.git"
+            020_Interwiki:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Interwiki.git"
+            021_LocalisationUpdate:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/LocalisationUpdate.git"
+            022_Nuke:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Nuke.git"
+            023_ParserFunctions:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/ParserFunctions.git"
+            024_PdfHandler:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/PdfHandler.git"
+            025_Poem:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Poem.git"
+            026_Renameuser:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Renameuser.git"
+            029_TitleBlacklist:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/TitleBlacklist.git"
+            030_WikiEditor:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/WikiEditor.git"
+            030b_Scribunto:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/extensions/Scribunto.git"
+            030c_AutoSitemap:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "git clone https://github.com/bonusbits/AutoSitemap.git"
+            031_mkdir_HideNamespace:
+              cwd: /var/www/html/mediawiki/extensions
+              command: "mkdir HideNamespace"
+            032_HideNamespace:
+              cwd: /var/www/html/mediawiki/extensions
+              command: !Sub "aws s3 sync s3://${S3ContentPath}/HideNamespace/ HideNamespace/ --sse"
+            033_chmod_extensions:
+              cwd: /var/www/html/mediawiki
+              command: "chown -R nginx:nginx extensions"
+            034_vendor_clone_insteadof_composer:
+              cwd: /var/www/html/mediawiki
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/vendor.git"
+            035_chmod_vendor:
+              cwd: /var/www/html/mediawiki
+              command: "chown -R nginx:nginx vendor"
+        mediawiki_customizations:
+          commands:
+            001_download_vector_skin:
+              cwd: /var/www/html/mediawiki/skins
+              command: !Sub "git clone --branch REL${MediawikiMajorRelease}_${MediawikiMinorRelease} https://gerrit.wikimedia.org/r/p/mediawiki/skins/Vector.git"
+            002_chmod_vector:
+              cwd: /var/www/html/mediawiki/skins
+              command: "chown -R nginx:nginx Vector"
+            003_desktop_logo:
+              cwd: /var/www/html/mediawiki/images
+              command: !Sub "aws s3 cp s3://${S3ContentPath}/logo17_128x128.png desktop_logo.png --sse"
+            004_mobile_logo:
+              cwd: /var/www/html/mediawiki/images
+              command: !Sub "aws s3 cp s3://${S3ContentPath}/logo_mobile17.png mobile_logo.png --sse"
+            005_chmod_logos:
+              cwd: /var/www/html/mediawiki/images
+              command: "chown -R nginx:nginx *.png"
+            006_favicon:
+              cwd: /var/www/html/mediawiki
+              command: !Sub "aws s3 cp s3://${S3ContentPath}/favicon.ico . --sse"
+            007_chmod_favicon:
+              cwd: /var/www/html/mediawiki
+              command: "chown nginx:nginx favicon.ico"
+            008_adsense_vector:
+              cwd: /var/www/html/mediawiki/skins/Vector
+              command: !Sub "aws s3 cp s3://${S3ContentPath}/VectorTemplate.php . --sse"
+            009_chmod_vectortemplate:
+              cwd: /var/www/html/mediawiki/skins/Vector
+              command: "chown nginx:nginx VectorTemplate.php"
+            010_adsense_mobilefrontend:
+              cwd: /var/www/html/mediawiki/extensions/MobileFrontend/includes/skins
+              command: !Sub "aws s3 cp s3://${S3ContentPath}/MinervaTemplate.php . --sse"
+            011_chmod_mobilefrontend:
+              cwd: /var/www/html/mediawiki/extensions/MobileFrontend/includes/skins
+              command: "chown nginx:nginx MinervaTemplate.php"
+            #012_news_fix_underscores:
+            #  cwd: /var/www/html/mediawiki/extensions/News
+            #  command: !Sub "aws s3 cp s3://${S3ContentPath}/NewsRenderer.php . --sse"
+            #013_chmod_news:
+            #  cwd: /var/www/html/mediawiki/extensions/News
+            #  command: "chown nginx:nginx NewsRenderer.php"
+        config_mediawiki:
+          files:
+            "/etc/nginx/conf.d/mediawiki.conf":
+              content: !Sub |
+                server {
+                    listen 80 backlog=1024;
+                    set_real_ip_from ${LbLanIp};
+                    real_ip_header X-Forwarded-For;
+                    real_ip_recursive on;
+                    server_name ${VirtaulServerNames};
+                    root /var/www/html/mediawiki;
+                    index index.php;
+                    # client_max_body_size 24000M;
+                    #access_log /var/log/nginx/mediawiki_access.log;
+                    #error_log /var/log/nginx/mediawiki_error.log;
+                    #error_log /var/log/nginx/medaiwiki_debug.log debug;
+
+                    location / {
+                        #   Recognize if HTTPS Terminate Prior to Nginx Getting Hands on it
+                        if ($http_x_forwarded_proto != 'https') {
+                            rewrite ^ https://$host$request_uri? permanent;
+                        }
+                        try_files $uri $uri/ @handler;
+                        # error_page 404 = @mediawiki;
+                    }
+
+                    # location @mediawiki {
+                    #     rewrite ^/wiki([^?]*)(?:\?(.*))? /index.php?title=$1&$2 last;
+                    # }
+
+                    location @handler {
+                        fastcgi_pass 127.0.0.1:9000;
+                        fastcgi_param SCRIPT_FILENAME /var/www/html/mediawiki/index.php;
+                        include /etc/nginx/fastcgi_params;
+                        fastcgi_param SCRIPT_NAME /index.php;
+                    }
+
+                    location ~ .php$ {
+                        try_files $uri @handler;
+                        fastcgi_pass    127.0.0.1:9000;
+                        fastcgi_index   index.php;
+                        fastcgi_param SCRIPT_FILENAME /var/www/html/mediawiki$fastcgi_script_name;
+                        include fastcgi_params;
+                    }
+
+                    #    Exclude all access from the cache directory
+                    location ^~ /cache/ { deny all; }
+
+                    #    Prevent access to any files starting with a dot, like .htaccess
+                    #    or text editor temp files
+                    location ~ /\. { access_log off; log_not_found off; deny all; }
+
+                    #    Prevent access to any files starting with a dot, like .htaccess
+                    #    or text editor temp files
+                    location ~ /\. { access_log off; log_not_found off; deny all; }
+
+                    #    Prevent access to any files starting with a $ (usually temp files)
+                    location ~ ~$ { access_log off; log_not_found off; deny all; }
+
+                    #    Do not log access to robots.txt, to keep the logs cleaner
+                    location = /robots.txt { access_log off; log_not_found off; }
+
+                    #    Do not log access to the favicon, to keep the logs cleaner
+                    location = /favicon.ico { access_log off; log_not_found off; }
+
+                    #    Keep images and CSS around in browser cache for as long as possible,
+                    #    to cut down on server load
+                    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+                        try_files $uri /index.php;
+                        expires 7d;
+                        log_not_found off;
+                    }
+
+                    # Exception for AutoSitemap sitemap.xml template
+                    location = /extensions/AutoSitemap/sitemap.xsl { allow all; }
+
+                    #    Mark all of these directories as "deny all", which means that they cannot
+                    #    be explicitly accessed by clients. However, the web server can still use
+                    #    and serve the files inside of them. This keeps people from poking around
+                    #    in the wiki's deny alls.
+                    location ^~ /bin/ { deny all; }
+                    location ^~ /docs/ { deny all; }
+                    location ^~ /includes/ { deny all; }
+                    location ^~ /maintenance/ { deny all; }
+                    location ^~ /mw-config/ { deny all; } #Uncomment after installation
+                    location ^~ /resources/lib/ { deny all; }
+                    location ^~ /resources/src/ { deny all; }
+                    location ^~ /resources/Resources.php { deny all; } # ResourcesOOUI.php  Resources.php
+                    location ^~ /resources/ResourcesOOUI.php { deny all; } # ResourcesOOUI.php  Resources.php
+                    location ^~ /serialized/ { deny all; }
+                    location ^~ /tests/ { deny all; }
+                    location ^~ /skins/ { deny all; }
+                    location ^~ /vendor/ { deny all; }
+
+                    #    Force potentially-malicious files in the /images directory to be served
+                    #    with a text/plain mime type, to prevent them from being executed by
+                    #    the PHP handler
+                    location ~* ^/images/.*.(html|htm|shtml|php)$ { types { } default_type text/plain; }
+
+                    #    Redirect all requests for unknown URLs out of images and back to the
+                    #    root index.php file
+                    location ^~ /images/ { try_files $uri /index.php; }
+
+                    #    Deny direct access to uploads directory
+                    location ~* /(?:uploads|files)/.*\.php$ { deny all; }
+                }
+            "/var/www/html/mediawiki/robots.txt":
+              mode: "000644"
+              owner: nginx
+              group: nginx
+              encoding: plain
+              content: !Sub |
+                User-agent: *
+                Disallow: /*.json
+                Disallow: /*.php
+                Disallow: /*.php5
+                Disallow: /cache/*
+                Disallow: /extensions/*
+                Disallow: /images/*
+                Disallow: /includes/*
+                Disallow: /index.php?*
+                Disallow: /maintenance/*
+                Disallow: /mw-config/*
+                Disallow: /resources/*
+                Disallow: /skins/*
+                Disallow: /uploads/*
+                Disallow: /vendor/*
+                Disallow: /wiki/Category:*
+                Disallow: /wiki/File:*
+                Disallow: /wiki/Help:*
+                Disallow: /wiki/Image:*
+                Disallow: /wiki/List:*
+                Disallow: /wiki/Manual:*
+                Disallow: /wiki/Module:*
+                Disallow: /wiki/MediaWiki:*
+                Disallow: /wiki/Project:*
+                Disallow: /wiki/Special:*
+                Disallow: /wiki/Template:*
+                Disallow: /wiki/User:*
+            "/var/www/html/mediawiki/LocalSettings.php":
+              mode: "000444"
+              owner: nginx
+              group: nginx
+              encoding: plain
+              content: !Sub |
+                <?php
+
+                # Protect against web entry
+                if ( !defined( 'MEDIAWIKI' ) ) {
+                        exit;
+                }
+
+                ## Debugging
+                #$wgShowExceptionDetails = true;
+                #$wgShowSQLErrors = true;
+                #$wgDebugDumpSql = true;
+                #$wgShowDBErrorBacktrace = true;
+                #$wgDebugLogFile = "/var/log/mediawiki.log";
+
+                ## Web Settings
+                # $wgDisableOutputCompression = true;
+                $wgSitename = "${SiteTitle}";
+                $wgMetaNamespace = "${SiteTitle}";
+                $wgScriptPath = "";
+                $wgArticlePath = "/wiki/$1";
+                $wgUsePathInfo = true;
+                $wgScriptExtension = ".php";
+                $wgFavicon = "$wgScriptPath/favicon.ico";
+                $wgServer = "${SiteURL}";
+                $wgStylePath = "$wgScriptPath/skins";
+                $wgLogo = "$wgScriptPath/images/desktop_logo.png";
+                $wgEnableEmail = true;
+                $wgEnableUserEmail = true; # UPO
+                $wgEmergencyContact = "${ContactEmail}";
+                $wgPasswordSender = "${ContactEmail}";
+                $wgEnotifUserTalk = true; # UPO
+                $wgEnotifWatchlist = true; # UPO
+                $wgEmailAuthentication = true;
+                $wgExternalLinkTarget = '_blank';
+                $wgUniversalEditButton = true;
+
+                ## Database Settings
+                $wgDBtype = "mysql";
+                $wgDBserver = "${DbHost}";
+                $wgDBname = "${DbName}";
+                $wgDBuser = "${DbUser}";
+                $wgDBpassword = "${DbPassword}";
+                $wgDBprefix = "";
+                $wgDBTableOptions = "ENGINE=InnoDB, DEFAULT CHARSET=binary";
+                $wgDBmysql5 = false;
+
+                ## Cache and Uploads
+                $wgMainCacheType = CACHE_ACCEL;
+                $wgMemCachedServers = array();
+                $wgCacheDirectory = "$IP/cache";
+                $wgEnableUploads = true;
+                $wgUseImageMagick = true;
+                $wgImageMagickConvertCommand = "/usr/bin/convert";
+                $wgUseInstantCommons = true;
+                $wgShellLocale = "en_US.utf8";
+                $wgHashedUploadDirectory = false;
+
+                ## Site Settings
+                $wgLanguageCode = "en";
+                $wgSecretKey = "${SecretKey}";
+                $wgUpgradeKey = "${UpgradeKey}";
+                $wgRightsPage = ""; # Set to the title of a wiki page that describes your license/copyright
+                $wgRightsUrl = "http://www.gnu.org/copyleft/fdl.html";
+                $wgRightsText = "GNU Free Documentation License 1.3 or later";
+                $wgRightsIcon = "{$wgResourceBasePath}/resources/assets/licenses/gnu-fdl.png";
+                $wgDiff3 = "/usr/bin/diff3";
+
+                ## Permissions
+                $wgGroupPermissions['*']['createaccount'] = false;
+                $wgGroupPermissions['*']['read'] = true;
+                $wgGroupPermissions['*']['edit'] = false;
+                $wgGroupPermissions['*']['createpage'] = false;
+                $wgGroupPermissions['*']['createtalk'] = false;
+                $wgGroupPermissions['*']['writeapi'] = false;
+
+                ## Skin
+                require_once "$IP/skins/Vector/Vector.php";
+                $wgDefaultSkin = "vector";
+
+                ## Base Extensions
+                require_once "$IP/extensions/Cite/Cite.php";
+                require_once "$IP/extensions/ConfirmEdit/ConfirmEdit.php";
+                require_once "$IP/extensions/Gadgets/Gadgets.php";
+                require_once "$IP/extensions/ImageMap/ImageMap.php";
+                require_once "$IP/extensions/InputBox/InputBox.php";
+                require_once "$IP/extensions/Interwiki/Interwiki.php";
+                require_once "$IP/extensions/LocalisationUpdate/LocalisationUpdate.php";
+                require_once "$IP/extensions/Nuke/Nuke.php";
+                require_once "$IP/extensions/ParserFunctions/ParserFunctions.php";
+                require_once "$IP/extensions/PdfHandler/PdfHandler.php";
+                require_once "$IP/extensions/Poem/Poem.php";
+                require_once "$IP/extensions/Renameuser/Renameuser.php";
+                require_once "$IP/extensions/SpamBlacklist/SpamBlacklist.php";
+                require_once "$IP/extensions/SyntaxHighlight_GeSHi/SyntaxHighlight_GeSHi.php";
+                require_once "$IP/extensions/TitleBlacklist/TitleBlacklist.php";
+                require_once "$IP/extensions/WikiEditor/WikiEditor.php";
+
+                # End of automatically generated settings.
+                # Add more configuration options below.
+
+                ##########################################
+                # START: UNC Links
+                ##########################################
+
+                ## Enable UNC Links
+                # http://www.mediawiki.org/wiki/UNC_links
+                #array_push($wgUrlProtocols, "file://");
+
+                ##########################################
+                # END: UNC Links
+                ##########################################
+
+
+                ##########################################
+                # BEGIN ConfirmEdit - ReCaptcha
+                ##########################################
+
+                #wfLoadExtensions( array( 'ConfirmEdit', 'ConfirmEdit/ReCaptchaNoCaptcha' ) );
+                require_once "$IP/extensions/ConfirmEdit/ReCaptchaNoCaptcha.php";
+                $wgCaptchaClass = 'ReCaptchaNoCaptcha';
+                $wgReCaptchaSiteKey = '${ReCaptchaSiteKey}';
+                $wgReCaptchaSecretKey = '${ReCaptchaSecretKey}';
+                $wgGroupPermissions['*'            ]['skipcaptcha'] = false;
+                $wgGroupPermissions['user'         ]['skipcaptcha'] = false;
+                $wgGroupPermissions['autoconfirmed']['skipcaptcha'] = true;
+                $wgGroupPermissions['bot'          ]['skipcaptcha'] = true; // registered bots
+                $wgGroupPermissions['sysop'        ]['skipcaptcha'] = true;
+
+                $wgCaptchaTriggers['edit']          = true;
+                $wgCaptchaTriggers['create']        = true;
+                $wgCaptchaTriggers['createaccount'] = true;
+                $wgCaptchaTriggers['badlogin'] = true;
+                $wgCaptchaTriggers['contactpage'] = true; // Adds reCAPTCHA to the contact page if created
+
+                ##########################################
+                # END ConfirmEdit - ReCaptcha
+                ##########################################
+
+
+                ##########################################
+                # BEGIN LOAD BALANCER SETTINGS
+                ##########################################
+
+                $wgUsedPrivateIPs = true;
+
+                ##########################################
+                # END LOAD BALANCER SETTINGS
+                ##########################################
+
+
+                ###################################
+                # BEGIN: Memory Settings
+                ##################################
+
+                //Maximum amount of virtual memory available to shell processes under linux, in KB.
+                //http://www.mediawiki.org/wiki/Manual:$wgMaxShellMemory
+                //Default = 102400
+                $wgMaxShellMemory = 102400*64;
+
+                //Maximum CPU time in seconds for shell processes under Linux.
+                //http://www.mediawiki.org/wiki/Manual:$wgMaxShellTime
+                //Default = 180 seconds
+                $wgMaxShellTime = 500;
+
+                // Maximum file size created by shell processes under linux, in KB
+                // ImageMagick convert for example can be fairly hungry for scratch space
+                // http://www.mediawiki.org/wiki/Manual:$wgMaxShellFileSize
+                // Default = 102400
+                $wgMaxShellFileSize = 102400*64;
+
+                ###################################
+                # END: Memory Settings
+                ##################################
+
+
+                ##########################################
+                # START MOBILEFRONTEND
+                ##########################################
+
+                # http://www.mediawiki.org/wiki/Extension:MobileFrontend
+                require_once("$IP/extensions/MobileFrontend/MobileFrontend.php");
+                $wgMFAutodetectMobileView = true;
+                $wgMobileFrontendLogo = "$wgScriptPath/images/mobile_logo.png";
+
+                ##########################################
+                # END MOBILEFRONTEND
+                ##########################################
+
+
+                ##########################################
+                # START WIKIEDITOR
+                ##########################################
+
+                // Enable User Options
+                $wgDefaultUserOptions['usebetatoolbar'] = 1;
+                $wgDefaultUserOptions['usebetatoolbar-cgd'] = 1;
+                $wgDefaultUserOptions['wikieditor-preview'] = 1;
+
+                ##########################################
+                # END WIKIEDITOR
+                ##########################################
+
+
+                ##########################################
+                # START CUSTOM NAMESPACES
+                ##########################################
+
+                # http://www.mediawiki.org/wiki/Manual:Using_custom_namespaces
+
+                // Define Constants for Name Spaces
+                // (Only letters, numbers and underscores allowed)
+                define( "NS_HOWTO", 3000);
+                define( "NS_HOWTO_TALK", 3001);
+                define( "NS_REFERENCE", 3002);
+                define( "NS_REFERENCE_TALK", 3003);
+                define( "NS_KB", 3004);
+                define( "NS_KB_TALK", 3005);
+                define( "NS_LIST", 3006);
+                define( "NS_LIST_TALK", 3007);
+
+                // Create Custom NameSpaces
+                $wgExtraNamespaces[NS_HOWTO] = "HowTo";
+                $wgExtraNamespaces[NS_HOWTO_TALK] = "HowTo_talk";
+                $wgExtraNamespaces[NS_REFERENCE] = "Reference";
+                $wgExtraNamespaces[NS_REFERENCE_TALK] = "Reference_talk";
+                $wgExtraNamespaces[NS_KB] = "KB";
+                $wgExtraNamespaces[NS_KB_TALK] = "KB_talk";
+                $wgExtraNamespaces[NS_LIST] = "List";
+                $wgExtraNamespaces[NS_LIST_TALK] = "List_talk";
+
+                $wgExportFromNamespaces = true;
+
+                // Added more namespaces to correct Special:Statistics Content Pages count
+                // http://www.mediawiki.org/wiki/$wgContentNamespaces
+                // Pages are consider to have content if they have at least one link to another page.
+                $wgContentNamespaces = array (
+                        NS_MAIN,
+                        NS_HOWTO,
+                        NS_REFERENCE,
+                        NS_KB
+                );
+
+                // Added All Custom Namespaces to Default Search
+                // http://www.mediawiki.org/wiki/Manual:$wgNamespacesToBeSearchedDefault
+                #Set default searching
+                $wgNamespacesToBeSearchedDefault = array(
+                        NS_CATEGORY             => false,
+                        NS_CATEGORY_TALK        => false,
+                        NS_HELP                 => false,
+                        NS_HELP_TALK            => false,
+                        NS_HOWTO                => true,
+                        NS_HOWTO_TALK           => false,
+                        NS_IMAGE                => false,
+                        NS_IMAGE_TALK           => false,
+                        NS_KB                   => true,
+                        NS_KB_TALK              => false,
+                        NS_LIST                 => false,
+                        NS_LIST_TALK            => false,
+                        NS_MAIN                 => true,
+                        NS_MEDIAWIKI            => false,
+                        NS_MEDIAWIKI_TALK       => false,
+                        NS_MODULE               => false,
+                        NS_MODULE_TALK          => false,
+                        NS_PROJECT              => false,
+                        NS_PROJECT_TALK         => false,
+                        NS_REFERENCE            => true,
+                        NS_REFERENCE_TALK       => false,
+                        NS_TALK                 => false,
+                        NS_TEMPLATE             => false,
+                        NS_TEMPLATE_TALK        => false,
+                        NS_USER                 => false,
+                        NS_USER_TALK            => false
+                );
+
+                ##########################################
+                # END CUSTOM NAMESPACES
+                ##########################################
+
+
+                ##########################################
+                # START HIDENAMESPACE
+                ##########################################
+
+                # http://www.mediawiki.org/wiki/Extension:HideNamespace
+
+                // Ability to hide namespace name in page title and its header.
+                require_once( "$IP/extensions/HideNamespace/HideNamespace.php" );
+
+                // Put the namespaces here
+                $wgHidensNamespaces = array(
+                        NS_CATEGORY,
+                        NS_HOWTO,
+                        NS_KB,
+                        NS_LIST,
+                        NS_MODULE,
+                        NS_REFERENCE,
+                        NS_TEMPLATE
+                );
+
+                ##########################################
+                # END HIDENAMESPACE
+                ##########################################
+
+
+                ##########################################
+                # START UPLOADWIZARD
+                ##########################################
+
+                ## Set URL Upload Path
+                # http://www.mediawiki.org/wiki/Manual:$wgUploadPath
+                $wgUploadPath = "{$wgScriptPath}/uploads";
+
+                ## Set Local Upload Path
+                # http://www.mediawiki.org/wiki/Manual:$wgUploadDirectory
+                $wgUploadDirectory = "{$IP}/uploads";
+
+                ## Upload Wizard
+                # http://www.mediawiki.org/wiki/Extension:UploadWizard
+                require_once( "$IP/extensions/UploadWizard/UploadWizard.php" );
+
+                $wgUseInstantCommons = true;
+                $wgUploadNavigationUrl = '/wiki/Special:UploadWizard';
+                $wgFileExtensions = array(
+                        'bmp',
+                        'doc',
+                        'docx',
+                        'gif',
+                        'jpeg',
+                        'jpg',
+                        'mp3',
+                        'mp4',
+                        'mpp',
+                        'odg',
+                        'odp',
+                        'ods',
+                        'odt',
+                        'ogg',
+                        'ogv',
+                        'pdf',
+                        'png',
+                        'ppt',
+                        'pptx',
+                        'ps',
+                        'svg',
+                        'tiff',
+                        'webm',
+                        'wmv',
+                        'xls',
+                        'xlsx',
+                        'zip'
+                );
+
+                ##########################################
+                # END UPLOADWIZARD
+                ##########################################
+
+
+                ##########################################
+                # START NEWS
+                ##########################################
+
+                # http://www.mediawiki.org/wiki/Extension:News
+                require_once( "$IP/extensions/News/News.php" );
+                # MediaWiki Core setting for recentchanges table purges
+                # http://www.mediawiki.org/wiki/Manual:Recentchanges_table
+                # http://www.mediawiki.org/wiki/Manual:$wgRCMaxAge
+                #$wgRCMaxAge = 13 * 7 * 24 * 3600; //13 weeks default after 1.16.0
+                #$wgRCMaxAge = 365 * 24 * 3600; //365 days (I had this since setup News Extension)
+                $wgRCMaxAge = 260 * 7 * 24 * 3600; //5 years (Trying this out, need to watch DB growth or clutter)
+
+                ##########################################
+                # END NEWS
+                ##########################################
+
+
+                ##########################################
+                # START MULTIBOILERPLATE
+                ##########################################
+
+                # http://www.mediawiki.org/wiki/Extension:MultiBoilerplate
+                require_once( "$IP/extensions/MultiBoilerplate/MultiBoilerplate.php" );
+
+                $wgMultiBoilerplateOptions = false;
+
+                # Display Special Page with list of Boiler Plates
+                $wgMultiBoilerplateDisplaySpecialPage = true;
+
+                ##########################################
+                # END MULTIBOILERPLATE
+                ##########################################
+
+
+                ##########################################
+                # START: ReplaceText
+                ##########################################
+
+                # http://www.mediawiki.org/wiki/Extension:Replace_Text
+                require_once( "$IP/extensions/ReplaceText/ReplaceText.php" );
+
+                ##########################################
+                # END: ReplaceText
+                ##########################################
+
+
+                ##########################################
+                # START: YouTube
+                ##########################################
+
+                # http://www.mediawiki.org/wiki/Extension:YouTube
+                require_once( "$IP/extensions/YouTube/YouTube.php" );
+
+                ##########################################
+                # END: YouTube
+                ##########################################
+
+
+                ##########################################
+                # START SVG
+                ##########################################
+
+                ## SVG File Extension
+                # http://www.mediawiki.org/wiki/SVG
+                // Enable SVG Vector graphic support
+                $wgAllowtitlesInSVG = true;
+                // http://www.mediawiki.org/wiki/Manual:Image_Administration#SVG
+                $wgSVGConverter = 'ImageMagick';
+                $wgSVGConverters['ImageMagick'] = '"' . $wgImageMagickConvertCommand . '" -background white -thumbnail $widthx$height^! $input PNG:$output';
+
+                #########################################
+                # END SVG
+                ##########################################
+
+
+                ###########################################
+                # START SECURITY
+                ###########################################
+
+                ## AntiBot Extension
+                # https://www.mediawiki.org/wiki/Extension:AntiBot
+                require_once( "$IP/extensions/AntiBot/AntiBot.php" );
+
+                ## AntiSpoof Extension
+                # https://www.mediawiki.org/wiki/Extension:AntiSpoof
+                require_once( "$IP/extensions/AntiSpoof/AntiSpoof.php" );
+                $wgSharedTables[] = "spoofuser";
+
+                ## SimpleAntiSpam Extension
+                # https://www.mediawiki.org/wiki/Extension:SimpleAntiSpam
+                require_once("$IP/extensions/SimpleAntiSpam/SimpleAntiSpam.php");
+
+                ## SpamBlackList Extension
+                # https://www.mediawiki.org/wiki/Extension:SpamBlacklist
+                // Bump the Perl Compatible Regular Expressions backtrack memory limit
+                // (PHP 5.2.x default, 100K, is too low for SpamBlacklist)
+                ini_set( 'pcre.backtrack_limit', '8M' );
+
+                #require_once( "$IP/extensions/SpamBlacklist/SpamBlacklist.php" );
+                $wgSpamBlacklistFiles = array(
+                   "http://meta.wikimedia.org/w/index.php?title=Spam_blacklist&action=raw&sb_ver=1",
+                   "http://en.wikipedia.org/w/index.php?title=MediaWiki:Spam-blacklist&action=raw&sb_ver=1"
+                );
+
+                # Robot Policies
+                # http://www.mediawiki.org/wiki/Manual:$wgDefaultRobotPolicy
+                # http://www.mediawiki.org/wiki/Manual:$wgNamespaceRobotPolicies
+                # http://www.mediawiki.org/wiki/Manual:$wgArticleRobotPolicies
+
+                ###########################################
+                # END SECURITY
+                ###########################################
+
+
+                ##########################################
+                # START: Google Analytics Integration
+                ##########################################
+
+                require_once "$IP/extensions/googleAnalytics/googleAnalytics.php";
+                // Replace xxxxxxx-x with YOUR GoogleAnalytics UA number
+                $wgGoogleAnalyticsAccount = '${GoogleAnalyticsAccount}';
+                // Add HTML code for any additional web analytics (can be used alone or with $wgGoogleAnalyticsAccount)
+                $wgGoogleAnalyticsOtherCode = '<script type="text/javascript" src="https://analytics.example.com/tracking.js"></script>';
+
+                // Optional configuration (for defaults see googleAnalytics.php)
+                // Store full IP address in Google Universal Analytics (see https://support.google.com/analytics/answer/2763052?hl=en for details)
+                $wgGoogleAnalyticsAnonymizeIP = false;
+                // Array with NUMERIC namespace IDs where web analytics code should NOT be included.
+                $wgGoogleAnalyticsIgnoreNsIDs = array(500);
+                // Array with page names (see magic word Extension:Google Analytics Integration) where web analytics code should NOT be included.
+                $wgGoogleAnalyticsIgnorePages = array('ArticleX', 'Foo:Bar');
+                // Array with special pages where web analytics code should NOT be included.
+                $wgGoogleAnalyticsIgnoreSpecials = array( 'Userlogin', 'Userlogout', 'Preferences', 'ChangePassword', 'OATH');
+                // Use 'noanalytics' permission to exclude specific user groups from web analytics, e.g.
+                $wgGroupPermissions['sysop']['noanalytics'] = true;
+                $wgGroupPermissions['bot']['noanalytics'] = true;
+                // To exclude all logged in users give 'noanalytics' permission to 'user' group, i.e.
+                $wgGroupPermissions['user']['noanalytics'] = true;
+
+                ##########################################
+                # END: Google Analytics Integration
+                ##########################################
+
+
+                ##########################################
+                # START: Mantle
+                ##########################################
+
+                #(MobileFrontend + VisualEditor)
+                require_once "$IP/extensions/Mantle/Mantle.php";
+
+                ##########################################
+                # END: Mantle
+                ##########################################
+
+
+                ##########################################
+                # START: Widgets
+                ##########################################
+
+                # http://www.mediawiki.org/wiki/Extension:Widgets
+                # http://www.mediawikiwidgets.org/AdSense
+                #require_once "$IP/extensions/Widgets/Widgets.php";
+
+                ##########################################
+                # END: Widgets
+                ##########################################
+
+
+                ##########################################
+                # START: AutoSitemap
+                ##########################################
+
+                # https://github.com/dolfinus/AutoSitemap
+                wfLoadExtension( 'AutoSitemap' );
+                $wgAutoSitemap["filename"] = "sitemap.xml";
+                $wgAutoSitemap["server"] = "https://www.bonusbits.com";
+                #$wgAutoSitemap["notify"] = [
+                #    'https://www.google.com/webmasters/sitemaps/ping?sitemap=https://www.bonusbits.com/sitemap.xml',
+                #    'https://www.bing.com/webmaster/ping.aspx?sitemap=https://www.bonusbits.com/sitemap.xml',
+                #];
+
+                $wgAutoSitemap["exclude_namespaces"] = [
+                    NS_CATEGORY,
+                    NS_CATEGORY_TALK,
+                    NS_FILE,
+                    NS_FILE_TALK,
+                    NS_HELP,
+                    NS_HELP_TALK,
+                    NS_IMAGE,
+                    NS_IMAGE_TALK,
+                    NS_LIST,
+                    NS_LIST_TALK,
+                    NS_MEDIAWIKI,
+                    NS_MEDIAWIKI_TALK,
+                    NS_MODULE,
+                    NS_MODULE_TALK,
+                    NS_PROJECT,
+                    NS_PROJECT_TALK,
+                    NS_TALK,
+                    NS_TEMPLATE,
+                    NS_TEMPLATE_TALK,
+                    NS_USER,
+                    NS_USER_TALK
+                ];
+
+                $wgAutoSitemap["exclude_pages"] = ['page title to exclude', 'other one'];
+                $wgAutoSitemap["freq"] = "daily";
+
+                ##########################################
+                # END: AutoSitemap
+                ##########################################
+
+
+                ##########################################
+                # START: Scribunto
+                ##########################################
+
+                # https://www.mediawiki.org/wiki/Extension:Scribunto
+                # For Modules + Templates
+                # Lua script support
+                require_once "$IP/extensions/Scribunto/Scribunto.php";
+                $wgScribuntoDefaultEngine = 'luastandalone';
+                $wgScribuntoUseGeSHi = true;
+
+                ##########################################
+                # END: Scribunto
+                ##########################################
+        config_php_fpm:
+          commands:
+            01_replace_apache_with_nginx_user:
+              command: "sed -i 's/apache/nginx/g' /etc/php-fpm-7.0.d/www.conf"
+            02_set_ownership_logs_dir:
+              command: "chown -R nginx:nginx /var/log/php-fpm"
+            03_set_ownership_session_dir:
+              command: "chown -R root:nginx /var/lib/php/7.0/"
+        start_services:
+          commands:
+            01_start_php_fpm:
+              command: "service php-fpm-7.0 restart"
+            02_start_nginx:
+              command: "service nginx restart"
+            03_onboot_php_fpm:
+              command: "chkconfig nginx on"
+            04_onboot_nginx:
+              command: "chkconfig php-fpm-7.0 on"
+        deploy_dns_update_script:
+          files:
+            "/usr/sbin/update-dns":
+              mode: "000755"
+              content: !Sub |
+                #!/bin/bash
+
+                cat <<EOF > /tmp/route53-upsert.json
+                {
+                  "Comment": "string",
+                  "Changes": [
+                    {
+                      "Action": "UPSERT",
+                      "ResourceRecordSet": {
+                        "Name": "${RecordName}",
+                        "Type": "A",
+                        "TTL": 60,
+                        "ResourceRecords": [
+                          {
+                            "Value": "$(curl http://169.254.169.254/latest/meta-data/local-ipv4/)"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+                EOF
+
+                aws route53 change-resource-record-sets --hosted-zone-id "${HostedZoneId}" --change-batch "file:///tmp/route53-upsert.json"
+        run_update_dns:
+          commands:
+            01_run_script:
+              command: "/usr/sbin/update-dns"
+        install_yum_cron:
+          commands:
+            01_install_yum_cron:
+              command: "yum install -y yum-plugin-security yum-cron"
+        setup_yum_cron:
+          files:
+            "/etc/yum/yum-cron.conf":
+              mode: "000644"
+              content: !Sub |
+                [commands]
+                #  What kind of update to use:
+                # default                            = yum upgrade
+                # security                           = yum --security upgrade
+                # security-severity:Critical         = yum --sec-severity=Critical upgrade
+                # minimal                            = yum --bugfix update-minimal
+                # minimal-security                   = yum --security update-minimal
+                # minimal-security-severity:Critical =  --sec-severity=Critical update-minimal
+                update_cmd = security
+                update_messages = yes
+                download_updates = yes
+                apply_updates = yes
+                random_sleep = 120
+
+                [emitters]
+                emit_via = stdio
+                output_width = 80
+
+                [email]
+                email_from = root@localhost
+                email_to = root
+                email_host = localhost
+
+                [groups]
+                group_list = None
+                group_package_types = mandatory, default
+
+                [base]
+                debuglevel = -2
+                mdpolicy = group:main
+                # assumeyes = True
+          commands:
+            01_enable_onboot:
+              command: "chkconfig yum-cron on"
+            02_start_yum_cron:
+              command: "service yum-cron restart"
+        warm_ebs:
+          commands:
+            01_warm_ebs:
+              command: "echo 'ACTION: Performing EBS Warming' && dd if=/dev/xvda of=/dev/xvda conv=notrunc bs=1M status=progress"
+    CreationPolicy:
+      ResourceSignal:
+        Count: 1
+        Timeout: PT30M
+
+Outputs:
+  # Ownership
+  Owner:
+    Description: Team or Individual that Owns this Formation.
+    Value: !Ref Owner
+  DeleteAfter:
+    Description: It is ok to delete the Formation after this date.
+    Value: !Ref DeleteAfter
+
+  # Network
+  VPC:
+    Value: !Ref VPC
+  SubnetId:
+    Value: !Ref SubnetId
+  SecurityGroup:
+    Value: !Ref SecurityGroup
+  InternalAccessSecurityGroup:
+    Value: !Ref InternalAccessSecurityGroup
+  RemoteSecurityGroup:
+    Value: !Ref RemoteSecurityGroup
+  RdsSecurityGroup:
+    Value: !Ref RdsSecurityGroup
+  EfsSecurityGroup:
+    Value: !Ref EfsSecurityGroup
+  InstanceURL:
+    Value: !Join [ "", [ "http://", !GetAtt EC2Instance.PrivateDnsName ] ]
+  DnsURL:
+    Value: !Join [ "", [ "http://", !Ref RecordName ] ]
+
+  # Instance Settings
+  AMI:
+    Description: AMI Used.
+    Value: !FindInMap [ RegionMap, !Ref "AWS::Region", EBS ]
+  InstanceType:
+    Description: Instance Type Used.
+    Value: !Ref InstanceType
+  KeyPairName:
+    Description: Key Pair Name Used.
+    Value: !Ref KeyPairName
+  IAMRole:
+    Description: IAM Instance Profile Role Created.
+    Value: !Ref IamRole
+
+  # DNS
+  RecordName:
+    Description: Record Name.
+    Value: !Ref RecordName
+  HostedZoneId:
+    Description: Hosted Zone ID.
+    Value: !Ref HostedZoneId

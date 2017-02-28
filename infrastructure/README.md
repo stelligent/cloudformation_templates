@@ -8,48 +8,45 @@ Collection of Foundational Infrastructure Templates.
 
 ### Infrastructure
 
-<table>
+<table width="100%">
     <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template">VPC (Virtual Private Cloud)</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.yml">VPC (Virtual Private Cloud)</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
-            <p>Creates an entire VPC from scratch for Lab or Permanent.</p>
-            <h6>Create Details</h6>
-            <ol>
-             <li>Single VPC</li>
-             <li>3 Public Subnets</li>
-             <li>3 Private Subnets</li>
-             <li>Public Route Table</li>
-             <li>Private Route Table</li>
-             <li>Internet Gateway</li>
-             <ul>
-               <li>Attached to the Public Route Table</li>
-             </ul>
-             <li>Public Network ACL</li>
-             <li>Private Network ACL</li>
-             <li>VPC Endpoint</li>
-             <li>Instance Access Security Group</li>
-             <ul>
-               <li>Instance to Instance Access</li>
-             </ul>
-             <li>Remote Access Security Group</li>
-             <ul>
-               <li>This can be used for to allow site-to-site VPN or Direct Connect Networks access to instances.</li>
-             </ul>
-            </ol>
+        <td width="100%" valign="top">
+           <p>Creates an entire VPC from scratch for Lab or Permanent.</p>
+           <h6>Create Details</h6>
+           <ol>
+            <li>Single VPC</li>
+            <li>3 Public Subnets</li>
+            <li>3 Private Subnets</li>
+            <li>Public Route Table</li>
+            <li>Private Route Table</li>
+            <li>Internet Gateway</li>
+            <ul>
+              <li>Attached to the Public Route Table</li>
+            </ul>
+            <li>Public Network ACL</li>
+            <li>Private Network ACL</li>
+            <li>VPC Endpoint</li>
+            <li>Instance Access Security Group</li>
+            <ul>
+              <li>Instance to Instance Access</li>
+            </ul>
+            <li>Remote Access Security Group</li>
+            <ul>
+              <li>This can be used for to allow site-to-site VPN or Direct Connect Networks access to instances.</li>
+            </ul>
+           </ol>
         </td>
-        <td  nowrap width="200" valign="top">
+        <td nowrap width="200" valign="top">
             <table>
                 <tr>
                     <th align="left">Launch</th>
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpc.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpc.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpc.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>
@@ -59,7 +56,7 @@ Collection of Foundational Infrastructure Templates.
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpc.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/vpc-200x200.jpg" width:100% alt="View in Designer"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpc.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/vpc-200x200.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
@@ -75,44 +72,11 @@ Collection of Foundational Infrastructure Templates.
             </table>
         </td>
     </tr>
+</table>
+
+<table>
     <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpc.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpc-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPC Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPCSubnetCidrBlock,ParameterValue="10.20.0.0/16" ParameterKey=AvailabilityZone1,ParameterValue="a" ParameterKey=AvailabilityZone2,ParameterValue="b" ParameterKey=AvailabilityZone3,ParameterValue="c" ParameterKey=PublicSubnetCidrBlock1,ParameterValue="10.20.1.0/24" ParameterKey=PublicSubnetCidrBlock2,ParameterValue="10.20.2.0/24" ParameterKey=PublicSubnetCidrBlock3,ParameterValue="10.20.3.0/24" ParameterKey=PrivateSubnetCidrBlock1,ParameterValue="10.20.4.0/24" ParameterKey=PrivateSubnetCidrBlock2,ParameterValue="10.20.5.0/24" ParameterKey=PrivateSubnetCidrBlock3,ParameterValue="10.20.6.0/24" ParameterKey=RemoteAccessNetwork,ParameterValue="50.12.34.56/32"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat-gateway.template">NAT Gateway (Network Addresss Translation)</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat-gateway.yml">NAT Gateway (Network Addresss Translation)</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
@@ -122,7 +86,7 @@ Collection of Foundational Infrastructure Templates.
              <li>VPC</li>
              <ul>
                <li>Public Subnet, IGW, Private Subnet/s.</li>
-               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
+               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
              </ul>
             <li>AWS Privileges</li>
             </ol>
@@ -145,10 +109,7 @@ Collection of Foundational Infrastructure Templates.
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/nat-gateway.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/nat-gateway.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/nat-gateway.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>
@@ -158,7 +119,7 @@ Collection of Foundational Infrastructure Templates.
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/nat-gateway.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/nat-gateway-200x200.jpg" width:100% alt="View in Designer"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/nat-gateway.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/nat-gateway-200x200.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
@@ -174,44 +135,11 @@ Collection of Foundational Infrastructure Templates.
             </table>
         </td>
     </tr>
+</table>
+
+<table>
     <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/nat-gateway.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/nat-gateway-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="NAT Gateway Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpn-bgp.template">VPN BGP (Virtual Private Network using Border Gateway Protocol)</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpn-bgp.yml">VPN BGP (Virtual Private Network using Border Gateway Protocol)</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
@@ -227,7 +155,7 @@ Collection of Foundational Infrastructure Templates.
                 <li>VPC</li>
                 <ul>
                   <li>Public Subnet, IGW, Private Subnet/s.</li>
-                  <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
+                  <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
                 </ul>
               <li>Remote Network (Office) VPN Device WAN IP</li>
               <li>Remote Network CIDR Block to Allow Access and Propagate.</li>
@@ -248,10 +176,7 @@ Collection of Foundational Infrastructure Templates.
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpn-bgp.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>
@@ -261,7 +186,7 @@ Collection of Foundational Infrastructure Templates.
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpn-bgp.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/vpn-bgp-200x200.jpg" width:100% alt="View in Designer"></a>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpn-bgp.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/vpn-bgp-200x200.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
@@ -277,44 +202,11 @@ Collection of Foundational Infrastructure Templates.
             </table>
         </td>
     </tr>
+</table>
+
+<table>
     <tr>
-        <td colspan="2">
-            <table>
-                <tr>
-                    <th align="left">AWS CLI Example</th>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/vpn-bgp.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/vpn-bgp-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="VPN Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicRouteTable,ParameterValue="rtb-d6cce3b2" ParameterKey=PrivateRouteTable,ParameterValue="rtb-d5cce3b1" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=PrivateNetworkAcl,ParameterValue="acl-3c207458" ParameterKey=RemoteVpnDeviceIp,ParameterValue="50.23.45.67" ParameterKey=RemoteNetworkCidr,ParameterValue="192.168.100.0/24" ParameterKey=IncludePublicSubnets,ParameterValue="true"</code>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion.template">Bastion</a></h4></th>
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion.yml">Bastion</a></h4></th>
     </tr>
     <tr>
         <td valign="top">
@@ -324,7 +216,7 @@ Collection of Foundational Infrastructure Templates.
              <li>VPC</li>
              <ul>
                <li>Public Subnet, IGW, Private Subnet/s.</li>
-               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.template" target="_blank">VPC Template</a> to create a one.</li>
+               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
              </ul>
             <li>Available EIP</li>
             </ol>
@@ -344,10 +236,7 @@ Collection of Foundational Infrastructure Templates.
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/bastion.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png" width:144 alt="us-west-2"></a>
-                        <p>us-west-2</p>
-                        <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/bastion.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/images/buttons/cloudformation-launch-stack-button.png"></a>
-                        <p>us-east-1</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/bastion.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png" width:144 alt="us-west-2"></a>
                     </td>
                 </tr>
             </table>
@@ -357,54 +246,54 @@ Collection of Foundational Infrastructure Templates.
                 </tr>
                 <tr>
                     <td>
-                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/bastion.template" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/bastion-200x200.jpg" width:100% alt="View in Designer"></a>
-                    </td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th align="left">How To Video</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="https://s3.amazonaws.com/stelligent-public/media/images/screenshots/HowTo_Stelligent_YouTube_144x81.jpg" width:100% alt="HowTo Video"></a>
-                        <p>COMING SOON</p>
+                        <a href="https://console.aws.amazon.com/cloudformation/designer/home?region=us-west-2&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/bastion.json" target="_blank"><img src="https://s3.amazonaws.com/stelligent-public/media/cloudformation-diagrams/bastion-200x200.jpg" width:100% alt="View in Designer"></a>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
+</table>
+
+<table width="100%">
     <tr>
-        <td colspan="2">
+        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/proxy-awsapi-devops-access.yml">Proxy AWSAPI & DevOps Sites Access for Private Instances</a></h4></th>
+    </tr>
+    <tr>
+        <td width="100%" valign="top">
+            <p>Create EC2 Single Proxy Instance</p>
+            <h6>Prerequisites</h6>
+            <ol>
+             <li>VPC</li>
+             <li>1 Public Subnet</li>
+            </ol>
+            <h6>CloudFormation Tasks</h6>
+            <ol>
+             <li>Create Single EC2 Instance on Public Network with Public IP</li>
+             <li>Create Autoscaling Group of 1 for DR</li>
+             <li>Create Proxy Access Security Group</li>
+             <li>Install Chef Client</li>
+             <li>Create Chef Configurations Files (environment, roles, etc.)</li>
+             <li>Download Cookbooks from Github Repo</li>
+             <li>Checkout Specific Version of Cookbook</li>
+             <li>Run Chef Client using Chef Zero</li>
+             <li>Warm EBS Volume</li>
+            </ol>
+            <h6>Chef Cookbook Tasks</h6>
+            <ol>
+             <li>Install, Configure and Start Squid Proxy</li>
+             <li>Setup CloudWatch Logs</li>
+             <li>Create Route53 DNS Update Script</li>
+             <li>Configure DNS Update Cron Job</li>
+            </ol>
+        </td>
+        <td nowrap width="200" valign="top">
             <table>
                 <tr>
-                    <th align="left">AWS CLI Example</th>
+                    <th align="left">Launch</th>
                 </tr>
                 <tr>
                     <td>
-                        <h6>Base Command</h6>
-                        <code>aws cloudformation create-stack --profile {AWS Profile Name} --stack-name {Stack Name} --template-url "https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/infrastructure/bastion.template"</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h5>Parameters</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 1 - Custom Parameters JSON File <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/parameters_examples/bastion-parameters.json">(Example Here)</a></h6>
-                        <code>--parameters file:///localpath/to/custom-parameters.json</code>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h6>Option 2 - Pass Parameters on CLI</h6>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <code>--parameters ParameterKey=Owner,ParameterValue="Levon Becker" ParameterKey=Project,ParameterValue="Bastion Creation" ParameterKey=DeleteAfter,ParameterValue="Never" ParameterKey=VPC,ParameterValue="vpc-b9f488dd" ParameterKey=PublicSubnet,ParameterValue="subnet-14197570" ParameterKey=PublicNetworkAcl,ParameterValue="acl-3d207459" ParameterKey=InternalAccessSecurityGroup,ParameterValue="sg-69d8410f" ParameterKey=OsType,ParameterValue="rhel" ParameterKey=NetworkAccessIP,ParameterValue="50.23.45.67/32" ParameterKey=InstanceType,ParameterValue="t2.small" ParameterKey=Ec2KeyPair,ParameterValue="stelligent-dev"</code>
+                        <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?&templateURL=https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/proxy-awsapi-devops-access.yml" target="_blank"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png"></a>
                     </td>
                 </tr>
             </table>

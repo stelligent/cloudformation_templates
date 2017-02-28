@@ -41,7 +41,7 @@
   },
   {
     "ParameterKey": "KeyName",
-    "ParameterValue": "stelligent-dev"
+    "ParameterValue": "dev"
   },
   {
     "ParameterKey": "RootIops",

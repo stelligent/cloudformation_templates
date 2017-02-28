@@ -1,0 +1,374 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Sophos UTM 9 (20170131-1930)
+Parameters:
+  # Ownership
+  Owner:
+    Type: String
+    Default: FirstName LastName
+  DeleteAfter:
+    Type: String
+    Default: 00/00/201x
+
+  # Instance
+  AMI:
+    Description: Will autodetect latest AMI is used based on the license type.
+    Type: String
+    Default: autodetect
+  LicenseType:
+    Description: Bring Your Own License (BYOL) or hourly billing licensing type. This parameter has no effect if the AMI parameter is set to an AMI ID.
+    Type: String
+    AllowedValues:
+    - Hourly
+    - BYOL
+    Default: Hourly
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing EC2 KeyPair to enable SSH access.
+  InstanceSize:
+    Description: Default selects m3.medium or c4.large depending on the region.
+    Type: String
+    Default: default
+
+  # Network
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: Existing VPC into which the UTM should be deployed.
+  PrivateSubnetId:
+    Description: Subnet ID for private network interface.
+    Type: AWS::EC2::Subnet::Id
+  PublicSubnetId:
+    Description: Subnet ID for public network interface.
+    Type: AWS::EC2::Subnet::Id
+  PrivateNetworkCIDR:
+    Description: Allow all traffic from this CIDR on the private network interface.
+    Type: String
+    Default: 0.0.0.0/0
+    AllowedPattern: "[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}"
+    ConstraintDescription: 'Please specify a valid source IP range. E.g.: 192.168.2.0/24'
+  PublicNetworkCIDR:
+    Description: Allow all TCP traffic (except port 22 and 4444) from this CIDR on the public network interface.
+    Type: String
+    Default: 0.0.0.0/0
+    AllowedPattern: "[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/[0-9]{1,2}"
+    ConstraintDescription: 'Please specify a valid source IP range. Eg: 192.168.2.0/24'
+  OptTrustedNetworkCIDR:
+    Description: Allow all traffic (including! TCP port 22 and 4444) from this CIDR on the public network interface.
+    Type: String
+    Default: ''
+  OptExistingElasticIpId:
+    Description: Association ID of an existing Elastic IP. If no ID is specified a new Elastic IP is created.
+    Type: String
+    Default: ''
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      # Ownership
+      - Label:
+          default: Ownership
+        Parameters:
+          - Owner
+          - DeleteAfter
+
+      # Instance
+      - Label:
+          default: Instance
+        Parameters:
+        - AMI
+        - LicenseType
+        - InstanceSize
+        - KeyName
+
+      # Network
+      - Label:
+          default: Network
+        Parameters:
+        - VpcId
+        - PrivateSubnetId
+        - PublicSubnetId
+        - PrivateNetworkCIDR
+        - PublicNetworkCIDR
+        - OptExistingElasticIpId
+        - OptTrustedNetworkCIDR
+
+    ParameterLabels:
+      # Ownership
+      Owner:
+        default: Team or Individual Owner
+      DeleteAfter:
+        default: Delete After Date
+
+      # Instance
+      AMI:
+        default: AMI of the UTM
+      LicenseType:
+        default: License Type
+      KeyName:
+        default: SSH Key
+      InstanceSize:
+        default: UTM instance size
+
+      # Network
+      VpcId:
+        default: VPC ID
+      PrivateSubnetId:
+        default: Private Subnet ID
+      PublicSubnetId:
+        default: Public Subnet ID
+      PrivateNetworkCIDR:
+        default: Private Network CIDR
+      PublicNetworkCIDR:
+        default: Public Network CIDR
+      OptExistingElasticIpId:
+        default: Existing Elastic IP ID (optional)
+      OptTrustedNetworkCIDR:
+        default: Trusted Network CIDR (optional)
+
+Mappings:
+  RegionMap:
+    ap-northeast-1:
+      Hourly: ami-71e09416
+      BYOL: ami-2ce5914b
+      ARN: aws
+      HAInstanceType: m3.medium
+    ap-northeast-2:
+      Hourly: ami-2afa2c44
+      BYOL: ami-2bfa2c45
+      ARN: aws
+      HAInstanceType: c4.large
+    ap-south-1:
+      Hourly: ami-731d6b1c
+      BYOL: ami-c61d6ba9
+      ARN: aws
+      HAInstanceType: m4.large
+    ap-southeast-1:
+      Hourly: ami-6fad040c
+      BYOL: ami-f4ab0297
+      ARN: aws
+      HAInstanceType: m3.medium
+    ap-southeast-2:
+      Hourly: ami-7d003a1e
+      BYOL: ami-7c003a1f
+      ARN: aws
+      HAInstanceType: m3.medium
+    ca-central-1:
+      Hourly: ami-6816a40c
+      BYOL: ami-7a17a51e
+      ARN: aws
+      HAInstanceType: m4.large
+    eu-central-1:
+      Hourly: ami-ac38fbc3
+      BYOL: ami-ce3dfea1
+      ARN: aws
+      HAInstanceType: m3.medium
+    eu-west-1:
+      Hourly: ami-0f1a377c
+      BYOL: ami-921439e1
+      ARN: aws
+      HAInstanceType: m4.large
+    eu-west-2:
+      Hourly: ami-70e7ed14
+      BYOL: ami-95f9f3f1
+      ARN: aws
+      HAInstanceType: m4.large
+    sa-east-1:
+      Hourly: ami-8eed76e2
+      BYOL: ami-2fee7543
+      ARN: aws
+      HAInstanceType: m3.medium
+    us-east-1:
+      Hourly: ami-c61805d1
+      BYOL: ami-c91805de
+      ARN: aws
+      HAInstanceType: m3.medium
+    us-east-2:
+      Hourly: ami-9cf4aef9
+      BYOL: ami-73f1ab16
+      ARN: aws
+      HAInstanceType: m4.large
+    us-gov-west-1:
+      Hourly: ami-28932849
+      BYOL: ami-28932849
+      ARN: aws-us-gov
+      HAInstanceType: m3.medium
+    us-west-1:
+      Hourly: ami-78f9a818
+      BYOL: ami-9ff6a7ff
+      ARN: aws
+      HAInstanceType: m3.medium
+    us-west-2:
+      Hourly: ami-09299f69
+      BYOL: ami-6817a108
+      ARN: aws
+      HAInstanceType: m3.medium
+
+Conditions:
+  DetectAMI: !Equals [ !Ref AMI, 'autodetect' ]
+  DetectInstanceSize: !Equals [ !Ref InstanceSize, 'default' ]
+  TrustedPublicNetwork: !Not [ !Equals [ !Ref OptTrustedNetworkCIDR, '' ] ]
+  AllocateElasticIP: !Equals [ !Ref OptExistingElasticIpId, '' ]
+
+Resources:
+  SecurityGroupPrivate:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security Group
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - IpProtocol: "-1"
+        FromPort: "-1"
+        ToPort: "-1"
+        CidrIp: !Ref PrivateNetworkCIDR
+      Tags:
+        - Key: Name
+          Value: !Join [ "", [ !Ref "AWS::StackName", -private ] ]
+        - Key: Owner
+          Value: !Ref Owner
+        - Key: DeleteAfter
+          Value: !Ref DeleteAfter
+
+  SecurityGroupPublic:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security Group
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        CidrIp: !Ref PublicNetworkCIDR
+        FromPort: '0'
+        ToPort: '21'
+      - IpProtocol: tcp
+        CidrIp: !Ref PublicNetworkCIDR
+        FromPort: '23'
+        ToPort: '4443'
+      - IpProtocol: tcp
+        CidrIp: !Ref PublicNetworkCIDR
+        FromPort: '4445'
+        ToPort: '5431'
+      - IpProtocol: tcp
+        CidrIp: !Ref PublicNetworkCIDR
+        FromPort: '5433'
+        ToPort: '65535'
+      - IpProtocol: udp
+        FromPort: '3410'
+        ToPort: '3410'
+        CidrIp: !Ref PublicNetworkCIDR
+      Tags:
+        - Key: Name
+          Value: !Join [ "", [ !Ref "AWS::StackName", -public ] ]
+        - Key: Owner
+          Value: !Ref Owner
+        - Key: DeleteAfter
+          Value: !Ref DeleteAfter
+
+  SecurityGroupTrusted:
+    Type: AWS::EC2::SecurityGroup
+    Condition: TrustedPublicNetwork
+    Properties:
+      GroupDescription: Security Group
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+      - IpProtocol: "-1"
+        FromPort: "-1"
+        ToPort: "-1"
+        CidrIp: !Ref OptTrustedNetworkCIDR
+      Tags:
+        - Key: Name
+          Value: !Join [ "", [ !Ref "AWS::StackName", -trusted ] ]
+        - Key: Owner
+          Value: !Ref Owner
+        - Key: DeleteAfter
+          Value: !Ref DeleteAfter
+
+  PublicENI:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      SubnetId: !Ref PublicSubnetId
+      Description: ENI for Public Subnet
+      GroupSet:
+      - Fn::If:
+        - TrustedPublicNetwork
+        - !Ref SecurityGroupTrusted
+        - !Ref SecurityGroupPublic
+      - !Ref SecurityGroupPublic
+      SourceDestCheck: 'false'
+      Tags:
+        - Key: Name
+          Value: !Join [ "", [ !Ref "AWS::StackName", -public ] ]
+        - Key: Owner
+          Value: !Ref Owner
+        - Key: DeleteAfter
+          Value: !Ref DeleteAfter
+
+  PrivateENI:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      SubnetId: !Ref PrivateSubnetId
+      Description: ENI for Private Subnet
+      GroupSet:
+      - !Ref SecurityGroupPrivate
+      SourceDestCheck: 'false'
+      Tags:
+        - Key: Name
+          Value: !Join [ "", [ !Ref "AWS::StackName", -private ] ]
+        - Key: Owner
+          Value: !Ref Owner
+        - Key: DeleteAfter
+          Value: !Ref DeleteAfter
+
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType:
+        Fn::If:
+        - DetectInstanceSize
+        - !FindInMap [ RegionMap, !Ref "AWS::Region", HAInstanceType ]
+        - !Ref InstanceSize
+      KeyName: !Ref KeyName
+      NetworkInterfaces:
+      - NetworkInterfaceId: !Ref PublicENI
+        DeviceIndex: '0'
+      - NetworkInterfaceId: !Ref PrivateENI
+        DeviceIndex: '1'
+      ImageId:
+        Fn::If:
+        - DetectAMI
+        - !FindInMap [ RegionMap, !Ref "AWS::Region", !Ref LicenseType ]
+        - !Ref AMI
+      Tags:
+        - Key: Name
+          Value: !Ref "AWS::StackName"
+        - Key: Owner
+          Value: !Ref Owner
+        - Key: DeleteAfter
+          Value: !Ref DeleteAfter
+
+  NewEIP:
+    Type: AWS::EC2::EIP
+    Condition: AllocateElasticIP
+    Properties:
+      Domain: vpc
+
+  EIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      NetworkInterfaceId: !Ref PublicENI
+      AllocationId:
+        Fn::If:
+        - AllocateElasticIP
+        - !GetAtt NewEIP.AllocationId
+        - !Ref OptExistingElasticIpId
+
+Outputs:
+  # Ownership
+  Owner:
+    Description: Team or Individual that Owns this Formation.
+    Value: !Ref Owner
+  DeleteAfter:
+    Description: It is ok to delete the Formation after this date.
+    Value: !Ref DeleteAfter
+
+  URL:
+    Description: URL to the Gateway portal
+    Value: !Join [ "", [ "https://", !GetAtt Instance.PublicIp, ":4444" ] ]

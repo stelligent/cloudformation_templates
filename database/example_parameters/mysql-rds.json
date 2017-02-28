@@ -1,0 +1,98 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Firstname Lastname"
+  },
+  {
+    "ParameterKey": "Project",
+    "ParameterValue": "MySQL RDS Creation"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "Never"
+  },
+  {
+    "ParameterKey": "VPC",
+    "ParameterValue": "vpc-00000000"
+  },
+  {
+    "ParameterKey": "PrivateSubnet1",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "PrivateSubnet2",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "PrivateSubnet3",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "MasterUsername",
+    "ParameterValue": "superman"
+  },
+  {
+    "ParameterKey": "MasterUserPassword",
+    "ParameterValue": "Kryptonite"
+  },
+  {
+    "ParameterKey": "BackupRetentionPeriod",
+    "ParameterValue": "30"
+  },
+  {
+    "ParameterKey": "MultiAvailabilityZone",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "TcpPort",
+    "ParameterValue": "3306"
+  },
+  {
+    "ParameterKey": "ConfigureDns",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "Cname",
+    "ParameterValue": "justice.league.com"
+  },
+  {
+    "ParameterKey": "R53HostedZoneName",
+    "ParameterValue": "league.com"
+  },
+  {
+    "ParameterKey": "AlertSnsTopicArn",
+    "ParameterValue": "arn:aws:sns:us-west-2:000000000000:rds-alerts"
+  },
+  {
+    "ParameterKey": "AllocatedStorage",
+    "ParameterValue": "30"
+  },
+  {
+    "ParameterKey": "PreferredBackupWindow",
+    "ParameterValue": "17:00-19:00"
+  },
+  {
+    "ParameterKey": "PreferredMaintenanceWindow",
+    "ParameterValue": "Sun:19:00-Sun:23:00"
+  },
+  {
+    "ParameterKey": "ConfigureProvisionedIops",
+    "ParameterValue": "false"
+  },
+  {
+    "ParameterKey": "SnapshotOnDelete",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "SetupAlarms",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "ProvisionedIopsValue",
+    "ParameterValue": "1000"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "db.t2.small"
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Firstname Lastname"
+  },
+  {
+    "ParameterKey": "Project",
+    "ParameterValue": "IAM EC2 Instance Policy Creation"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "Never"
+  }
+]

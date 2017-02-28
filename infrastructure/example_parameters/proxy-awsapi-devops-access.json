@@ -1,0 +1,58 @@
+[
+	{
+		"ParameterKey": "Owner",
+		"ParameterValue": "Levon Becker"
+	},
+	{
+		"ParameterKey": "DeleteAfter",
+		"ParameterValue": "Never"
+	},
+	{
+		"ParameterKey": "VPC",
+		"ParameterValue": "vpc-00000000"
+	},
+	{
+		"ParameterKey": "PublicSubnetIdList",
+		"ParameterValue": "subnet-00000000,subnet-00000000,subnet-00000000"
+	},
+	{
+		"ParameterKey": "ProxySecurityGroupCidr",
+		"ParameterValue": "10.10.0.0/16"
+	},
+	{
+		"ParameterKey": "InternalAccessSecurityGroup",
+		"ParameterValue": "sg-0000000"
+	},
+	{
+		"ParameterKey": "ProxyFqdn",
+		"ParameterValue": "proxy.mydomain.com"
+	},
+	{
+		"ParameterKey": "HostedZoneId",
+		"ParameterValue": "ABCD1234567890"
+	},
+	{
+		"ParameterKey": "KeyPairName",
+		"ParameterValue": "stack-uswest2-dev"
+	},
+	{
+		"ParameterKey": "InstanceType",
+		"ParameterValue": "t2.nano"
+	},
+	{
+		"ParameterKey": "ChefClientVersion",
+		"ParameterValue": "12.17.44"
+	},
+	{
+		"ParameterKey": "CookbookVersion",
+		"ParameterValue": "1.0.2"
+	},
+	{
+		"ParameterKey": "GitLfsVersion",
+		"ParameterValue": "1.5.4-1"
+	},
+	{
+		"ParameterKey": "SquidPort",
+		"ParameterValue": "3128"
+	}
+]

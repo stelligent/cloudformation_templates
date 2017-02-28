@@ -1,0 +1,143 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create S3 Backup Bucket Template v20170114-1130
+Parameters:
+  # Ownership
+  Owner:
+    Type: String
+    Default: FirstName LastName
+  Project:
+    Type: String
+    Default: S3 Backup Bucket Creation
+  DeleteAfter:
+    Type: String
+    Default: 00/00/201x
+
+  # Deployment
+  VpcE:
+    Type: String
+  BucketName:
+    Type: String
+  PreviousLifeCycle:
+    Type: Number
+    Default: 30
+
+Resources:
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+         - Id: !Join [ "", [ "Delete Previous > ", !Ref PreviousLifeCycle, " Days" ] ]
+           NoncurrentVersionExpirationInDays: !Ref PreviousLifeCycle
+           Status: Enabled
+      Tags:
+        - Key: Owner
+          Value: !Ref Owner
+        - Key: Project
+          Value: !Ref Project
+        - Key: DeleteAfter
+          Value: !Ref DeleteAfter
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Version: '2008-10-17'
+        Statement:
+        -
+          Sid: "Deny Unencrypted Put Object"
+          Effect: Deny
+          Principal: "*"
+          Action:
+            - "s3:PutObject"
+          Resource: !Join [ "", [ "arn:aws:s3:::", !Ref Bucket, "/*" ] ]
+          Condition:
+            StringNotEquals:
+              s3:x-amz-server-side-encryption:
+                - "AES256"
+                - "aws:kms"
+        -
+          Sid: "Deny Unencrypted Object Uploads"
+          Effect: Deny
+          Principal: "*"
+          Action:
+            - "s3:PutObject"
+          Resource: !Join [ "", [ "arn:aws:s3:::", !Ref Bucket, "/*" ] ]
+          Condition:
+            StringNotEquals:
+              s3:x-amz-server-side-encryption: "true"
+        -
+          Sid: "Allow VPCe Read Bucket"
+          Effect: Allow
+          Principal: "*"
+          Action:
+            - "s3:ListBucket"
+            - "s3:ListBucketVersions"
+          Resource: !Join [ "", [ "arn:aws:s3:::", !Ref Bucket ] ]
+          Condition:
+            StringEquals:
+              aws:sourceVpce: !Ref VpcE
+        -
+          Sid: "Allow VPCe Read-Write Content"
+          Effect: Allow
+          Principal: "*"
+          Action:
+            - "s3:GetObject"
+            - "s3:GetObjectVersion"
+            - "s3:DeleteObject"
+            - "s3:DeleteObjectVersion"
+            - "s3:PutObject"
+          Resource: !Join [ "", [ "arn:aws:s3:::", !Ref Bucket, "/*" ] ]
+          Condition:
+            StringEquals:
+              aws:sourceVpce: !Ref VpcE
+
+Outputs:
+  VpcE:
+    Description: VPC Endpoint
+    Value: !Ref VpcE
+  BucketName:
+    Description: S3 Bucket Name
+    Value: !Ref BucketName
+  PreviousLifeCycle:
+    Description: Previous Life Cycle
+    Value: !Ref PreviousLifeCycle
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    -
+      Label:
+        default: Ownership
+      Parameters:
+        - Owner
+        - Project
+        - DeleteAfter
+    -
+      Label:
+        default: Deployment
+      Parameters:
+        - VpcE
+        - BucketName
+        - PreviousLifeCycle
+
+    ParameterLabels:
+      # Ownership
+      Owner:
+        default: Contact Owner
+      Project:
+        default: ASV
+      DeleteAfter:
+        default: CMDB Environment
+
+      # Deployment
+      VpcE:
+        default: VPC Endpoint
+      BucketName:
+        default: Bucket Name
+      PreviousLifeCycle:
+        default: Previous LifeCycle (Days)

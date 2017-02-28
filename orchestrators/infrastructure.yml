@@ -1,0 +1,743 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Infrastructure Stack by Levon Becker v20160722-1600
+Parameters:
+  Owner:
+    Description: Enter Team or Individual Name Responsible for the Stack.
+    Type: String
+    Default: FirstName LastName
+  Project:
+    Description: Enter Project Name.
+    Type: String
+    Default: Infrastructure Stack Creation
+  DeleteAfter:
+    Description: Enter Date (MM/DD/YYYY). It's Ok to Delete the Stack or 'Never' if
+      meant to be persistent.
+    Type: String
+    Default: 00/00/201x
+  VPCSubnetCidrBlock:
+    Description: Enter VPC CIDR Block. (i.e. 10.0.0.0/16 = 10.0.0.0-10.0.255.255 =
+      256 Subnets - 65534 hosts)
+    Type: String
+    Default: 10.0.0.0/16
+    MinLength: '10'
+    MaxLength: '18'
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+  AvailabilityZone1:
+    Description: Enter Availability Zone 1 for Public and Private Subnets to use.
+    Type: String
+    Default: a
+    AllowedValues:
+    - a
+    - b
+    - c
+    - d
+    - e
+    - f
+  AvailabilityZone2:
+    Description: Enter Availability Zone 1 for Public and Private Subnets to use.
+    Type: String
+    Default: b
+    AllowedValues:
+    - a
+    - b
+    - c
+    - d
+    - e
+    - f
+  AvailabilityZone3:
+    Description: Enter Availability Zone 1 for Public and Private Subnets to use.
+    Type: String
+    Default: c
+    AllowedValues:
+    - a
+    - b
+    - c
+    - d
+    - e
+    - f
+  PublicSubnetCidrBlock1:
+    Description: Enter Public Subnet 1 CIDR Block.
+    Type: String
+    Default: 10.0.1.0/24
+    MinLength: '10'
+    MaxLength: '18'
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+  PublicSubnetCidrBlock2:
+    Description: Enter Public Subnet 2 CIDR Block.
+    Type: String
+    Default: 10.0.2.0/24
+    MinLength: '10'
+    MaxLength: '18'
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+  PublicSubnetCidrBlock3:
+    Description: Enter Public Subnet 3 CIDR Block.
+    Type: String
+    Default: 10.0.3.0/24
+    MinLength: '10'
+    MaxLength: '18'
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+  PrivateSubnetCidrBlock1:
+    Description: Enter Private Subnet 1 CIDR Block.
+    Type: String
+    Default: 10.0.4.0/24
+    MinLength: '10'
+    MaxLength: '18'
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+  PrivateSubnetCidrBlock2:
+    Description: Enter Private Subnet 2 CIDR Block.
+    Type: String
+    Default: 10.0.5.0/24
+    MinLength: '10'
+    MaxLength: '18'
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+  PrivateSubnetCidrBlock3:
+    Description: Enter Private Subnet 3 CIDR Block.
+    Type: String
+    Default: 10.0.6.0/24
+    MinLength: '10'
+    MaxLength: '18'
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+  RemoteAccessNetwork:
+    Description: Source Network IP CIDR Block such as an Office that can access instances
+      say over VPN. (i.e. 192.168.100.0/24)
+    Type: String
+    MinLength: '9'
+    MaxLength: '18'
+    Default: 192.168.100.0/24
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: must be a valid CIDR range of the form x.x.x.x/x.
+  AllowHttpToPublicRuleNumber:
+    Description: Enter Public Network ACL Rule Number to Allow HTTP From Internet
+      to Public Network.
+    Type: Number
+    Default: '100'
+  AllowHttpsToPublicRuleNumber:
+    Description: Enter Public Network ACL Rule Number to Allow HTTPS From Internet
+      to Public Network.
+    Type: Number
+    Default: '105'
+  AllowReturnTrafficToPublicRuleNumber:
+    Description: Enter Public Network ACL Rule Number to Allow Return Traffic From
+      Internet to Public Network.
+    Type: Number
+    Default: '110'
+  AllowVpcSubnetsRuleNumber:
+    Description: Enter Public Network ACL Rule Number to Allow All VPC Subnets Cross
+      Access to Public Network.
+    Type: Number
+    Default: '115'
+  AllowAllOutboundPublicRuleNumber:
+    Description: Enter Public Network ACL Rule Number to Allow All Outbound Traffic
+      from the Public Network.
+    Type: Number
+    Default: '100'
+  AllowAllInboundPrivateRuleNumber:
+    Description: Enter Private Network ACL Rule Number to Allow All Inbound Traffic.
+    Type: Number
+    Default: '100'
+  AllowAllOutboundPrivateRuleNumber:
+    Description: Enter Private Network ACL Rule Number to Allow All Outbound Traffic.
+    Type: Number
+    Default: '100'
+  SetupNatGateway:
+    Description: Setup NAT Gateway?
+    Type: String
+    Default: 'false'
+    AllowedValues:
+    - 'true'
+    - 'false'
+  SetupVpn:
+    Description: Setup Site-to-Site VPN Connection?
+    Type: String
+    Default: 'false'
+    AllowedValues:
+    - 'true'
+    - 'false'
+  SetupBastion:
+    Description: Setup Bastion Host?
+    Type: String
+    Default: 'false'
+    AllowedValues:
+    - 'true'
+    - 'false'
+  BastionOsType:
+    Description: "(Skip if Not setting up a Bastion Host) Select OS Type for Bastion
+      Host."
+    Type: String
+    Default: rhel
+    AllowedValues:
+    - rhel
+    - ubuntu
+    - windows
+  AllowSshRdpToBastionRuleNumber:
+    Description: Enter Public Network ACL Rule Number to Allow SSH/RDP Access to EIP
+      from Network Access IP.
+    Type: Number
+    Default: '200'
+  AllowIcmpToBastionRuleNumber:
+    Description: Enter Public Network ACL Rule Number to Allow SSH/RDP Access to EIP
+      from Network Access IP.
+    Type: Number
+    Default: '205'
+  Ec2KeyPair:
+    Description: Select Keypair to Assign to EC2 Instances
+    Type: AWS::EC2::KeyPair::KeyName
+  BastionInstanceType:
+    Description: Select Instance Type.
+    Type: String
+    Default: t2.small
+    AllowedValues:
+    - t2.nano
+    - t2.micro
+    - t2.small
+    - t2.medium
+    - t2.large
+    - m1.small
+    - m1.medium
+    - m1.large
+    - m1.xlarge
+    - m2.xlarge
+    - m2.2xlarge
+    - m2.4xlarge
+    - m3.medium
+    - m3.large
+    - m3.xlarge
+    - m3.2xlarge
+    - m4.large
+    - m4.xlarge
+    - m4.2xlarge
+    - m4.4xlarge
+    - m4.10xlarge
+    - c1.medium
+    - c1.xlarge
+    - c3.large
+    - c3.xlarge
+    - c3.2xlarge
+    - c3.4xlarge
+    - c3.8xlarge
+    - c4.large
+    - c4.xlarge
+    - c4.2xlarge
+    - c4.4xlarge
+    - c4.8xlarge
+    - g2.2xlarge
+    - g2.8xlarge
+    - r3.large
+    - r3.xlarge
+    - r3.2xlarge
+    - r3.4xlarge
+    - r3.8xlarge
+    - i2.xlarge
+    - i2.2xlarge
+    - i2.4xlarge
+    - i2.8xlarge
+    - d2.xlarge
+    - d2.2xlarge
+    - d2.4xlarge
+    - d2.8xlarge
+    - hi1.4xlarge
+    - hs1.8xlarge
+    - cr1.8xlarge
+    - cc2.8xlarge
+    - cg1.4xlarge
+    ConstraintDescription: Must be a valid EC2 instance type.
+  RemoteVpnDeviceIp:
+    Description: Enter External IP Address of the Customer VPN Device.
+    Type: String
+    MinLength: '7'
+    MaxLength: '12'
+    Default: 0.0.0.0
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})"
+    ConstraintDescription: Must be a valid IP Address x.x.x.x
+  RemoteNetworkCidr:
+    Description: Enter Remote Network IP Range CIDR (i.e. 192.168.100.0/24).
+    Type: String
+    MinLength: '11'
+    MaxLength: '18'
+    Default: 192.168.100.0/24
+    AllowedPattern: "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+    ConstraintDescription: Must be a valid CIDR range of the form x.x.x.x/x.
+  RemoteBgpAsn:
+    Description: Enter Remote VPN Device BGP ASN.
+    Type: String
+    MinLength: '4'
+    MaxLength: '5'
+    Default: '65000'
+    AllowedPattern: "(\\d{4,5})"
+    ConstraintDescription: Must be a valid CIDR range of the form x.x.x.x/x.
+  IncludePublicSubnets:
+    Description: Select whether to include the Public Subnets in VPN Access or not.
+    Type: String
+    Default: 'true'
+    AllowedValues:
+    - 'true'
+    - 'false'
+  AllowOfficeNetworktoPublicRuleNumber:
+    Description: Enter Public Network ACL Rule Number to Allow Office Network. (Skip
+      if Not Including Public)
+    Type: Number
+    Default: '125'
+  AllowOfficeNetworktoPrivateRuleNumber:
+    Description: Enter Private Network ACL Rule Number to Allow Office Network.
+    Type: Number
+    Default: '125'
+Conditions:
+  ConfigNAT:
+    Fn::Equals:
+    - Ref: SetupNatGateway
+    - 'true'
+  ConfigVPN:
+    Fn::Equals:
+    - Ref: SetupVpn
+    - 'true'
+  ConfigBastion:
+    Fn::Equals:
+    - Ref: SetupBastion
+    - 'true'
+Resources:
+  vpc:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpc.yml
+      TimeoutInMinutes: '15'
+      Parameters:
+        Owner:
+          Ref: Owner
+        Project:
+          Ref: Project
+        DeleteAfter:
+          Ref: DeleteAfter
+        VPCSubnetCidrBlock:
+          Ref: VPCSubnetCidrBlock
+        AvailabilityZone1:
+          Ref: AvailabilityZone1
+        AvailabilityZone2:
+          Ref: AvailabilityZone2
+        AvailabilityZone3:
+          Ref: AvailabilityZone3
+        PublicSubnetCidrBlock1:
+          Ref: PublicSubnetCidrBlock1
+        PublicSubnetCidrBlock2:
+          Ref: PublicSubnetCidrBlock2
+        PublicSubnetCidrBlock3:
+          Ref: PublicSubnetCidrBlock3
+        PrivateSubnetCidrBlock1:
+          Ref: PrivateSubnetCidrBlock1
+        PrivateSubnetCidrBlock2:
+          Ref: PrivateSubnetCidrBlock2
+        PrivateSubnetCidrBlock3:
+          Ref: PrivateSubnetCidrBlock3
+        RemoteAccessNetwork:
+          Ref: RemoteAccessNetwork
+        AllowHttpToPublicRuleNumber:
+          Ref: AllowHttpToPublicRuleNumber
+        AllowHttpsToPublicRuleNumber:
+          Ref: AllowHttpsToPublicRuleNumber
+        AllowReturnTrafficToPublicRuleNumber:
+          Ref: AllowReturnTrafficToPublicRuleNumber
+        AllowVpcSubnetsRuleNumber:
+          Ref: AllowVpcSubnetsRuleNumber
+        AllowAllOutboundPublicRuleNumber:
+          Ref: AllowAllOutboundPublicRuleNumber
+        AllowAllInboundPrivateRuleNumber:
+          Ref: AllowAllInboundPrivateRuleNumber
+        AllowAllOutboundPrivateRuleNumber:
+          Ref: AllowAllOutboundPrivateRuleNumber
+  nat:
+    Condition: ConfigNAT
+    DependsOn:
+    - vpc
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/nat-gateway.yml
+      TimeoutInMinutes: '15'
+      Parameters:
+        Owner:
+          Ref: Owner
+        Project:
+          Ref: Project
+        DeleteAfter:
+          Ref: DeleteAfter
+        VPC:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.VPC
+        PublicSubnet:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.PublicSubnet1
+        PrivateRouteTable:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.PrivateRouteTable
+        PublicNetworkAcl:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.PublicNetworkAcl
+  vpn:
+    Condition: ConfigVPN
+    DependsOn:
+    - vpc
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/vpn-bgp.yml
+      TimeoutInMinutes: '15'
+      Parameters:
+        Owner:
+          Ref: Owner
+        Project:
+          Ref: Project
+        DeleteAfter:
+          Ref: DeleteAfter
+        VPC:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.VPC
+        PublicRouteTable:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.PublicRouteTable
+        PrivateRouteTable:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.PrivateRouteTable
+        PublicNetworkAcl:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.PublicNetworkAcl
+        PrivateNetworkAcl:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.PrivateNetworkAcl
+        RemoteVpnDeviceIp:
+          Ref: RemoteVpnDeviceIp
+        RemoteNetworkCidr:
+          Ref: RemoteNetworkCidr
+        RemoteBgpAsn:
+          Ref: RemoteBgpAsn
+        IncludePublicSubnets:
+          Ref: IncludePublicSubnets
+        AllowOfficeNetworktoPublicRuleNumber:
+          Ref: AllowOfficeNetworktoPublicRuleNumber
+        AllowOfficeNetworktoPrivateRuleNumber:
+          Ref: AllowOfficeNetworktoPrivateRuleNumber
+  bastion:
+    Condition: ConfigBastion
+    DependsOn:
+    - vpc
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/bastion.yml
+      TimeoutInMinutes: '15'
+      Parameters:
+        Owner:
+          Ref: Owner
+        Project:
+          Ref: Project
+        DeleteAfter:
+          Ref: DeleteAfter
+        VPC:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.VPC
+        PublicSubnet:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.PublicSubnet1
+        PublicNetworkAcl:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.PublicNetworkAcl
+        InternalAccessSecurityGroup:
+          Fn::GetAtt:
+          - vpc
+          - Outputs.InternalAccessSecurityGroup
+        OsType:
+          Ref: BastionOsType
+        NetworkAccessIP:
+          Ref: RemoteAccessNetwork
+        AllowSshRdpToBastionRuleNumber:
+          Ref: AllowSshRdpToBastionRuleNumber
+        AllowIcmpToBastionRuleNumber:
+          Ref: AllowIcmpToBastionRuleNumber
+        Ec2KeyPair:
+          Ref: Ec2KeyPair
+        InstanceType:
+          Ref: BastionInstanceType
+Outputs:
+  Owner:
+    Description: Team or Individual that Owns this Formation.
+    Value:
+      Ref: Owner
+  Project:
+    Description: The project name
+    Value:
+      Ref: Project
+  VPC:
+    Description: Created VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.VPC
+  VPCCIDR:
+    Description: VPC Subnet CIDR Block
+    Value:
+      Ref: VPCSubnetCidrBlock
+  VPCe:
+    Description: Created VPC Endpoint
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.VPCe
+  PublicRouteTable:
+    Description: Public Route Table Created for VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.PublicRouteTable
+  PrivateRouteTable:
+    Description: Private Route Table Created for VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.PrivateRouteTable
+  PublicNetworkAcl:
+    Description: Public Network ACL Created for VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.PublicNetworkAcl
+  PrivateNetworkAcl:
+    Description: Private Netowrk ACL Created for VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.PrivateNetworkAcl
+  PublicSubnet1:
+    Description: Public Subnet 1 Created for VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.PublicSubnet1
+  PublicSubnet2:
+    Description: Public Subnet 2 Created for VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.PublicSubnet2
+  PublicSubnet3:
+    Description: Public Subnet 3 Created for VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.PublicSubnet3
+  PrivateSubnet1:
+    Description: Private Subnet 1 Created for VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.PrivateSubnet1
+  PrivateSubnet2:
+    Description: Private Subnet 2 Created for VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.PrivateSubnet2
+  PrivateSubnet3:
+    Description: Private Subnet 3 Created for VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.PrivateSubnet3
+  AvailabilityZone1:
+    Description: AvailabilityZone 1
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.AvailabilityZone1
+  AvailabilityZone2:
+    Description: AvailabilityZone 2
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.AvailabilityZone2
+  AvailabilityZone3:
+    Description: AvailabilityZone 3
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.AvailabilityZone3
+  PublicSubnetCidr1:
+    Description: Public Subnet IDs Created for VPC
+    Value:
+      Ref: PublicSubnetCidrBlock1
+  PublicSubnetCidr2:
+    Description: Public Subnet IDs Created for VPC
+    Value:
+      Ref: PublicSubnetCidrBlock2
+  PublicSubnetCidr3:
+    Description: Public Subnet IDs Created for VPC
+    Value:
+      Ref: PublicSubnetCidrBlock3
+  PrivateSubnetCidr1:
+    Description: Private Subnet IDs Created for VPC
+    Value:
+      Ref: PrivateSubnetCidrBlock1
+  PrivateSubnetCidr2:
+    Description: Private Subnet IDs Created for VPC
+    Value:
+      Ref: PrivateSubnetCidrBlock2
+  PrivateSubnetCidr3:
+    Description: Private Subnet IDs Created for VPC
+    Value:
+      Ref: PrivateSubnetCidrBlock3
+  InternetGateway:
+    Description: Internet Gateway Created for VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.InternetGateway
+  InternalAccessSecurityGroup:
+    Description: Instance to Instance Access within VPC
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.InternalAccessSecurityGroup
+  RemoteAccessSecurityGroup:
+    Description: Remote Network or IP that can Access the instances of VPN or Direct
+      Connect.
+    Value:
+      Fn::GetAtt:
+      - vpc
+      - Outputs.RemoteAccessSecurityGroup
+  PublicNetworkACLRuleNumbers:
+    Description: Public Network ACL Rules Numbers Created.
+    Value:
+      Fn::Join:
+      - ''
+      - - Inbound (
+        - Ref: AllowHttpToPublicRuleNumber
+        - ", "
+        - Ref: AllowHttpsToPublicRuleNumber
+        - ", "
+        - Ref: AllowReturnTrafficToPublicRuleNumber
+        - ", "
+        - Ref: AllowVpcSubnetsRuleNumber
+        - ") "
+        - Outbound (
+        - Ref: AllowAllOutboundPublicRuleNumber
+        - ")"
+  PrivateNetworkACLRuleNumbers:
+    Description: Private Network ACL Rules Numbers Created.
+    Value:
+      Fn::Join:
+      - ''
+      - - Inbound (
+        - Ref: AllowAllInboundPrivateRuleNumber
+        - ") "
+        - Outbound (
+        - Ref: AllowAllOutboundPrivateRuleNumber
+        - ")"
+  DeleteAfter:
+    Description: It is ok to delete this Formation after this date
+    Value:
+      Ref: DeleteAfter
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Ownership
+      Parameters:
+      - Owner
+      - Project
+      - DeleteAfter
+    - Label:
+        default: Infrastructure Options
+      Parameters:
+      - SetupNatGateway
+      - SetupVpn
+      - SetupBastion
+    - Label:
+        default: VPN Settings (Optional)
+      Parameters:
+      - RemoteVpnDeviceIp
+      - RemoteNetworkCidr
+      - RemoteBgpAsn
+      - IncludePublicSubnets
+      - AllowOfficeNetworktoPublicRuleNumber
+      - AllowOfficeNetworktoPrivateRuleNumber
+    - Label:
+        default: Bastion Settings (Optional)
+      Parameters:
+      - BastionOsType
+      - Ec2KeyPair
+      - AllowSshRdpToBastionRuleNumber
+      - AllowIcmpToBastionRuleNumber
+      - BastionInstanceType
+    - Label:
+        default: Remote Configurations
+      Parameters:
+      - RemoteAccessNetwork
+    - Label:
+        default: AWS Network Configurations
+      Parameters:
+      - VPCSubnetCidrBlock
+      - PublicSubnetCidrBlock1
+      - PublicSubnetCidrBlock2
+      - PublicSubnetCidrBlock3
+      - PrivateSubnetCidrBlock1
+      - PrivateSubnetCidrBlock2
+      - PrivateSubnetCidrBlock3
+      - AvailabilityZone1
+      - AvailabilityZone2
+      - AvailabilityZone3
+    - Label:
+        default: AWS Network ACL Rule Numbers
+      Parameters:
+      - AllowHttpToPublicRuleNumber
+      - AllowHttpsToPublicRuleNumber
+      - AllowReturnTrafficToPublicRuleNumber
+      - AllowVpcSubnetsRuleNumber
+      - AllowAllOutboundPublicRuleNumber
+      - AllowAllInboundPrivateRuleNumber
+      - AllowAllOutboundPrivateRuleNumber
+    ParameterLabels:
+      Owner:
+        default: Team or Individual Owner
+      DeleteAfter:
+        default: Delete After Date
+      VPCSubnetCidrBlock:
+        default: VPC Subnet
+      PublicSubnetCidrBlock1:
+        default: Public Subnet 1
+      PublicSubnetCidrBlock2:
+        default: Public Subnet 2
+      PublicSubnetCidrBlock3:
+        default: Public Subnet 3
+      PrivateSubnetCidrBlock1:
+        default: Private Subnet 1
+      PrivateSubnetCidrBlock2:
+        default: Private Subnet 2
+      PrivateSubnetCidrBlock3:
+        default: Private Subnet 3
+      AvailabilityZone1:
+        default: Availability Zone 1
+      AvailabilityZone2:
+        default: Availability Zone 2
+      AvailabilityZone3:
+        default: Availability Zone 3
+      AllowHttpToPublicRuleNumber:
+        default: HTTP to Public
+      AllowHttpsToPublicRuleNumber:
+        default: HTTPS to Public
+      AllowReturnTrafficToPublicRuleNumber:
+        default: Return Traffic to Public
+      AllowVpcSubnetsRuleNumber:
+        default: VPC Subnets to Public
+      AllowAllOutboundPublicRuleNumber:
+        default: Public Outbound
+      AllowAllInboundPrivateRuleNumber:
+        default: Private Inbound
+      AllowAllOutboundPrivateRuleNumber:
+        default: Private Outbound

@@ -1,0 +1,110 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "First Last"
+  },
+  {
+    "ParameterKey": "Project",
+    "ParameterValue": "Autoscaling Baked AMI RDS Backed Webapp Stack Creation"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "08/01/2016"
+  },
+  {
+    "ParameterKey": "VPC",
+    "ParameterValue": "vpc-00000000"
+  },
+  {
+    "ParameterKey": "PublicSubnet1",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "PublicSubnet2",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "PublicSubnet3",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "PrivateSubnet1",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "PrivateSubnet2",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "PrivateSubnet3",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "PublicNetworkAcl",
+    "ParameterValue": "acl-00000000"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "t2.small"
+  },
+  {
+    "ParameterKey": "AMI",
+    "ParameterValue": "ami-00000000"
+  },
+  {
+    "ParameterKey": "Ec2KeyPair",
+    "ParameterValue": "dev"
+  },
+  {
+    "ParameterKey": "MinAutoScaleCount",
+    "ParameterValue": "3"
+  },
+  {
+    "ParameterKey": "MaxAutoScaleCount",
+    "ParameterValue": "6"
+  },
+  {
+    "ParameterKey": "InternalAccessSecurityGroup",
+    "ParameterValue": "sg-00000000"
+  },
+  {
+    "ParameterKey": "RemoteSecurityGroup",
+    "ParameterValue": "sg-00000000"
+  },
+  {
+    "ParameterKey": "RDSAccessSecurityGroup",
+    "ParameterValue": "sg-00000000"
+  },
+  {
+    "ParameterKey": "ConfigureDns",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "Route53ElbAlias",
+    "ParameterValue": "www.hecklejeckle.com"
+  },
+  {
+    "ParameterKey": "UseSsl",
+    "ParameterValue": "true"
+  },
+  {
+    "ParameterKey": "ElbSslCertArn",
+    "ParameterValue": "arn:aws:iam::0000000000000:server-certificate/www.hecklejeckle.com"
+  },
+  {
+    "ParameterKey": "ElbHttpListeningPort",
+    "ParameterValue": "443"
+  },
+  {
+    "ParameterKey": "InstanceHttpListeningPort",
+    "ParameterValue": "8443"
+  },
+  {
+    "ParameterKey": "ListenOnBothPorts",
+    "ParameterValue": "false"
+  },
+  {
+    "ParameterKey": "SetupElbLogging",
+    "ParameterValue": "true"
+  }
+]

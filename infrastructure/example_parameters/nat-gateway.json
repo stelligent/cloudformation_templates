@@ -1,0 +1,34 @@
+[
+  {
+    "ParameterKey": "Owner",
+    "ParameterValue": "Levon Becker"
+  },
+  {
+    "ParameterKey": "Project",
+    "ParameterValue": "NAT Gateway Creation"
+  },
+  {
+    "ParameterKey": "DeleteAfter",
+    "ParameterValue": "Never"
+  },
+  {
+    "ParameterKey": "VPC",
+    "ParameterValue": "vpc-00000000"
+  },
+  {
+    "ParameterKey": "PublicSubnet",
+    "ParameterValue": "subnet-00000000"
+  },
+  {
+    "ParameterKey": "PrivateRouteTable",
+    "ParameterValue": "rtb-00000000"
+  },
+  {
+    "ParameterKey": "PublicNetworkAcl",
+    "ParameterValue": "acl-00000000"
+  },
+  {
+    "ParameterKey": "AllowNatRuleNumber",
+    "ParameterValue": "120"
+  }
+]
