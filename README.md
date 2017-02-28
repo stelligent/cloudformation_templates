@@ -719,6 +719,10 @@ command using various foundational templates that I've creates to be used togeth
              <li>Lambda Function</li>
              <li>CodePipeline</li>
             </ol>
+            <h6>Public S3 URL</h6>
+            <ol>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/lambda-codepipeline.json</li>
+            </ol>
         </td>
         <td nowrap width="200" valign="top">
             <table>
