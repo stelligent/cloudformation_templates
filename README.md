@@ -648,7 +648,7 @@ command using various foundational templates that I've creates to be used togeth
              <li>CodePipeline</li>
             </ol>
         </td>
-        <td  nowrap width="200" valign="top">
+        <td nowrap width="200" valign="top">
             <table>
                 <tr>
                     <th align="left">Launch</th>
@@ -721,7 +721,7 @@ command using various foundational templates that I've creates to be used togeth
              <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/bitbucket.yml</li>
             </ol>
         </td>
-        <td  nowrap width="200" valign="top">
+        <td nowrap width="200" valign="top">
             <table>
                 <tr>
                     <th align="left">Launch</th>
