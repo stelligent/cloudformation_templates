@@ -44,7 +44,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/orchestrators/infrastructure.yml">Infrastructure</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Select the foundational pieces for building out an infrastructure from the ground up.</p>
             <h6>Create Details</h6>
             <ol>
@@ -161,7 +161,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/nat-gateway.yml">NAT Gateway (Network Addresss Translation)</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Creates a NAT Gateway on an existing VPC with Public (IGW) and Private subnets. Private route table is updated to route traffic to the NAT gateway a Public subnet that has an Internet Gateway Attached.</p>
             <h6>Prerequisites</h6>
             <ol>
@@ -228,7 +228,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpn-bgp.yml">VPN BGP (Virtual Private Network using Border Gateway Protocol)</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Creates a Site-to-Site BGP VPN Connection in and existing VPC with public and/or private networks.
              There is an option to not exclude allowing VPN access to the public networks.
              Simply select false for the 'Include Public Subnets', leave default value in Public Network ACL and Route Table.
@@ -299,7 +299,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/bastion.yml">Bastion</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Creates a single Bastion host on a Public subnet in an existing VPC. Select from either a RHEL, Ubuntu or Windows OS.</p>
             <h6>Prerequisites</h6>
             <ol>
@@ -379,6 +379,10 @@ command using various foundational templates that I've creates to be used togeth
              <li>Create Route53 DNS Update Script</li>
              <li>Configure DNS Update Cron Job</li>
             </ol>
+            <h6>Public S3 URL</h6>
+            <ol>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/proxy-awsapi-devops-access.yml</li>
+            </ol>
         </td>
         <td nowrap width="200" valign="top">
             <table>
@@ -453,6 +457,10 @@ command using various foundational templates that I've creates to be used togeth
              <li>Enabled Versioning</li>
              <li>Enforced Encryption</li>
              <li>Creates LifeCycle to Delete Previous Versions after X Days</li>
+            </ol>
+            <h6>Public S3 URL</h6>
+            <ol>
+             <oi>https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/s3-backup-bucket-delete-previous.yml</li>
             </ol>
         </td>
         <td nowrap width="200" valign="top">
@@ -572,7 +580,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/autoscaling/bakedami-elb-rdsbackend.yml">Baked AMI, ELB, RDS Backend</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Create an Autoscaling group in 3 private subnets from a baked AMI, an Elastic Load Balancer in 3 public subnets and S3 ELB Logging Bucket.
             Option to use SSL/TLS on ELB. Option to update Route 53 Hosted DNS alias to point to the ELB.
             Setup to add RDS Access Security Group. Does not create an RDS Instance. Use an RDS Instance Cloudformation Template first.</p>
@@ -679,7 +687,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/bitbucket/bitbucket.yml">Bitbucket Lab</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Creates a Bitbucket Server in a private or public subnet in an existing VPC.</p>
             <h6>Prerequisites</h6>
             <ol>
@@ -751,7 +759,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/chef">Chef Compliance Lab</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Creates a Chef Complianc Web server in a Public Subnet with Internet Gatewayy attached on an existing VPC.
              It then attaches an EIP and finally adds the instance to an existing instance-to-instance security group.</p>
             <h6>Prerequisites</h6>
@@ -811,7 +819,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codebuild">CodeBuild and AWS Developer Tools SuiteLab</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Automates the integration between AWS CodeBuild, CodeCommit, CodeDeploy, and CodePipeline</p>
             <h6>Prerequisites</h6>
             <ol>
@@ -871,7 +879,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codecommit">CodeCommit CodePipeline Lab</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Automates the integration between AWS CodeCommit and CodePipeline</p>
             <h6>Prerequisites</h6>
             <ol>
@@ -921,7 +929,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codepipeline">CodePipeline Approvals Labs</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Adds a Manual Approval to a CodePipeline</p>
             <h6>Prerequisites</h6>
             <ol>
@@ -980,7 +988,7 @@ command using various foundational templates that I've creates to be used togeth
          <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/containers/docker/build">Containerized CI Solutions in AWS: Jenkins in ECS Lab</a></h4></th>
      </tr>
      <tr>
-         <td valign="top">
+         <td width="100%" valign="top">
              <p>Containerized CI Solutions in AWS: Jenkins in ECS</p>
              <h6>Prerequisites</h6>
              <ol>
@@ -1032,7 +1040,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/ecs">EC2 Container Service Lab</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Automates the integration between EC2 Container Service (ECS), EC2 Container Registry (ECR), CodeCommit, and CodePipeline</p>
             <h6>Prerequisites</h6>
             <ol>
@@ -1087,7 +1095,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/eb">Elastic Beanstalk CodePipeline Lab</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Automates the integration between AWS Elastic Beanstalk and CodePipeline</p>
             <h6>Prerequisites</h6>
             <ol>
@@ -1184,7 +1192,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codepipeline/codepipeline-canonical.yml">Mock Stages and Actions in AWS CodePipeline and AWS Lambda</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Creates a deployment pipeline in AWS CodePipeline using a pre-built Lambda function. It can be used to model a pipeline without initial implementation</p>
             <h6>Prerequisites</h6>
               <ol>
@@ -1234,7 +1242,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/opsworks">OpsWorks CodePipeline Lab</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Automates the integration between AWS OpsWorks, CodeCommit and CodePipeline</p>
             <h6>Prerequisites</h6>
             <ol>
@@ -1283,7 +1291,7 @@ command using various foundational templates that I've creates to be used togeth
        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/spa/pipeline.yml">Pipeline for Single-Page Appliation</a></h4></th>
     </tr>
     <tr>
-       <td valign="top">
+       <td width="100%" valign="top">
            <p>Creates an S3 bucket to host a single-page application and a continuous delivery pipeline with CodeBuild and CodePipeline.</p>
            <h6>Prerequisites</h6>
            <ol>
@@ -1326,7 +1334,7 @@ command using various foundational templates that I've creates to be used togeth
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.yml">Test Instances</a></h4></th>
     </tr>
     <tr>
-        <td valign="top">
+        <td width="100%" valign="top">
             <p>Creates three test instances in an existing VPC. Each instance is a different operating system. They are; Red Hat Enterprise Linux 7, Ubuntu 14 and Windows 2012 R2.</p>
             <h6>Create Details</h6>
             <ol>
