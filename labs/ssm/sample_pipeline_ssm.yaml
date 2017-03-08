@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Builds a sample pipeline that will make use of the AWS Parameter Store during the Source Stage
+Resources: 
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codepipeline.amazonaws.com
+          Action: sts:AssumeRole
+      Path: /
+      Policies:
+        -
+          PolicyName: codepipeline-service
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: Allow
+                Action: "*"
+                Resource: "*"
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codebuild.amazonaws.com
+          Action: sts:AssumeRole
+      Path: /
+      Policies:
+        -
+          PolicyName: codebuild-service
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: Allow
+                Action: "*"
+                Resource: "*"
+  S3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties: 
+      VersioningConfiguration:
+        Status: Enabled
+  ConfigFileBuild:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: ConfigFileBuild
+      Description: Runs a Ruby script that gets parameters from the Parameter Store and replaces the variable tokens with them inside of the sample configuration file
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_LARGE
+        Image: aws/codebuild/eb-ruby-2.3-amazonlinux-64:2.1.6
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: |
+          version: 0.1
+          phases:
+            pre_build:
+              commands:
+                - gem install aws-sdk
+                - ls -las
+            build:
+              commands:
+                - ruby sample_ruby_ssm.rb
+          artifacts:
+            files:
+              - '**/*'
+  MyCodePipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStore:
+        Location: !Ref S3Bucket
+        Type: S3
+      RoleArn: !GetAtt [CodePipelineRole, Arn]
+      Stages:
+        - Name: Source
+          Actions:
+          - Name: S3 Source
+            ActionTypeId:
+              Category: Source
+              Owner: AWS
+              Provider: S3
+              Version: 1
+            OutputArtifacts:
+              - Name: OutputArtifact
+            Configuration:
+              S3Bucket: stelligent-training-public
+              S3ObjectKey: public/parameterstore/ssm_config_ruby.zip
+        - Name: Build
+          Actions:
+          - Name: Build
+            RunOrder: 1
+            ActionTypeId:
+              Category: Build
+              Owner: AWS
+              Version: 1
+              Provider: CodeBuild
+            Configuration:
+              ProjectName:
+                Ref: ConfigFileBuild
+            InputArtifacts:
+              - Name: OutputArtifact
+            OutputArtifacts:
+              - Name: NewConfiguredFile

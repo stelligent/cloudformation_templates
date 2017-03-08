@@ -1,0 +1,6 @@
+{
+  "Parameters" : {
+    "HostedZoneName" : "HOSTEDZONE",
+    "Password" : "PASSWORD"
+  }
+}
