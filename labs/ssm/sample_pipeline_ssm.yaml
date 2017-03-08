@@ -94,8 +94,8 @@ Resources:
             OutputArtifacts:
               - Name: OutputArtifact
             Configuration:
-              S3Bucket: stelligent-training-public
-              S3ObjectKey: public/parameterstore/ssm_config_ruby.zip
+              S3Bucket: stelligent-public
+              S3ObjectKey: cloudformation-templates/github/labs/ssm/ssm_configuration.zip
         - Name: Build
           Actions:
           - Name: Build
