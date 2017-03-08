@@ -85,7 +85,7 @@ Resources:
       Stages:
         - Name: Source
           Actions:
-          - Name: S3 Source
+          - Name: S3Source
             ActionTypeId:
               Category: Source
               Owner: AWS
