@@ -126,3 +126,15 @@ Resources:
               - Name: OutputArtifact
             OutputArtifacts:
               - Name: NewConfiguredFile
+Outputs:
+  StackName:
+    Value:
+      Ref: AWS::StackName
+  CodePipelineURL:
+    Value:
+      Fn::Join:
+      - ''
+      - - https://console.aws.amazon.com/codepipeline/home?region=
+        - Ref: AWS::Region
+        - "#/view/"
+        - Ref: MyCodePipeline
