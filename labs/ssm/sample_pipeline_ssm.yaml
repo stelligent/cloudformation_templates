@@ -1,5 +1,18 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Builds a sample pipeline that will make use of the AWS Parameter Store during the Source Stage
+Parameters:
+  GitHubToken:
+    Type: String
+    NoEcho: true
+  GitHubUser:
+    Type: String
+    Default: stelligent
+  GitHubRepoName:
+    Type: String
+    Default: Parameter-Store-Example
+  GitHubBranchName:
+    Type: String
+    Default: master
 Resources: 
   CodePipelineRole:
     Type: AWS::IAM::Role
@@ -68,7 +81,6 @@ Resources:
             pre_build:
               commands:
                 - gem install aws-sdk
-                - ls -las
             build:
               commands:
                 - ruby sample_ruby_ssm.rb
@@ -85,17 +97,19 @@ Resources:
       Stages:
         - Name: Source
           Actions:
-          - Name: S3Source
+          - Name: GitHubSource
             ActionTypeId:
               Category: Source
-              Owner: AWS
-              Provider: S3
+              Owner: ThirdParty
+              Provider: GitHub
               Version: 1
             OutputArtifacts:
               - Name: OutputArtifact
             Configuration:
-              S3Bucket: stelligent-public
-              S3ObjectKey: cloudformation-templates/github/labs/ssm/ssm_configuration.zip
+              Owner: !Ref GitHubUser
+              Repo: !Ref GitHubRepoName
+              Branch: !Ref GitHubBranchName
+              OAuthToken: !Ref GitHubToken
         - Name: Build
           Actions:
           - Name: Build
