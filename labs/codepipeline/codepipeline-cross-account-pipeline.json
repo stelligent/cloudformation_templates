@@ -5,12 +5,12 @@
     "S3Bucket":{
       "Type":"String",
       "Description":"S3 bucket to use for artifacts. Just bucket Name; not URL. IAM user should have access to the bucket.",
-      "Default":"stelligent-training-public"
+      "Default":"stelligent-public"
     },
     "S3Key":{
       "Type":"String",
       "Description":"S3 key within S3Bucket.",
-      "Default":"public/codepipeline/aws-codepipeline-s3-aws-codedeploy_linux.zip"
+      "Default":"cloudformation-templates/github/cross-account-pipeline/aws-codepipeline-s3-aws-codedeploy_linux.zip"
     },
     "PipelineAWSAccountId":{
       "Type":"String",
