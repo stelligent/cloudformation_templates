@@ -1,0 +1,88 @@
+{
+  "AWSTemplateFormatVersion":"2010-09-09",
+  "Description":"Provision CodeDeploy Application and Deployment",
+  "Parameters":{
+    "Bucket":{
+      "Type":"String",
+      "Description":"The unique bucket name where deployment distribution is located"
+    },
+    "Key":{
+      "Type":"String",
+      "Description":"The unique bucket name where deployment distribution is located"
+    },
+    "TagKey":{
+      "Type":"String",
+      "Default":"Name",
+      "Description":"The tag name that is associated with EC2 instances on which CodeDeploy agent is installed"
+    },
+    "TagValue":{
+      "Type":"String",
+      "Description":"The value associated with TagKey"
+    },
+    "RoleArn":{
+      "Type":"String",
+      "Description":"ARN for IAM role created when EC2 instances that have installed CodeDeploy agent were provisioned. Output value of CFN stack."
+    }
+  },
+  "Resources":{
+    "MyApplication":{
+      "Type":"AWS::CodeDeploy::Application"
+    },
+    "MyDeploymentGroup":{
+      "Type":"AWS::CodeDeploy::DeploymentGroup",
+      "DependsOn":"MyApplication",
+      "Properties":{
+        "ApplicationName":{
+          "Ref":"MyApplication"
+        },
+        "Deployment":{
+          "Description":"First time",
+          "IgnoreApplicationStopFailures":"true",
+          "Revision":{
+            "RevisionType":"S3",
+            "S3Location":{
+              "Bucket":{
+                "Ref":"Bucket"
+              },
+              "BundleType":"Zip",
+              "Key":{
+                "Ref":"Key"
+              }
+            }
+          }
+        },
+        "Ec2TagFilters":[
+          {
+            "Key":{
+              "Ref":"TagKey"
+            },
+            "Value":{
+              "Ref":"TagValue"
+            },
+            "Type":"KEY_AND_VALUE"
+          }
+        ],
+        "ServiceRoleArn":{
+          "Ref":"RoleArn"
+        }
+      }
+    }
+  },
+  "Outputs":{
+    "MyAWSAccountId":{
+      "Value":{
+        "Ref":"AWS::AccountId"
+      }
+    },
+    "MyApplication":{
+      "Value":{
+        "Ref":"MyApplication"
+      }
+    },
+    "MyDeploymentGroup":{
+      "Value":{
+        "Ref":"MyDeploymentGroup"
+      }
+    }
+  }
+}
