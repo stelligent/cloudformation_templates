@@ -5,12 +5,12 @@
     "S3Bucket":{
       "Type":"String",
       "Description":"S3 bucket to use for artifacts. Just bucket Name; not URL. IAM user should have access to the bucket.",
-      "Default":"stelligent-training-public"
+      "Default":"stelligent-public"
     },
     "S3Key":{
       "Type":"String",
       "Description":"S3 key within S3Bucket.",
-      "Default":"public/codepipeline/aws-codepipeline-s3-aws-codedeploy_linux.zip"
+      "Default":"cloudformation-templates/github/example-apps/aws-codepipeline-s3-aws-codedeploy_linux.zip"
     },
     "KeyName":{
       "Description":"Name of an existing Amazon EC2 key pair to enable SSH or RDP access to the instances.",
@@ -25,7 +25,7 @@
     "CodeDeployEC2InstancesStack":{
       "Type":"AWS::CloudFormation::Stack",
       "Properties":{
-        "TemplateURL":"https://s3.amazonaws.com/stelligent-training-public/public/codedeploy/codedeploy-ec2.json",
+        "TemplateURL":"https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codepipeline/codedeploy-ec2.json",
         "TimeoutInMinutes":"60",
         "Parameters":{
           "TagValue":{
@@ -41,7 +41,7 @@
       "Type":"AWS::CloudFormation::Stack",
       "DependsOn":"CodeDeployEC2InstancesStack",
       "Properties":{
-        "TemplateURL":"https://s3.amazonaws.com/stelligent-training-public/public/codedeploy/codedeploy-deployment.json",
+        "TemplateURL":"https://s3.amazonaws.com/stelligent-public/cloudformation-templates/github/labs/codepipeline/codedeploy-deployment.json",
         "TimeoutInMinutes":"60",
         "Parameters":{
           "TagValue":{
