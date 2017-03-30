@@ -222,7 +222,7 @@
         "Description":"Always return success",
         "Timeout":20,
         "Handler":"lambdadummy.handler",
-        "Runtime":"nodejs",
+        "Runtime":"nodejs4.3",
         "MemorySize":128
       }
     },
