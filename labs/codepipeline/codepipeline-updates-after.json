@@ -5,7 +5,7 @@
     "S3BucketLambdaFunction":{
       "Type":"String",
       "Description":"S3 bucket to use for artifacts. Just bucket Name; not URL. IAM user should have access to the bucket.",
-      "Default":"stelligent-training-public"
+      "Default":"stelligent-public"
     },
     "RepositoryName":{
       "Description":"The name of the CodeCommit repo",
