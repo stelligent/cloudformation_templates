@@ -1,0 +1,77 @@
+{
+  "Description":"Launch nested CloudFormation stack to provision and run AWS CodeDeploy",
+  "AWSTemplateFormatVersion":"2010-09-09",
+  "Parameters":{
+    "S3Bucket":{
+      "Type":"String",
+      "Description":"The unique bucket name where deployment distribution is located"
+    },
+    "S3Key":{
+      "Type":"String",
+      "Description":"The unique bucket name where deployment distribution is located"
+    },
+    "EC2TagValue":{
+      "Description":"The tag value that identifies this as a target for deployments.",
+      "Type":"String",
+      "AllowedPattern":"[\\x20-\\x7E]*",
+      "ConstraintDescription":"Can contain only ASCII characters."
+    },
+    "EC2KeyPairName":{
+      "Description":"Name of an existing Amazon EC2 key pair to enable SSH or RDP access to the instances.",
+      "Type":"AWS::EC2::KeyPair::KeyName",
+      "MinLength":"1",
+      "MaxLength":"255",
+      "AllowedPattern":"[\\x20-\\x7E]*",
+      "ConstraintDescription":"Can contain only ASCII characters."
+    }
+  },
+  "Resources":{
+    "CodeDeployEC2InstancesStack":{
+      "Type":"AWS::CloudFormation::Stack",
+      "Properties":{
+        "TemplateURL":"http://s3.amazonaws.com/aws-codedeploy-us-east-1/templates/latest/CodeDeploy_SampleCF_Template.json",
+        "TimeoutInMinutes":"60",
+        "Parameters":{
+          "TagValue":{
+            "Ref":"EC2TagValue"
+          },
+          "KeyPairName":{
+            "Ref":"EC2KeyPairName"
+          }
+        }
+      }
+    },
+    "CodeDeploySimpleStack":{
+      "Type":"AWS::CloudFormation::Stack",
+      "DependsOn":"CodeDeployEC2InstancesStack",
+      "Properties":{
+        "TemplateURL":"https://s3.amazonaws.com/stelligent-training-public/public/codedeploy/codedeploy-deployment.json",
+        "TimeoutInMinutes":"60",
+        "Parameters":{
+          "TagValue":{
+            "Ref":"EC2TagValue"
+          },
+          "RoleArn":{
+            "Fn::GetAtt":[
+              "CodeDeployEC2InstancesStack",
+              "Outputs.CodeDeployTrustRoleARN"
+            ]
+          },
+          "Bucket":{
+            "Ref":"S3Bucket"
+          },
+          "Key":{
+            "Ref":"S3Key"
+          }
+        }
+      }
+    }
+  },
+  "Outputs":{
+    "MyAWSAccountId":{
+      "Value":{
+        "Ref":"AWS::AccountId"
+      }
+    }
+  }
+}

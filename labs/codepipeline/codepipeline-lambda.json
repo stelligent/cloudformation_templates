@@ -144,7 +144,7 @@
         "Description":"Validate a website URL",
         "Timeout":20,
         "Handler":"validateurl.handler",
-        "Runtime":"nodejs",
+        "Runtime":"nodejs4.3",
         "MemorySize":128
       }
     },

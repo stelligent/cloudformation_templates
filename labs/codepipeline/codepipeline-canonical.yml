@@ -6,11 +6,11 @@ Parameters:
     Type: String
     Description: S3 bucket to use for artifacts. Just bucket Name; not URL. IAM user
       should have access to the bucket.
-    Default: stelligent-training-public
+    Default: stelligent-public
   S3Key:
     Type: String
     Description: S3 key within S3Bucket.
-    Default: public/codepipeline/aws-codepipeline-s3-aws-codedeploy_linux.zip
+    Default: cloudformation-templates/github/example-apps/aws-codepipeline-s3-aws-codedeploy_linux.zip
   EmailAddress:
     Description: Email Address
     Type: String
@@ -57,6 +57,70 @@ Resources:
           Action:
           - sts:AssumeRole
       Path: "/"
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - codepipeline.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: codepipeline-service
+        PolicyDocument:
+          Statement:
+          - Action:
+            - codecommit:GetBranch
+            - codecommit:GetCommit
+            - codecommit:UploadArchive
+            - codecommit:GetUploadArchiveStatus
+            - codecommit:CancelUploadArchive
+            - codebuild:*
+            Resource: "*"
+            Effect: Allow
+          - Action:
+            - s3:*
+            Resource: "*"
+            Effect: Allow
+          - Action:
+            - s3:PutObject
+            Resource:
+            - arn:aws:s3:::codepipeline*
+            - arn:aws:s3:::elasticbeanstalk*
+            Effect: Allow
+          - Action:
+            - codedeploy:CreateDeployment
+            - codedeploy:GetApplicationRevision
+            - codedeploy:GetDeployment
+            - codedeploy:GetDeploymentConfig
+            - codedeploy:RegisterApplicationRevision
+            Resource: "*"
+            Effect: Allow
+          - Action:
+            - elasticbeanstalk:*
+            - ec2:*
+            - elasticloadbalancing:*
+            - autoscaling:*
+            - cloudwatch:*
+            - s3:*
+            - sns:*
+            - cloudformation:*
+            - rds:*
+            - sqs:*
+            - ecs:*
+            - iam:PassRole
+            Resource: "*"
+            Effect: Allow
+          - Action:
+            - lambda:InvokeFunction
+            - lambda:ListFunctions
+            Resource: "*"
+            Effect: Allow
+          Version: '2012-10-17'
   CodePipelineLambdaDummy:
     Type: AWS::Lambda::Function
     DependsOn:
@@ -86,7 +150,8 @@ Resources:
         - ''
         - - 'arn:aws:iam::'
           - Ref: AWS::AccountId
-          - ":role/AWS-CodePipeline-Service"
+          - ":role/"
+          - Ref: CodePipelineRole
       Stages:
       - Name: Source
         Actions:
