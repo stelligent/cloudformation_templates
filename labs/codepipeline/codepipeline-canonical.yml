@@ -2,18 +2,34 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Mock a pipeline using CodePipeline and Lambda
 Parameters:
-  S3Bucket:
+  S3BucketLambdaFunction:
     Type: String
     Description: S3 bucket to use for artifacts. Just bucket Name; not URL. IAM user
       should have access to the bucket.
     Default: stelligent-public
-  S3Key:
+  RepositoryName:
+    Description: The name of the CodeCommit repo
+    Default: codecommit-demo
     Type: String
-    Description: S3 key within S3Bucket.
-    Default: cloudformation-templates/github/example-apps/aws-codepipeline-s3-aws-codedeploy_linux.zip
+    AllowedPattern: "[\\x20-\\x7E]*"
+    ConstraintDescription: Can contain only ASCII characters.
+  RepositoryBranch:
+    Description: The name of the branch for the CodeCommit repo
+    Type: String
+    Default: master
+    AllowedPattern: "[\\x20-\\x7E]*"
+    ConstraintDescription: Can contain only ASCII characters.
   EmailAddress:
     Description: Email Address
     Type: String
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: CodeCommit Configuration
+      Parameters:
+      - RepositoryName
+      - RepositoryBranch
 Resources:
   MySNSTopic:
     Type: AWS::SNS::Topic
@@ -22,6 +38,63 @@ Resources:
       - Endpoint:
           Ref: EmailAddress
         Protocol: email
+  CodePipelineTrustRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Sid: '1'
+          Effect: Allow
+          Principal:
+            Service:
+            - codepipeline.amazonaws.com
+          Action: sts:AssumeRole
+      Path: "/"
+  CodePipelineRolePolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CodePipelinePolicy
+      PolicyDocument:
+        Statement:
+        - Action:
+          - s3:*
+          Resource:
+          - "*"
+          Effect: Allow
+        - Action:
+          - s3:PutBucketPolicy
+          - s3:PutObject
+          Resource:
+          - Fn::Join:
+            - ''
+            - - arn:aws:s3:::demo-
+              - Ref: AWS::Region
+              - "-"
+              - Ref: AWS::AccountId
+              - "-"
+              - Ref: AWS::StackName
+          Effect: Allow
+        - Action:
+          - codecommit:GetBranch
+          - codecommit:GetCommit
+          - codecommit:UploadArchive
+          - codecommit:GetUploadArchiveStatus
+          - codecommit:CancelUploadArchive
+          Resource: "*"
+          Effect: Allow
+        - Action:
+          - codepipeline:*
+          - iam:ListRoles
+          - iam:PassRole
+          - opsworks:*
+          - sns:*
+          - elasticbeanstalk:DescribeApplications
+          - elasticbeanstalk:DescribeEnvironments
+          - lambda:*
+          Resource: "*"
+          Effect: Allow
+      Roles:
+      - Ref: CodePipelineTrustRole
   LambdaCodePipelineExecutionPolicy:
     DependsOn:
     - CodePipelineLambdaRole
@@ -57,70 +130,6 @@ Resources:
           Action:
           - sts:AssumeRole
       Path: "/"
-  CodePipelineRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Statement:
-        - Effect: Allow
-          Principal:
-            Service:
-            - codepipeline.amazonaws.com
-          Action:
-          - sts:AssumeRole
-      Path: "/"
-      Policies:
-      - PolicyName: codepipeline-service
-        PolicyDocument:
-          Statement:
-          - Action:
-            - codecommit:GetBranch
-            - codecommit:GetCommit
-            - codecommit:UploadArchive
-            - codecommit:GetUploadArchiveStatus
-            - codecommit:CancelUploadArchive
-            - codebuild:*
-            Resource: "*"
-            Effect: Allow
-          - Action:
-            - s3:*
-            Resource: "*"
-            Effect: Allow
-          - Action:
-            - s3:PutObject
-            Resource:
-            - arn:aws:s3:::codepipeline*
-            - arn:aws:s3:::elasticbeanstalk*
-            Effect: Allow
-          - Action:
-            - codedeploy:CreateDeployment
-            - codedeploy:GetApplicationRevision
-            - codedeploy:GetDeployment
-            - codedeploy:GetDeploymentConfig
-            - codedeploy:RegisterApplicationRevision
-            Resource: "*"
-            Effect: Allow
-          - Action:
-            - elasticbeanstalk:*
-            - ec2:*
-            - elasticloadbalancing:*
-            - autoscaling:*
-            - cloudwatch:*
-            - s3:*
-            - sns:*
-            - cloudformation:*
-            - rds:*
-            - sqs:*
-            - ecs:*
-            - iam:PassRole
-            Resource: "*"
-            Effect: Allow
-          - Action:
-            - lambda:InvokeFunction
-            - lambda:ListFunctions
-            Resource: "*"
-            Effect: Allow
-          Version: '2012-10-17'
   CodePipelineLambdaDummy:
     Type: AWS::Lambda::Function
     DependsOn:
@@ -129,7 +138,7 @@ Resources:
     Properties:
       Code:
         S3Bucket:
-          Ref: S3Bucket
+          Ref: S3BucketLambdaFunction
         S3Key: Archive.zip
       Role:
         Fn::GetAtt:
@@ -140,18 +149,20 @@ Resources:
       Handler: lambdadummy.handler
       Runtime: nodejs4.3
       MemorySize: 128
-  CodePipelineStack:
+  MyPipeline:
     Type: AWS::CodePipeline::Pipeline
     DependsOn:
     - CodePipelineLambdaDummy
     Properties:
-      RoleArn:
+      Name:
         Fn::Join:
         - ''
-        - - 'arn:aws:iam::'
-          - Ref: AWS::AccountId
-          - ":role/"
-          - Ref: CodePipelineRole
+        - - Ref: AWS::StackName
+          - "-Pipeline"
+      RoleArn:
+        Fn::GetAtt:
+        - CodePipelineTrustRole
+        - Arn
       Stages:
       - Name: Source
         Actions:
@@ -161,14 +172,14 @@ Resources:
             Category: Source
             Owner: AWS
             Version: '1'
-            Provider: S3
+            Provider: CodeCommit
           OutputArtifacts:
           - Name: MyApp
           Configuration:
-            S3Bucket:
-              Ref: S3Bucket
-            S3ObjectKey:
-              Ref: S3Key
+            BranchName:
+              Ref: RepositoryBranch
+            RepositoryName:
+              Ref: RepositoryName
           RunOrder: 1
       - Name: Commit
         Actions:
@@ -462,19 +473,19 @@ Resources:
       ArtifactStore:
         Type: S3
         Location:
-          Ref: S3Bucket
+          Fn::Join:
+          - ''
+          - - codepipeline-
+            - Ref: AWS::Region
+            - "-"
+            - Ref: AWS::AccountId
 Outputs:
-  StackName:
-    Value:
-      Ref: AWS::StackName
-  CodePipelineURL:
+  PipelineUrl:
     Value:
       Fn::Join:
       - ''
       - - https://console.aws.amazon.com/codepipeline/home?region=
         - Ref: AWS::Region
         - "#/view/"
-        - Ref: CodePipelineStack
-  LambdaFunctionName:
-    Value:
-      Ref: CodePipelineLambdaDummy
+        - Ref: MyPipeline
+    Description: Pipeline Url
