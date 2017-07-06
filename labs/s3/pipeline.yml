@@ -161,8 +161,7 @@ Resources:
           phases:
             post_build:
               commands:
-                - aws s3 cp --recursive --acl public-read ./samples s3://${SiteBucketName}/samples 
-                - aws s3 cp --recursive --acl public-read ./html s3://${SiteBucketName}/ 
+                - aws s3 cp --recursive --acl public-read ./ s3://${SiteBucketName}/ 
           artifacts:
             type: zip
             files:
