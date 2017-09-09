@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform:
+- AWS::Serverless-2016-10-31
+
+Resources:
+  PermissionForEventsToInvokeLambda: 
+    Type: "AWS::Lambda::Permission"
+    Properties: 
+      FunctionName: 
+        Ref: "AutoTrigger"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: 
+        Fn::GetAtt: 
+          - "AutoTrigger"
+          - "Arn"
+  AutoTrigger:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: aws-slack-notify.handler
+      Runtime: nodejs4.3
+      Role:
+        Fn::ImportValue:
+          !Join ['-', [!Ref 'AWS::StackName', 'LambdaTrustRole']]
+      Events:
+        Timer:
+          Type: Schedule
+          Properties:
+            Schedule: rate(5 minutes)
