@@ -1,0 +1,37 @@
+---
+Description: Automate provisioning of CodePipeline notifications.
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  EmailAddress:
+    Description: Email Address for sending SNS notifications
+    Type: String
+Resources:
+  EventRule: 
+    Type: "AWS::Events::Rule"
+    Properties: 
+      Description: "EventRule"
+      EventPattern: 
+        source:
+        - aws.codepipeline
+        detail-type:
+        - CodePipeline Pipeline Execution State Change
+        detail:
+          state:
+          - FAILED
+      State: "ENABLED"
+      Targets: 
+        - 
+          Arn: 
+            Ref: "MySNSTopic"
+          Id: "PipelineNotificationTopic"
+          InputTransformer:
+            InputTemplate: '"The Pipeline <pipeline> has failed. Go to https://console.aws.amazon.com/codepipeline/home?region=us-east-1#/view/<pipeline>" '
+            InputPathsMap:
+              pipeline: "$.detail.pipeline" 
+  MySNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+      - Endpoint:
+          Ref: EmailAddress
+        Protocol: email
