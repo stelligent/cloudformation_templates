@@ -5,7 +5,7 @@ Parameters:
   SiteBucketName:
     Type: String
     Description: Name of bucket to create to host the website
-    Default: "stelligent-cloudformation-templates"
+    Default: "cloudformation-templates-stelligent"
   GitHubUser:
     Type: String
     Description: GitHub User
@@ -210,3 +210,6 @@ Outputs:
   PipelineUrl:
     Value: !Sub https://console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${Pipeline}
     Description: CodePipeline URL
+  S3PrefixURL:
+    Value: !Sub https://s3.amazonaws.com/${SiteBucketName}/
+    Description: Prefix for S3 URL. The S3 keys are defined under https://github.com/stelligent/cloudformation_templates
