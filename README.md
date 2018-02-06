@@ -168,7 +168,7 @@ command using various foundational templates that I've creates to be used togeth
              <li>VPC</li>
              <ul>
                <li>Public Subnet, IGW, Private Subnet/s.</li>
-               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
+               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
              </ul>
             <li>AWS Privileges</li>
             </ol>
@@ -306,7 +306,7 @@ command using various foundational templates that I've creates to be used togeth
              <li>VPC</li>
              <ul>
                <li>Public Subnet, IGW, Private Subnet/s.</li>
-               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
+               <li>Either use an existing VPC Infrastructure or you can use the following <a href="https://github.com/stelligent/cloudformation_templates/blob/master/infrastructure/vpc.yml" target="_blank">VPC Template</a> to create a one.</li>
              </ul>
             <li>Available EIP</li>
             </ol>
@@ -523,7 +523,7 @@ command using various foundational templates that I've creates to be used togeth
         </td>
     </tr>
 </table>
-    
+
 <table width="100%">    
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/storage/create-rds-from-snapshot.yml">Create RDS From Snapshot</a></h4></th>
@@ -632,8 +632,8 @@ command using various foundational templates that I've creates to be used togeth
 </table>    
 
 ### Labs
-[Back to Top](#purpose) 
-    
+[Back to Top](#purpose)
+
 <table width="100%">  
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/lambda">AWS Lambda CodePipeline Lab</a></h4></th>
@@ -752,7 +752,7 @@ command using various foundational templates that I've creates to be used togeth
             </table>
         </td>
     </tr>
-</table> 
+</table>
 
 <table width="100%">
     <tr>
@@ -812,7 +812,7 @@ command using various foundational templates that I've creates to be used togeth
             </table>
         </td>
     </tr>
-</table> 
+</table>
 
 <table width="100%">
     <tr>
@@ -923,7 +923,7 @@ command using various foundational templates that I've creates to be used togeth
         </td>
     </tr>
 </table>    
-    
+
 <table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/codepipeline">CodePipeline Approvals Labs</a></h4></th>
@@ -1136,7 +1136,7 @@ command using various foundational templates that I've creates to be used togeth
             </table>
         </td>
     </tr>
-</table> 
+</table>
 
 <table width="100%">
     <tr>
@@ -1186,8 +1186,8 @@ command using various foundational templates that I've creates to be used togeth
         </td>
     </tr>
 </table>
-  
-<table width="100%"> 
+
+<table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/codepipeline/codepipeline-canonical.yml">Mock Stages and Actions in AWS CodePipeline and AWS Lambda</a></h4></th>
     </tr>
@@ -1235,8 +1235,8 @@ command using various foundational templates that I've creates to be used togeth
             </table>
         </td>
     </tr>
-</table> 
-    
+</table>
+
 <table width="100%">
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/tree/master/labs/opsworks">OpsWorks CodePipeline Lab</a></h4></th>
@@ -1284,8 +1284,8 @@ command using various foundational templates that I've creates to be used togeth
             </table>
         </td>
     </tr>
-</table> 
-   
+</table>
+
 <table width="100%">
     <tr>
        <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/spa/pipeline.yml">Pipeline for Single-Page Appliation</a></h4></th>
@@ -1295,7 +1295,7 @@ command using various foundational templates that I've creates to be used togeth
            <p>Creates an S3 bucket to host a single-page application and a continuous delivery pipeline with CodeBuild and CodePipeline.</p>
            <h6>Prerequisites</h6>
            <ol>
-            <li><a href="https://github.com/settings/tokens">GitHub token</a> (with access to repo and admin:repo_hook) 
+            <li><a href="https://github.com/settings/tokens">GitHub token</a> (with access to repo and admin:repo_hook)
            </ol>
            <h6>Supported Regions</h6>
            <ol>
@@ -1328,7 +1328,7 @@ command using various foundational templates that I've creates to be used togeth
        </td>
     </tr>
 </table>
-   
+
 <table width="100%">   
     <tr>
         <th align="left" colspan="2"><h4><a href="https://github.com/stelligent/cloudformation_templates/blob/master/labs/test_instances/rhel-ubuntu-win2012.yml">Test Instances</a></h4></th>
