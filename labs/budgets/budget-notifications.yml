@@ -1,0 +1,184 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Automate AWS Budgets"
+Parameters:
+  Currency:
+    Description: The currency of your budget
+    Type: String
+    Default: USD
+  StartTime:
+    Description: First day of August in 2018 in numeric form
+    Type: Number
+    Default: 1533081600
+  EndTime:
+    Description: Last Data evalutated
+    Type: Number
+    Default: 3706473600
+  BudgetLimit:
+    Description: Maximum Budget in USD
+    Type: Number
+    Default: 500
+  LinkedAccountBudgetLimit:
+    Description: Maximum Budget in USD
+    Type: Number
+    Default: 2000
+  SageMakerBudgetLimit:
+    Description: Maximum Budget in USD
+    Type: Number
+    Default: 120
+  Threshold01:
+    Description: Threshold Percentage from 0 to 100
+    Type: Number
+    Default: 50
+  Threshold02:
+    Description: Threshold Percentage from 0 to 100
+    Type: Number
+    Default: 85
+  EMail01:
+    Description: The email address where notifications are sent
+    Type: String
+  PhoneNumber01:
+    Description: Phone number preceded by country code and no spaces (for example, 12125551212)
+    Type: Number
+  LinkedAccountNumbers:
+    Description: The AWS account ID is a 12-digit number, such as 123456789012. This parameter is a comma-delimited list of linked AWS account ids if running from a master account.
+    Type: List<Number>   
+    Default: "123456789012, 123456789012"
+  LinkedAccountsBoolean: 
+    Description: Environment type.
+    Default: n
+    Type: String
+    AllowedValues: 
+      - y
+      - n
+    ConstraintDescription: must specify y or n.
+Conditions: 
+  FilterLinkedAccounts: !Equals [ !Ref LinkedAccountsBoolean, y ]
+
+Resources:
+  NotifyPhonesSNS:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${AWS::StackName}-phone-number
+      Subscription:
+        - Endpoint: !Sub ${PhoneNumber01}
+          Protocol: sms
+  MySnsTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Id: MyTopicPolicy
+        Version: 2012-10-17
+        Statement:
+          - Sid: My-statement-id
+            Effect: Allow
+            Principal:
+              Service:
+                - budgets.amazonaws.com
+            Action: sns:publish
+            Resource: !Sub ${NotifyPhonesSNS}
+      Topics:
+        - !Ref NotifyPhonesSNS 
+  TotalMonthlyBudget:
+    Type: "AWS::Budgets::Budget"
+    Properties:
+      Budget:
+        BudgetLimit:
+          Amount: !Sub ${BudgetLimit}
+          Unit: !Sub ${Currency}
+        TimeUnit: MONTHLY
+        TimePeriod:
+          Start: !Sub ${StartTime}
+          End: !Sub ${EndTime}
+        BudgetType: COST
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: !Sub ${Threshold02}
+          Subscribers:
+          - SubscriptionType: EMAIL
+            Address: !Sub ${EMail01}
+          - SubscriptionType: SNS
+            Address: !Sub ${NotifyPhonesSNS}
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: !Sub ${Threshold01}
+          Subscribers:
+          - SubscriptionType: EMAIL
+            Address: !Sub ${EMail01}
+          - SubscriptionType: SNS
+            Address: !Sub ${NotifyPhonesSNS}
+  SageMakerMonthlyBudget:
+    Type: "AWS::Budgets::Budget"
+    Properties:
+      Budget:
+        BudgetLimit:
+          Amount: !Sub ${SageMakerBudgetLimit}
+          Unit: !Sub ${Currency}
+        TimeUnit: MONTHLY
+        TimePeriod:
+          Start: !Sub ${StartTime}
+          End: !Sub ${EndTime}
+        BudgetType: COST
+        CostFilters:
+          Service:
+          - Amazon SageMaker
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: !Sub ${Threshold02}
+          Subscribers:
+          - SubscriptionType: EMAIL
+            Address: !Sub ${EMail01}
+          - SubscriptionType: SNS
+            Address: !Sub ${NotifyPhonesSNS}
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: !Sub ${Threshold01}
+          Subscribers:
+          - SubscriptionType: EMAIL
+            Address: !Sub ${EMail01}
+          - SubscriptionType: SNS
+            Address: !Sub ${NotifyPhonesSNS}
+
+  LinkedAccountsMonthlyBudget:
+    Type: "AWS::Budgets::Budget"
+    Condition: FilterLinkedAccounts
+    Properties:
+      Budget:
+        BudgetLimit:
+          Amount: !Sub ${LinkedAccountBudgetLimit}
+          Unit: !Sub ${Currency}
+        TimeUnit: MONTHLY
+        TimePeriod:
+          Start: !Sub ${StartTime}
+          End: !Sub ${EndTime}
+        BudgetType: COST
+        CostFilters:
+          LinkedAccount: !Ref LinkedAccountNumbers
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: !Sub ${Threshold02}
+          Subscribers:
+          - SubscriptionType: EMAIL
+            Address: !Sub ${EMail01}
+          - SubscriptionType: SNS
+            Address: !Sub ${NotifyPhonesSNS}
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: !Sub ${Threshold01}
+          Subscribers:
+          - SubscriptionType: EMAIL
+            Address: !Sub ${EMail01}
+          - SubscriptionType: SNS
+            Address: !Sub ${NotifyPhonesSNS}
+
+Outputs:
+  BudgetId:
+    Value: !Ref TotalMonthlyBudget
