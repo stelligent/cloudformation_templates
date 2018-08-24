@@ -3,6 +3,21 @@
 
 Using Amazon Polly to create an audio version of a blog post.
 
+1. Manually create an Amazon S3 bucket
+1. Manually create an Amazon Text-to-Speech MP3 and synthesize to Amazon S3
+1. Make the MP3 public
+1. Create an HTML audio tag snippet and embed in the blog post (HTML/Wordpress)
+1. Create a custom CloudFormation resource
+1. The Lambda in the custom CloudFormation resource will using the AWS CLI to create MP3 using Amazon Polly
+1. Create a CloudFormation template that creates the S3 bucket, uses the Amazon Polly custom resource, and a CodePipeline that uses Polly every time some text is changed. 
+
+New Idea: Use CodeBuild to do the same thing using the AWS CLI?
+
+Question: How to automatically upload text from Wordpress changes to S3 or a version control repo?
+
+https://stelligent.com/feed/
+
+https://stelligent.com/?s=AWS%20Budget%20Notifications%20in%20CloudFormation&feed=rss2
 
 Here's an example of the code snippet...
 
