@@ -126,13 +126,11 @@ Resources:
     Properties:
       AccessControl: PublicRead
       BucketName: !Sub ${AWS::StackName}-polly-files
-      StorageClass: REDUCED_REDUNDANCY
   PipelineBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
     Properties:
       BucketName: !Sub ${AWS::StackName}-codepipeline-files
-      StorageClass: REDUCED_REDUNDANCY
   RunPollyCommands:
     Type: AWS::CodeBuild::Project
     DependsOn: CodeBuildRole
