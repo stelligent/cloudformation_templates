@@ -19,6 +19,7 @@ Pipeline
 * **Build**: CodeBuild 
 
 Copies file from Codepipeline input artifact to S3
+
 Run Amazon Polly commands and store Output in S3
 
 # Step 5 - Manual HTML Update
