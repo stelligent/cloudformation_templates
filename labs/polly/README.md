@@ -64,6 +64,11 @@ Run Amazon Polly commands and store Output in S3
 
 One Time: update Html with audio tag that points to location in S3
 
+<audio controls>
+  <source src="horse.mp3" type="audio/mpeg">
+  Your browser does not support the audio tag.
+</audio>
+
 # Tips
 `pip install awscli --upgrade --user` (didn't have `start-speech-synthesis-task`)
 

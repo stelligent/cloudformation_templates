@@ -2,6 +2,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Deployment Pipeline to run Polly Commands
 Parameters:
+  PollyRecordings:
+    Type: String
+    Description: Name of bucket to host Polly recording files (e.g. mp3)
+    Default: "stelligent-polly"
   GitHubUser:
     Type: String
     Description: GitHub User
@@ -34,6 +38,10 @@ Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
+          default: "Bucket for Polly Recording Files"
+        Parameters:
+          - PollyRecordings
+      - Label:
           default: "GitHub Configuration"
         Parameters:
           - GitHubToken
@@ -47,6 +55,8 @@ Metadata:
           - BuildComputeType
           - BuildImage
     ParameterLabels:
+      PollyRecordings:
+        default: Name of S3 Bucket to create for Amazon Polly recording files
       GitHubToken:
         default: GitHub OAuth2 Token
       GitHubUser: 
@@ -120,6 +130,12 @@ Resources:
             Resource: "*"
             Effect: Allow
           Version: '2012-10-17'
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      AccessControl: PublicRead
+      BucketName: !Ref PollyRecordings
   PipelineBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
@@ -145,7 +161,7 @@ Resources:
               commands:
                 - aws --version
                 - testvar=$(cat ./labs/polly/blog.txt)
-                - aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name delete-pmd-guardduty --output-s3-key-prefix blog --text "$testvar" --voice-id Joanna 
+                - aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name ${PollyRecordings} --output-s3-key-prefix blog --text "$testvar" --voice-id Joanna 
           artifacts:
             files:
             - '**/*'
