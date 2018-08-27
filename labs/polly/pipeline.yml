@@ -144,6 +144,8 @@ Resources:
             post_build:
               commands:
                 - aws --version
+                - testvar=$(cat ./labs/polly/blog.txt)
+                - aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name delete-pmd-guardduty --text "$testvar" --voice-id Joanna 
           artifacts:
             files:
             - '**/*'

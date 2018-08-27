@@ -1,3 +1,5 @@
+Testing Paul Duvall. New text entered in the blog post.
+
 AWS Budgets gives you the ability to set custom budgets that alert you when your costs or usage exceed – or forecasted to exceed – your budgeted amount. AWS now provides the capability to automate the provisioning of AWS Budgets using the AWS::Budgets::Budget CloudFormation resource.
 
 With this, you get a visualization of your various budgets from the AWS Budgets console. This includes actuals versus your budget and your projected AWS spend for the evaluated period (e.g. monthly, quarterly, and annually). What’s more, you can configure AWS Budgets to send you notifications via text or email – using Amazon SNS – based on thresholds that you can configure.
