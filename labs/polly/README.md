@@ -14,11 +14,13 @@ CloudFormation of S3 bucket for storage, IAM Roles, Cloudwatch event notificatio
 
 # Step 4 - Deployment Pipeline
 Pipeline
-Source: Github
 
-Build: CodeBuild 
-Copies file from Codepipeline input artifact to S3
-Run Amazon Polly commands and store Output in S3
+* Source: Github
+* Build: CodeBuild 
+** Copies file from Codepipeline input artifact to S3
+** Run Amazon Polly commands and store Output in S3
+
+# Step 5 - Manual HTML Update
 
 One Time: update Html with audio tag that points to location in S3
 
