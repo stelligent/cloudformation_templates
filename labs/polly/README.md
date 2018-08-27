@@ -3,6 +3,26 @@
 
 Using Amazon Polly to create an audio version of a blog post.
 
+# Step 1 - Copy display text from website
+Manual: Copy text from website
+
+# Step 2 - Commit to GitHub
+Commit to text file in github
+
+# Step 3 - CloudFormation Template
+CloudFormation of S3 bucket for storage, IAM Roles, Cloudwatch event notifications, Codebuild, Codepipeline, SNS
+
+# Step 4 - Deployment Pipeline
+Pipeline
+Source: Github
+
+Build: CodeBuild 
+Copies file from Codepipeline input artifact to S3
+Run Amazon Polly commands and store Output in S3
+
+One Time: update Html with audio tag that points to location in S3
+
+# Other Ideas
 1. Manually create an Amazon S3 bucket
 1. Manually create an Amazon Text-to-Speech MP3 and synthesize to Amazon S3
 1. Make the MP3 public
@@ -10,6 +30,7 @@ Using Amazon Polly to create an audio version of a blog post.
 1. Create a custom CloudFormation resource
 1. The Lambda in the custom CloudFormation resource will using the AWS CLI to create MP3 using Amazon Polly
 1. Create a CloudFormation template that creates the S3 bucket, uses the Amazon Polly custom resource, and a CodePipeline that uses Polly every time some text is changed. 
+1. @TODO Convert commands from `test.sh` to CodeBuild. Then use GitHub and have CodeBuild copy from GitHub to S3 and download it locally and use with Polly.
 
 New Idea: Use CodeBuild to do the same thing using the AWS CLI?
 
@@ -17,7 +38,21 @@ Question: How to automatically upload text from Wordpress changes to S3 or a ver
 
 https://stelligent.com/feed/
 
-https://stelligent.com/?s=AWS%20Budget%20Notifications%20in%20CloudFormation&feed=rss2
+https://stelligent.com/?s=TotalMonthlyBudget&feed=rss2
+
+curl "https://stelligent.com/?s=TotalMonthlyBudget&feed=rss2"  2>/dev/null
+
+curl "https://stelligent.com/?s=TotalMonthlyBudget"  2>/dev/null
+
+https://docs.aws.amazon.com/cli/latest/reference/polly/synthesize-speech.html
+
+wget https://s3.amazonaws.com/delete-pmd-guardduty/text-for-polly/text-for-polly.txt
+https://docs.aws.amazon.com/polly/latest/dg/get-started-cli-exercise.html
+
+testvar=$(cat text-for-polly.txt)
+echo $testvar
+
+aws polly start-speech-synthesis-task --output-format mp3 --voice-id Joanna --output-s3-bucket-name BUCKETNAME --text $testvar hello.mp3
 
 Here's an example of the code snippet...
 
