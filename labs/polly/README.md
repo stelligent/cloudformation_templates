@@ -26,6 +26,9 @@ Run Amazon Polly commands and store Output in S3
 
 One Time: update Html with audio tag that points to location in S3
 
+# Tips
+pip install awscli --upgrade --user (didn't have `start-speech-synthesis-task`)
+
 # Other Ideas
 1. Manually create an Amazon S3 bucket
 1. Manually create an Amazon Text-to-Speech MP3 and synthesize to Amazon S3
