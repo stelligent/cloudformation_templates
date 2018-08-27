@@ -63,8 +63,10 @@ Run Amazon Polly commands and store Output in S3
 One Time: update Html with audio tag that points to location in S3
 
 # Tips
-pip install awscli --upgrade --user (didn't have `start-speech-synthesis-task`)
+`pip install awscli --upgrade --user` (didn't have `start-speech-synthesis-task`)
+
 Use the same file name in S3 so that it can be used as a URL (and make it public)
+
 Add manual approvals for manual tasks such as copying text and updating HTML with the new S3 HTTP URL
 
 ## Architecture and Implementation
