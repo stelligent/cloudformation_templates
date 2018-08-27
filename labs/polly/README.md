@@ -135,52 +135,6 @@ PhoneNumber01 | Phone number for which budget notifications are sent via SMS. Fo
 ####  Step 3. Test the Deployment
 Go to the [AWS Budgets dashboard](https://console.aws.amazon.com/billing/home?#/budgets) and verify the budgets have been created correctly.
 
-#  Filtering Budgets 
-You can filter your budgets by all types of criteria. The most effective way I found to automate this was to edit an existing budget to get the data. There's probably a way to do it through the API but it wasn't obvious to me. 
-
-
-## Filtering by Service
-
-Go back to the [AWS Budgets dashboard](https://console.aws.amazon.com/billing/home?#/budgets) and *select the checkbox* next to the budget you'd like to modify and click **Edit**. For example, to filter on a specific service, select the **Service** checkbox in the *Refine your budget* section. Choose the Service or Services you'd like to filter. For example, if you want to filter on `Amazon SageMaker`, choose this from the Service selection. Once you've done, save the budget. To automate it in CloudFormation, you'll need to run the following command from the command line and put the relevant results in your CloudFormation template. 
-
-
-`aws budgets describe-budgets --account-id <ACCOUNTID>`
-
-The results look like this: 
-
-```
-            "CostFilters": {
-                "Service": [
-                    "Amazon SageMaker"
-                ]
-            }
-```
-
-And this translates to the following in CloudFormation YAML. `CostFilters` is a Property of `AWS::Budgets::Budget`:
-```
-        CostFilters:
-          Service:
-          - Amazon SageMaker
-```
-
-
-##  Filtering by Linked Accounts
-
-You can go through the same process for filtering on AWS accounts. 
-
-The results returned when running `aws budgets describe-budgets --account-id <ACCOUNTID>` look like this (Your account ids should be something other than `123456789012`:
-
-
-```
-            "CostFilters": {
-                "LinkedAccount": [
-                    "123456789012", 
-                    "123456789012"
-                ]
-            }
-```
-
-The account id values can be defined in the comma-delimited parameter name: `LinkedAccountNumbers`.
 
 # Additional Resources
 * [AWS::Budgets::Budget](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-budgets-budget.html)
