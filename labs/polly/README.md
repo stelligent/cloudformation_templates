@@ -28,6 +28,8 @@ One Time: update Html with audio tag that points to location in S3
 
 # Tips
 pip install awscli --upgrade --user (didn't have `start-speech-synthesis-task`)
+Use the same file name in S3 so that it can be used as a URL (and make it public)
+
 
 # Other Ideas
 1. Manually create an Amazon S3 bucket

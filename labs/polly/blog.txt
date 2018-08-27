@@ -1,4 +1,4 @@
-Testing Paul Duvall. New text entered in the blog post.
+Today is Mon, August 27, 2018 at 12:27pm
 
 AWS Budgets gives you the ability to set custom budgets that alert you when your costs or usage exceed – or forecasted to exceed – your budgeted amount. AWS now provides the capability to automate the provisioning of AWS Budgets using the AWS::Budgets::Budget CloudFormation resource.
 
