@@ -64,10 +64,12 @@ Run Amazon Polly commands and store Output in S3
 
 One Time: update Html with audio tag that points to location in S3
 
+```
 <audio controls>
-  <source src="horse.mp3" type="audio/mpeg">
+  <source src="https://s3.amazonaws.com/pmd-polly-1334-polly-files/blog.01c3a373-70e3-446f-8bf3-2da95d52c3e5.mp3" type="audio/mpeg">
   Your browser does not support the audio tag.
 </audio>
+```
 
 # Tips
 `pip install awscli --upgrade --user` (didn't have `start-speech-synthesis-task`)
@@ -105,7 +107,7 @@ Click on the **Launch Stack** button below to launch the CloudFormation Stack to
 You can launch the same stack using the AWS CLI. Here's an example:
 
 ```
-aws cloudformation create-stack --stack-name YOURSTACKNAME --template-body file:///home/ec2-user/environment/cloudformation_templates/labs/polly/pipeline.yml --parameters ParameterKey=GitHubToken,ParameterValue=GITHUBTOKEN --capabilities CAPABILITY_NAMED_IAM
+aws cloudformation create-stack --stack-name YOURSTACKNAME --template-body file:///home/ec2-user/environment/cloudformation_templates/labs/polly/pipeline.yml --parameters ParameterKey=GitHubToken,ParameterValue=GITHUBTOKEN --capabilities CAPABILITY_NAMED_IAM --no-disable-rollback
 ```
 
 ## Parameters
