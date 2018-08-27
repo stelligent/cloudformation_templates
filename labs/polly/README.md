@@ -9,8 +9,44 @@ Manual: Copy text from website
 # Step 2 - Commit to GitHub
 Commit to text file in github
 
+```
+git add .
+git commit -am "update blog text" && git push
+```
+
 # Step 3 - CloudFormation Template
 CloudFormation of S3 bucket for storage, IAM Roles, Cloudwatch event notifications, Codebuild, Codepipeline, SNS
+
+## CodeBuild
+```
+  RunPollyCommands:
+    Type: AWS::CodeBuild::Project
+    DependsOn: CodeBuildRole
+    Properties:
+      Name: !Sub ${AWS::StackName}-PollyCommands
+      Description: Deploy site to S3
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        Type: !Ref BuildType
+        ComputeType: !Ref BuildComputeType
+        Image: !Sub ${BuildImage}
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: !Sub |
+          version: 0.2
+          phases:
+            post_build:
+              commands:
+                - aws --version
+                - testvar=$(cat ./labs/polly/blog.txt)
+                - aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name delete-pmd-guardduty --output-s3-key-prefix blog --text "$testvar" --voice-id Joanna 
+          artifacts:
+            files:
+            - '**/*'
+      TimeoutInMinutes: 10
+```
 
 # Step 4 - Deployment Pipeline
 Pipeline
@@ -31,6 +67,59 @@ pip install awscli --upgrade --user (didn't have `start-speech-synthesis-task`)
 Use the same file name in S3 so that it can be used as a URL (and make it public)
 Add manual approvals for manual tasks such as copying text and updating HTML with the new S3 HTTP URL
 
+## Architecture and Implementation
+###  Architecture Diagram
+![polly-arch](docs/polly-arch.png)
+
+## CloudFormation Templates resources
+  - **AWS Budget** – [AWS::Budgets::Budget](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-budgets-budget.html) – TBD
+
+## Costs
+This section outlines cost considerations for provisioning AWS Budgets Notifications. 
+- **CloudFormation** – No Additional Cost
+
+## Deployment Steps
+####  Step 1. Prepare an AWS Account
+Create or login AWS account at [http://aws.amazon.com](http://aws.amazon.com) by following the instructions on the site.
+
+####  Step 2. Launch the Stack
+Click on the **Launch Stack** button below to launch the CloudFormation Stack to set up your AWS Budgets. 
+
+**Stack Assumptions:** The pipeline stack assumes the following conditions, and may not function properly if they are not met:
+1. The pipeline stack name is less than 20 characters long
+2. The stack is launched in the US East (N. Virginia) Region (`us-east-1`).
+
+*NOTE: The URL for Launch Stack is automatically generated through a pipeline in one of Stelligent's AWS accounts.*
+
+[![Launch CFN stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#cstack=sn~sagemaker-stack|turl~https://s3.amazonaws.com/sagemaker-pipeline-src/CodePipeline/pipeline.yaml)
+
+You can launch the same stack using the AWS CLI. Here's an example:
+
+```
+aws cloudformation create-stack --stack-name YOURSTACKNAME --template-body file:///home/ec2-user/environment/cloudformation_templates/labs/polly/pipeline.yml --parameters ParameterKey=GitHubToken,ParameterValue=GITHUBTOKEN --capabilities CAPABILITY_NAMED_IAM
+```
+
+## Parameters
+Parameters | Description
+---------- | -----------
+GitHubUser | Your unique GitHub userid. Default is `stelligent`
+GitHubRepo | GitHub Repo to pull from. Only the Name. not the URL. Default is `cloudformation_templates`
+GitHubBranch | GitHub Branch. Default is `master`
+GitHubToken | Available at https://github.com/settings/tokens. Should have access to the [following](https://github.com/stelligent/devops-essentials/wiki/Prerequisites#create-an-oauth-token-in-github)
+BuildType | The build container type to use for building the app. Default is `LINUX_CONTAINER`
+BuildComputeType | The build compute type to use for building the app. Default is `BUILD_GENERAL1_SMALL`
+BuildImage | The build image to use for building the app. Default is `aws/codebuild/ubuntu-base:14.04`
+
+####  Step 3. Test the Deployment
+Go to the [AWS Polly Synthesis Tasks](https://console.aws.amazon.com/polly/home/SynthesisTasks) and verify the audio recordings have been generated. There's an S3 URL column available to download the file as well.
+
+
+# Additional Resources
+* [AWS::Budgets::Budget](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-budgets-budget.html)
+* [AWS Budgets](https://aws.amazon.com/aws-cost-management/aws-budgets/)
+
+## Summary
+You learned how to create an audio recording of blog post and embed a player so readers can listen to an audio rendition of your post. 
 
 # Other Ideas
 1. Manually create an Amazon S3 bucket
@@ -65,92 +154,3 @@ echo $testvar
 aws polly start-speech-synthesis-task --output-format mp3 --voice-id Joanna --output-s3-bucket-name BUCKETNAME --text $testvar hello.mp3
 
 Here's an example of the code snippet...
-
-```  TotalMonthlyBudget:
-    Type: "AWS::Budgets::Budget"
-    Properties:
-      Budget:
-        BudgetLimit:
-          Amount: !Sub ${BudgetLimit}
-          Unit: !Sub ${Currency}
-        TimeUnit: MONTHLY
-        TimePeriod:
-          Start: !Sub ${StartTime}
-          End: !Sub ${EndTime}
-        BudgetType: COST
-      NotificationsWithSubscribers:
-        - Notification:
-            NotificationType: ACTUAL
-            ComparisonOperator: GREATER_THAN
-            Threshold: !Sub ${Threshold02}
-          Subscribers:
-          - SubscriptionType: EMAIL
-            Address: !Sub ${EMail01}
-          - SubscriptionType: SNS
-            Address: !Sub ${NotifyPhonesSNS}
-        - Notification:
-            NotificationType: ACTUAL
-            ComparisonOperator: GREATER_THAN
-            Threshold: !Sub ${Threshold01}
-          Subscribers:
-          - SubscriptionType: EMAIL
-            Address: !Sub ${EMail01}
-          - SubscriptionType: SNS
-            Address: !Sub ${NotifyPhonesSNS}
-```
-
-## Architecture and Implementation
-###  Architecture Diagram
-![budgets-arch](docs/budgets-arch.png)
-
-## CloudFormation Templates resources
-  - **AWS Budget** – [AWS::Budgets::Budget](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-budgets-budget.html) – TBD
-
-## Costs
-This section outlines cost considerations for provisioning AWS Budgets Notifications. 
-- **CloudFormation** – No Additional Cost
-
-## Deployment Steps
-####  Step 1. Prepare an AWS Account
-Create or login AWS account at [http://aws.amazon.com](http://aws.amazon.com) by following the instructions on the site.
-
-####  Step 2. Launch the Stack
-Click on the **Launch Stack** button below to launch the CloudFormation Stack to set up your AWS Budgets. 
-
-**Stack Assumptions:** The pipeline stack assumes the following conditions, and may not function properly if they are not met:
-1. The pipeline stack name is less than 20 characters long
-2. The stack is launched in the US East (N. Virginia) Region (`us-east-1`).
-
-*NOTE: The URL for Launch Stack is automatically generated through a pipeline in one of Stelligent's AWS accounts.*
-
-[![Launch CFN stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#cstack=sn~sagemaker-stack|turl~https://s3.amazonaws.com/sagemaker-pipeline-src/CodePipeline/pipeline.yaml)
-
-You can launch the same stack using the AWS CLI. Here's an example:
-
-```
-aws cloudformation create-stack --stack-name YOURSTACKNAME --template-body file:///home/ec2-user/environment/cloudformation_templates/labs/polly/pipeline.yml --parameters ParameterKey=GitHubToken,ParameterValue=GITHUBTOKEN --capabilities CAPABILITY_NAMED_IAM
-```
-
-## Parameters
-Parameters | Description
----------- | -----------
-Currency | Country currency. Default is `USD`.
-StartTime | Start Time for the first day in which AWS Budgets is reporting on cost usage.
-EndTime | End Time for the last day in which AWS Budgets is reporting on cost usage.
-BudgetLimit | Numeric form of budget limit for the evaluated time period. Default is: `1000`. 
-SageMakerBudgetLimit | Numeric form of budget limit for a specifc service (`Amazon SageMaker` in this case) for the evaluated time period.
-Threshold01 | Number between 0 and 100 representing the percentage of the `BudgetLimit` in which people get notified
-Threshold02 | Number between 0 and 100 representing the next percentage of the `BudgetLimit` in which people get notified
-EMail01 | Email address for which budget notifications are sent. Example is `example@example.com`.
-PhoneNumber01 | Phone number for which budget notifications are sent via SMS. Format is `12125551212`. Number must be preceded by the country code (e.g. USA is `1`)
-
-####  Step 3. Test the Deployment
-Go to the [AWS Budgets dashboard](https://console.aws.amazon.com/billing/home?#/budgets) and verify the budgets have been created correctly.
-
-
-# Additional Resources
-* [AWS::Budgets::Budget](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-budgets-budget.html)
-* [AWS Budgets](https://aws.amazon.com/aws-cost-management/aws-budgets/)
-
-## Summary
-You learned how to use the AWS Budgets feature and automate its provisioning.
