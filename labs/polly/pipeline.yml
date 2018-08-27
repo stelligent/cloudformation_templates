@@ -126,11 +126,13 @@ Resources:
     Properties:
       AccessControl: PublicRead
       BucketName: !Sub ${AWS::StackName}-polly-files
+      StorageClass: REDUCED_REDUNDANCY
   PipelineBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
     Properties:
       BucketName: !Sub ${AWS::StackName}-codepipeline-files
+      StorageClass: REDUCED_REDUNDANCY
   RunPollyCommands:
     Type: AWS::CodeBuild::Project
     DependsOn: CodeBuildRole
@@ -154,8 +156,6 @@ Resources:
                 - aws --version
                 - testvar=$(cat ./labs/polly/blog.txt)
                 - aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name ${PollyRecordingsBucket} --output-s3-key-prefix blog --text "$testvar" --voice-id Joanna 
-                - sleep 100
-                - aws s3 cp ./labs/polly/blog.txt s3://${PollyRecordingsBucket} --acl public-read
           artifacts:
             files:
             - '**/*'
