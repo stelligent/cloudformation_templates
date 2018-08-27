@@ -157,7 +157,7 @@ Resources:
                 - pollyObjectId=$(aws polly list-speech-synthesis-tasks --max-results 1 --query 'SynthesisTasks[].TaskId' --output text)
                 - pollyObjectTaskId=$(echo $pollyObjectId.mp3)
                 - echo $pollyObjectTaskId
-                - sleep 60
+                - sleep 45
                 - aws s3api put-object-acl --bucket ${PollyRecordingsBucket} --key "$pollyObjectTaskId" --acl public-read
           artifacts:
             files:
