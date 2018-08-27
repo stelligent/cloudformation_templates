@@ -143,7 +143,7 @@ Resources:
           phases:
             post_build:
               commands:
-                - ls
+                - aws polly start-speech-synthesis-task --output-format mp3 --voice-id Joanna --output-s3-bucket-name delete-pmd-guardduty --text ./labs/polly/blog.txt hello.mp3
           artifacts:
             files:
             - '**/*'
