@@ -6,6 +6,8 @@ Using Amazon Polly to create an audio version of a blog post.
 # Step 1 - Copy display text from website
 Manual: Copy text from website
 
+![copy-text](docs/copy-text.png)
+
 # Step 2 - Commit to GitHub
 Commit to text file in github
 
