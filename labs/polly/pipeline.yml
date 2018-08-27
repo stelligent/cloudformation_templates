@@ -154,6 +154,7 @@ Resources:
                 - aws --version
                 - testvar=$(cat ./labs/polly/blog.txt)
                 - aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name ${PollyRecordingsBucket} --output-s3-key-prefix blog --text "$testvar" --voice-id Joanna 
+                - aws polly list-speech-synthesis-tasks --max-results 1 --query 'SynthesisTasks[].OutputUri' --output text
           artifacts:
             files:
             - '**/*'
