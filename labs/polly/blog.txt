@@ -1,0 +1,143 @@
+AWS Budgets gives you the ability to set custom budgets that alert you when your costs or usage exceed – or forecasted to exceed – your budgeted amount. AWS now provides the capability to automate the provisioning of AWS Budgets using the AWS::Budgets::Budget CloudFormation resource.
+
+With this, you get a visualization of your various budgets from the AWS Budgets console. This includes actuals versus your budget and your projected AWS spend for the evaluated period (e.g. monthly, quarterly, and annually). What’s more, you can configure AWS Budgets to send you notifications via text or email – using Amazon SNS – based on thresholds that you can configure.
+
+In this blog post, you’ll learn how to codify your AWS Budgets configuration for your AWS accounts at a specific interval while receiving alert notifications based on predefined thresholds to an email and an SMS endpoint. Moreover, you’ll be able to see a visualization of your actuals versus your budgets at any time.
+
+You can also manually create a budget. As an exercise, go through the steps defined at AWS Budgets. The results will look similar to Figure 1.
+
+budget-dashboard
+
+Figure 1 – AWS Budgets Dashboard
+
+You can also configure Budgets to send email notifications to SNS topics as shown in Figure 2.
+
+budget-dashboardemail
+
+Figure 2 – AWS Budgets Email Notification
+
+Once you’ve manually configured this, you’ll likely want the ability to define it consistently and update your configuration in code. To do this, you use AWS CloudFormation.
+
+Here’s an example of the code snippet that defines the AWS Budget resource in CloudFormation:
+
+  TotalMonthlyBudget:
+    Type: "AWS::Budgets::Budget"
+    Properties:
+      Budget:
+        BudgetLimit:
+          Amount: !Sub ${BudgetLimit}
+          Unit: !Sub ${Currency}
+        TimeUnit: MONTHLY
+        TimePeriod:
+          Start: !Sub ${StartTime}
+          End: !Sub ${EndTime}
+        BudgetType: COST
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: !Sub ${Threshold02}
+          Subscribers:
+          - SubscriptionType: EMAIL
+            Address: !Sub ${EMail01}
+          - SubscriptionType: SNS
+            Address: !Sub ${NotifyPhonesSNS}
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: !Sub ${Threshold01}
+          Subscribers:
+          - SubscriptionType: EMAIL
+            Address: !Sub ${EMail01}
+          - SubscriptionType: SNS
+            Address: !Sub ${NotifyPhonesSNS}
+The remainder of this post shows you how to launch an example CloudFormation stack to send budget notifications and to modify the configuration using CloudFormation.
+
+Architecture and Implementation
+Architecture Diagram
+budgets-arch
+
+CloudFormation Template resources
+AWS Budget – AWS::Budgets::Budget – Creates, replaces, or deletes budgets for Billing and Cost Management.
+AWS SNS Topic – AWS::SNS::Topic – sends a confirmation to the email/SMS specified as a parameter.
+AWS SNS Topic Policy – AWS::SNS::TopicPolicy – Associates Amazon SNS topics with a policy.
+Costs
+This section outlines cost considerations for provisioning AWS Budget Notifications.
+
+CloudFormation – No Additional Cost
+Budgets – “Your first two budgets are free, and each subsequent budget will incur a $.02 daily cost.” More can be found at AWS Cost Management Pricing.
+SNS – Realistically no cost – Free for first 1 million SNS requests and for first 1,000 Email Deliveries each month.
+Deployment Steps
+Step 1. Prepare an AWS Account
+Create your AWS account at http://aws.amazon.com by following the instructions on the site.
+
+Step 2. Launch the Stack
+Click on the Launch Stack button below to launch the CloudFormation Stack to set up your AWS Budgets.
+
+Stack Assumptions: The pipeline stack assumes the following conditions, and may not function properly if they are not met:
+
+The pipeline stack name is less than 20 characters long
+The stack is launched in the US East (N. Virginia) Region (us-east-1).
+NOTE: The URL for Launch Stack is automatically generated through a deployment pipeline in one of Stelligent’s AWS accounts.
+
+Launch CFN stack
+
+You can launch the same stack using the AWS CLI. Here’s an example:
+
+aws cloudformation create-stack --stack-name YOURSTACKNAME --template-body file:///home/ec2-user/environment/tools/budget-notifications.yml --parameters ParameterKey=EMail01,ParameterValue=YOUREMAIL@example.com ParameterKey=PhoneNumber01,ParameterValue=12125551212 ParameterKey=BudgetLimit,ParameterValue=1000 ParameterKey=Threshold01,ParameterValue=65 --capabilities CAPABILITY_NAMED_IAM
+
+Parameters
+Parameters	Description
+Currency	Country currency. Default is USD.
+StartTime	Start Time for the first day in which AWS Budgets is reporting on cost usage.
+EndTime	End Time for the last day in which AWS Budgets is reporting on cost usage.
+BudgetLimit	Numeric form of budget limit for the evaluated time period. Default is: 1000.
+SageMakerBudgetLimit	Numeric form of budget limit for a specifc service (Amazon SageMaker in this case) for the evaluated time period.
+Threshold01	Number between 0 and 100 representing the percentage of the BudgetLimit in which people get notified
+Threshold02	Number between 0 and 100 representing the next percentage of the BudgetLimit in which people get notified
+EMail01	Email address for which budget notifications are sent. Example is example@example.com.
+PhoneNumber01	Phone number for which budget notifications are sent via SMS. Format is 12125551212. Number must be preceded by the country code (e.g. USA is 1)
+Step 3. Test the Deployment
+Go to the AWS Budgets dashboard and verify the budgets have been created correctly.
+
+Filtering Budgets
+You can filter your budgets by all types of criteria including Services, Linked Accounts, Tags, Instance Types, Regions, and so on. The most effective way I found to automate this was to edit an existing budget to get the data to use in CloudFormation. There’s probably a way to do it through the API but it wasn’t obvious to me.
+
+Filtering by Service
+Here’s an example of filtering by an AWS Service or Services.
+
+First, go back to the AWS Budgets dashboard and select the checkbox next to the budget you’d like to modify and click Edit. To filter on a specific service, select the Service checkbox in the Refine your budget section. Choose the Service or Services you’d like to filter. For example, if you want to filter on Amazon SageMaker, choose this from the Service selection. Once you’ve done this, save the budget. To automate it in CloudFormation, you’ll need to run the following command from the command line using the AWS CLI and put the relevant results in your CloudFormation template.
+
+aws budgets describe-budgets --account-id
+
+The results look like this:
+
+            "CostFilters": {
+                "Service": [
+                    "Amazon SageMaker"
+                ]
+            }
+And this translates to the following in CloudFormation YAML (CostFilters is a property of AWS::Budgets::Budget):
+
+        CostFilters:
+          Service:
+          - Amazon SageMaker
+Filtering by Linked Accounts
+You can go through the same process for filtering on AWS accounts.
+
+The results returned when running aws budgets describe-budgets --account-id look like this (Your account ids should be something other than 123456789012:
+
+            "CostFilters": {
+                "LinkedAccount": [
+                    "123456789012", 
+                    "123456789012"
+                ]
+            }
+The account id values can be defined in the comma-delimited parameter name: LinkedAccountNumbers.
+
+Additional Resources
+AWS::Budgets::Budget
+AWS Budgets
+Code in GitHub from this blog post
+Summary
+You learned how to use the AWS Budgets feature and automate its provisioning in AWS CloudFormation.
