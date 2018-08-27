@@ -154,7 +154,8 @@ Resources:
                 - aws --version
                 - testvar=$(cat ./labs/polly/blog.txt)
                 - aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name ${PollyRecordingsBucket} --output-s3-key-prefix blog --text "$testvar" --voice-id Joanna 
-                - aws s3 sync ./labs/polly s3://${PollyRecordingsBucket} --acl public-read
+                - sleep 100
+                - aws s3 cp ./labs/polly/blog.txt s3://${PollyRecordingsBucket} --acl public-read
           artifacts:
             files:
             - '**/*'
