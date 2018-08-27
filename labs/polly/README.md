@@ -12,7 +12,7 @@ Manual: Copy text from website
 Commit to text file in github
 
 ```
-git add .
+git add blog.text
 git commit -am "update blog text" && git push
 ```
 
