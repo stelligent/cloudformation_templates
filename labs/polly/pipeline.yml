@@ -125,10 +125,12 @@ Resources:
     DeletionPolicy: Delete
     Properties:
       AccessControl: PublicRead
-      BucketName: !Sub ${AWS::StackName}-PollyFiles
+      BucketName: !Sub ${AWS::StackName}-polly-files
   PipelineBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-codepipeline-files
   RunPollyCommands:
     Type: AWS::CodeBuild::Project
     DependsOn: CodeBuildRole
