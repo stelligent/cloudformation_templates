@@ -118,13 +118,6 @@ BuildImage | The build image to use for building the app. Default is `aws/codebu
 Go to the [AWS Polly Synthesis Tasks](https://console.aws.amazon.com/polly/home/SynthesisTasks) and verify the audio recordings have been generated. There's an S3 URL column available to download the file as well.
 
 
-# Additional Resources
-* [Amazon Polly Plugin for WordPress Update – Translate and Vocalize Your Content](https://aws.amazon.com/blogs/aws/amazon-polly-plugin-for-wordpress-update-translate-and-vocalize-your-content/)
-* [Amazon Polly Update – Time-Driven Prosody and Asynchronous Synthesis](https://aws.amazon.com/blogs/aws/amazon-polly-update-time-driven-prosody-and-asynchronous-synthesis/)
-
-## Summary
-You learned how to create an audio recording of blog post and embed a player so readers can listen to an audio rendition of your post. 
-
 # Step 4 - Deployment Pipeline
 Pipeline
 
@@ -148,6 +141,13 @@ One Time: update Html with audio tag that points to location in S3. How to find 
   Your browser does not support the audio tag.
 </audio>
 ```
+# Additional Resources
+* [Give Your WordPress Blog a Voice With Our New Amazon Polly Plugin](https://aws.amazon.com/blogs/aws/give-your-wordpress-blog-a-voice-with-our-new-amazon-polly-plugin/)
+* [Amazon Polly Plugin for WordPress Update – Translate and Vocalize Your Content](https://aws.amazon.com/blogs/aws/amazon-polly-plugin-for-wordpress-update-translate-and-vocalize-your-content/)
+* [Amazon Polly Update – Time-Driven Prosody and Asynchronous Synthesis](https://aws.amazon.com/blogs/aws/amazon-polly-update-time-driven-prosody-and-asynchronous-synthesis/)
+
+## Summary
+You learned how to create an audio recording of blog post and embed a player so readers can listen to an audio rendition of your post. 
 
 # Tips
 `pip install awscli --upgrade --user` (didn't have `start-speech-synthesis-task`)
