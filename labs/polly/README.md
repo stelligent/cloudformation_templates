@@ -19,6 +19,11 @@ git commit -am "update blog text" && git push
 # Step 3 - CloudFormation Template
 CloudFormation of S3 bucket for storage, IAM Roles, Cloudwatch event notifications, Codebuild, Codepipeline, SNS
 
+AWS::CodeBuild::Project
+AWS::S3::Bucket
+AWS::IAM::Role
+AWS::CodePipeline::Pipeline
+
 ## CodeBuild
 ```
   RunPollyCommands:
@@ -62,7 +67,7 @@ Run Amazon Polly commands and store Output in S3
 
 # Step 5 - Manual HTML Update
 
-One Time: update Html with audio tag that points to location in S3
+One Time: update Html with audio tag that points to location in S3. How to find the full URL for the mp3 file
 
 ```
 <audio controls>
@@ -77,6 +82,11 @@ One Time: update Html with audio tag that points to location in S3
 Use the same file name in S3 so that it can be used as a URL (and make it public)
 
 Add manual approvals for manual tasks such as copying text and updating HTML with the new S3 HTTP URL
+
+Describe the `sleep 45` I added to the CodeBuild commands
+
+How to find the full URL for the mp3 file
+
 
 ## Architecture and Implementation
 ###  Architecture Diagram
