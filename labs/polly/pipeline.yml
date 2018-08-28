@@ -159,7 +159,7 @@ Resources:
                 - echo $pollyObjectTaskId
                 - sleep 40
                 - aws s3api put-object-acl --bucket ${PollyRecordingsBucket} --key "$pollyObjectTaskId" --acl public-read
-                - echo "https://s3.amazonaws.com/${PollyRecordingsBucket}/${pollyObjectTaskId}"
+                - echo "https://s3.amazonaws.com/${PollyRecordingsBucket}/$pollyObjectTaskId"
           artifacts:
             files:
             - '**/*'
