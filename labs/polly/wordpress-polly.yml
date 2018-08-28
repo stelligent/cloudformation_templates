@@ -1,0 +1,37 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Deployment Pipeline to create IAM Policy
+Parameters:
+  GitHubUser:
+    Type: String
+    Description: GitHub User
+    Default: "stelligent"
+Resources:
+  WordpressPollyGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: !Sub ${AWS::StackName}-polly-group
+      Policies:
+        - PolicyName: !Sub ${AWS::StackName}-polly-policy
+          PolicyDocument:
+            Statement:
+            - Sid: Permissions1
+              Effect: Allow
+              Action:
+              - s3:HeadBucket
+              - polly:SynthesizeSpeech
+              - polly:DescribeVoices
+              Resource: "*"
+            - Sid: Permissions2
+              Effect: Allow
+              Action:
+              - s3:ListBucket
+              - s3:GetBucketAcl
+              - s3:GetBucketPolicy
+              - s3:PutObject
+              - s3:DeleteObject
+              - s3:CreateBucket
+              - s3:PutObjectAcl
+              Resource:
+              - arn:aws:s3:::audio_for_wordpress*
+              - arn:aws:s3:::audio-for-wordpress*
