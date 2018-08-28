@@ -44,6 +44,9 @@ CloudFormation of S3 bucket for storage, IAM Roles, Cloudwatch event notificatio
   - [AWS::CodePipeline::Pipeline](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codepipeline-pipeline.html)
 
 ## CodeBuild
+
+@todo: Explain CodePipeline Input Artifacts
+
 ```
   RunPollyCommands:
     Type: AWS::CodeBuild::Project
@@ -77,10 +80,6 @@ CloudFormation of S3 bucket for storage, IAM Roles, Cloudwatch event notificatio
             - '**/*'
       TimeoutInMinutes: 10
 ```
-
-## Costs
-This section outlines cost considerations for provisioning AWS Budgets Notifications. 
-- **CloudFormation** – No Additional Cost
 
 ## Deployment Steps
 ####  Step 1. Prepare an AWS Account
@@ -141,8 +140,23 @@ One Time: update Html with audio tag that points to location in S3. How to find 
   Your browser does not support the audio tag.
 </audio>
 ```
+
+## Costs
+This section outlines cost considerations for provisioning AWS Budgets Notifications. 
+- **CloudFormation** – No Additional Cost
+- **CodeBuild** – Charges per minute used. First 100 minutes each month come at no charge. For information on pricing beyond the first 100 minutes, see [AWS CodeBuild Pricing](https://aws.amazon.com/codebuild/pricing/).
+- **S3** – Prices Vary, depends on size of model/artifacts stored. For first 50 TB each month, costs only $0.023 per GB stored. For more information, see Amazon S3 Pricing.
+- **IAM** – No Additional Cost
+- **CodePipeline** – "With AWS CodePipeline, there are no upfront fees or commitments. You pay only for what you use. AWS CodePipeline costs $1 per active pipeline* per month. To encourage experimentation, pipelines are free for the first 30 days after creation. An active pipeline is a pipeline that has existed for more than 30 days and has at least one code change that runs through it during the month. There is no charge for pipelines that have no new code changes running through them during the month. An active pipeline is not prorated for partial months." More can be found at [AWS CodePipeline Pricing](https://aws.amazon.com/codepipeline/pricing/).
+
+  - [AWS::CodeBuild::Project](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-project.html)
+  - [AWS::S3::Bucket](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html)
+  - [AWS::IAM::Role](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html)
+  - [AWS::CodePipeline::Pipeline](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codepipeline-pipeline.html)
+
 # Additional Resources
 * [Give Your WordPress Blog a Voice With Our New Amazon Polly Plugin](https://aws.amazon.com/blogs/aws/give-your-wordpress-blog-a-voice-with-our-new-amazon-polly-plugin/)
+* [Installing the Amazon Polly Plugin](https://docs.aws.amazon.com/polly/latest/dg/plugin-install.html)
 * [Amazon Polly Plugin for WordPress Update – Translate and Vocalize Your Content](https://aws.amazon.com/blogs/aws/amazon-polly-plugin-for-wordpress-update-translate-and-vocalize-your-content/)
 * [Amazon Polly Update – Time-Driven Prosody and Asynchronous Synthesis](https://aws.amazon.com/blogs/aws/amazon-polly-update-time-driven-prosody-and-asynchronous-synthesis/)
 
