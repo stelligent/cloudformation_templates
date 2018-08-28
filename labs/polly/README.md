@@ -73,42 +73,6 @@ AWS::CodePipeline::Pipeline
       TimeoutInMinutes: 10
 ```
 
-# Step 4 - Deployment Pipeline
-Pipeline
-
-![codepipeline-polly](docs/codepipeline-polly.png)
-
-
-* **Source**: Github
-* **Build**: CodeBuild 
-
-Copies file from Codepipeline input artifact to S3
-
-Run Amazon Polly commands and store Output in S3
-
-# Step 5 - Manually Update HTML
-
-One Time: update Html with audio tag that points to location in S3. How to find the full URL for the mp3 file
-
-```
-<audio controls>
-  <source src="https://s3.amazonaws.com/pmd-polly-1334-polly-files/blog.01c3a373-70e3-446f-8bf3-2da95d52c3e5.mp3" type="audio/mpeg">
-  Your browser does not support the audio tag.
-</audio>
-```
-
-# Tips
-`pip install awscli --upgrade --user` (didn't have `start-speech-synthesis-task`)
-
-Use the same file name in S3 so that it can be used as a URL (and make it public)
-
-Add manual approvals for manual tasks such as copying text and updating HTML with the new S3 HTTP URL
-
-Describe the `sleep 45` I added to the CodeBuild commands
-
-How to find the full URL for the mp3 file
-
-
 ## Architecture and Implementation
 ###  Architecture Diagram
 ![polly-arch](docs/polly-arch.png)
@@ -162,6 +126,44 @@ Go to the [AWS Polly Synthesis Tasks](https://console.aws.amazon.com/polly/home/
 
 ## Summary
 You learned how to create an audio recording of blog post and embed a player so readers can listen to an audio rendition of your post. 
+
+# Step 4 - Deployment Pipeline
+Pipeline
+
+![codepipeline-polly](docs/codepipeline-polly.png)
+
+
+* **Source**: Github
+* **Build**: CodeBuild 
+
+Copies file from Codepipeline input artifact to S3
+
+Run Amazon Polly commands and store Output in S3
+
+# Step 5 - Manually Update HTML
+
+One Time: update Html with audio tag that points to location in S3. How to find the full URL for the mp3 file
+
+```
+<audio controls>
+  <source src="https://s3.amazonaws.com/pmd-polly-1334-polly-files/blog.01c3a373-70e3-446f-8bf3-2da95d52c3e5.mp3" type="audio/mpeg">
+  Your browser does not support the audio tag.
+</audio>
+```
+
+# Tips
+`pip install awscli --upgrade --user` (didn't have `start-speech-synthesis-task`)
+
+Use the same file name in S3 so that it can be used as a URL (and make it public)
+
+Add manual approvals for manual tasks such as copying text and updating HTML with the new S3 HTTP URL
+
+Describe the `sleep 45` I added to the CodeBuild commands
+
+How to find the full URL for the mp3 file
+
+
+
 
 # Other Ideas
 1. Manually create an Amazon S3 bucket

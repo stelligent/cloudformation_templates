@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Deployment Pipeline to run Polly Commands
+Description: Deployment Pipeline to run Amazon Polly Commands
 Parameters:
   GitHubUser:
     Type: String
