@@ -5,14 +5,24 @@ In our previous post on [automating AWS Budgets](https://stelligent.com/2018/08/
 
 To create an audio file of my last post, I created an Amazon S3 bucket, copied the text from my blog post and pasted it into the text field for Amazon Polly, configured Polly to create the audio file, and click a button. Once it was complete, I made the mp3 file publicread in S3, and copied the URL to the blog post in Wordpress.
 
-Since there were some reptitive steps, I figured I would automate as many of them as I could because, well, I'm [lazy](http://wiki.c2.com/?LazinessImpatienceHubris) and don't like doing the same things over and over again. My other motiviation was that I would like to see more of the blogs I visit to include this kind of audio narration so that I and others can listen to them.
+Since there were some repetitive steps, I figured I would automate as many of them as I could because, well, I'm [lazy](http://wiki.c2.com/?LazinessImpatienceHubris) and don't like doing the same things over and over again. My other motiviation was that I would like to see more of the blogs I visit to include this kind of audio narration so that I and others can listen to them.
+
+There are 5 steps you'll go through to publish a recording to your blog post or website. They are: 
+
+1. Copy display text from website
+1. Commit text file to GitHub
+1. Launch CloudFormation Stack
+1. Get URL from Deployment Pipeline
+1. Manually Update HTML with Audio File
+
+Each of these steps are described in the remainder of this blog post.
 
 # Step 1 - Copy display text from website
 Manual: Copy text from website
 
 ![copy-text](docs/copy-text.png)
 
-# Step 2 - Commit to GitHub
+# Step 2 - Commit text file to GitHub
 Commit to text file in github
 
 ```
@@ -20,7 +30,7 @@ git add blog.text
 git commit -am "update blog text" && git push
 ```
 
-# Step 3 - CloudFormation Template
+# Step 3 - Launch CloudFormation Stack
 CloudFormation of S3 bucket for storage, IAM Roles, Cloudwatch event notifications, Codebuild, Codepipeline, SNS
 
 AWS::CodeBuild::Project
@@ -52,7 +62,11 @@ AWS::CodePipeline::Pipeline
               commands:
                 - aws --version
                 - testvar=$(cat ./labs/polly/blog.txt)
-                - aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name delete-pmd-guardduty --output-s3-key-prefix blog --text "$testvar" --voice-id Joanna 
+                - aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name ${PollyRecordingsBucket} --text "$testvar" --voice-id Joanna 
+                - pollyObjectId=$(aws polly list-speech-synthesis-tasks --max-results 1 --query 'SynthesisTasks[].TaskId' --output text)
+                - pollyObjectTaskId=$(echo $pollyObjectId.mp3)
+                - sleep 45
+                - aws s3api put-object-acl --bucket ${PollyRecordingsBucket} --key "$pollyObjectTaskId" --acl public-read
           artifacts:
             files:
             - '**/*'
@@ -72,7 +86,7 @@ Copies file from Codepipeline input artifact to S3
 
 Run Amazon Polly commands and store Output in S3
 
-# Step 5 - Manual HTML Update
+# Step 5 - Manually Update HTML
 
 One Time: update Html with audio tag that points to location in S3. How to find the full URL for the mp3 file
 
