@@ -1,4 +1,4 @@
-# AWS Polly
+# Amazon Polly
 ## Introduction
 
 In our previous post on [automating AWS Budgets](https://stelligent.com/2018/08/22/aws-budget-notifications-in-cloudformation/), I included an embedded audio file that read each word of the blog post. I did this using an AWS service called [Amazon Polly](https://aws.amazon.com/polly/). I got this idea after noticing that [Jeff Barr](https://aws.amazon.com/developer/community/evangelists/jeff-barr/), Chief Evangelist at AWS, had started doing this for the AWS News blog. I really enjoy listening to books from my Audible collection so this was particularly intriguing to me.
