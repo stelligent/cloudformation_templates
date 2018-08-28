@@ -58,6 +58,9 @@ AWS::CodePipeline::Pipeline
 # Step 4 - Deployment Pipeline
 Pipeline
 
+![codepipeline-polly](docs/codepipeline-polly.png)
+
+
 * **Source**: Github
 * **Build**: CodeBuild 
 
