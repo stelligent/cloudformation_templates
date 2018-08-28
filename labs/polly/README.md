@@ -33,10 +33,15 @@ git commit -am "update blog text" && git push
 # Step 3 - Launch CloudFormation Stack
 CloudFormation of S3 bucket for storage, IAM Roles, Cloudwatch event notifications, Codebuild, Codepipeline, SNS
 
-AWS::CodeBuild::Project
-AWS::S3::Bucket
-AWS::IAM::Role
-AWS::CodePipeline::Pipeline
+## Architecture and Implementation
+###  Architecture Diagram
+![polly-arch](docs/polly-arch.png)
+
+## CloudFormation Templates resources
+  - [AWS::CodeBuild::Project](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-project.html)
+  - [AWS::S3::Bucket](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html)
+  - [AWS::IAM::Role](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html)
+  - [AWS::CodePipeline::Pipeline](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codepipeline-pipeline.html)
 
 ## CodeBuild
 ```
@@ -72,13 +77,6 @@ AWS::CodePipeline::Pipeline
             - '**/*'
       TimeoutInMinutes: 10
 ```
-
-## Architecture and Implementation
-###  Architecture Diagram
-![polly-arch](docs/polly-arch.png)
-
-## CloudFormation Templates resources
-  - **AWS Budget** – [AWS::Budgets::Budget](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-budgets-budget.html) – TBD
 
 ## Costs
 This section outlines cost considerations for provisioning AWS Budgets Notifications. 
@@ -121,8 +119,8 @@ Go to the [AWS Polly Synthesis Tasks](https://console.aws.amazon.com/polly/home/
 
 
 # Additional Resources
-* [AWS::Budgets::Budget](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-budgets-budget.html)
-* [AWS Budgets](https://aws.amazon.com/aws-cost-management/aws-budgets/)
+* [Amazon Polly Plugin for WordPress Update – Translate and Vocalize Your Content](https://aws.amazon.com/blogs/aws/amazon-polly-plugin-for-wordpress-update-translate-and-vocalize-your-content/)
+* [Amazon Polly Update – Time-Driven Prosody and Asynchronous Synthesis](https://aws.amazon.com/blogs/aws/amazon-polly-update-time-driven-prosody-and-asynchronous-synthesis/)
 
 ## Summary
 You learned how to create an audio recording of blog post and embed a player so readers can listen to an audio rendition of your post. 
@@ -162,10 +160,6 @@ Describe the `sleep 45` I added to the CodeBuild commands
 
 How to find the full URL for the mp3 file
 
-
-
-
-# Other Ideas
 1. Manually create an Amazon S3 bucket
 1. Manually create an Amazon Text-to-Speech MP3 and synthesize to Amazon S3
 1. Make the MP3 public
