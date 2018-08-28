@@ -17,12 +17,24 @@ There are 5 steps you'll go through to publish a recording to your blog post or 
 
 Each of these steps are described in the remainder of this blog post.
 
-# Step 1 - Copy display text from website
+
+# Wordpress.com
+
+1) Create a new group using CloudFormation template
+2) Update termination protection: aws cloudformation update-termination-protection --enable-termination-protection --stack-name 
+3) Create a new user and assign a group
+4) Install Polly Plugin, Activate, and Configure Wordpress plugin
+
+## Hosted Wordpress
+
+# Non-Wordpress Implementations
+
+## Step 1 - Copy display text from website
 Manual: Copy text from website
 
 ![copy-text](docs/copy-text.png)
 
-# Step 2 - Commit text file to GitHub
+## Step 2 - Commit text file to GitHub
 Commit to text file in github
 
 ```
@@ -30,20 +42,21 @@ git add blog.text
 git commit -am "update blog text" && git push
 ```
 
-# Step 3 - Launch CloudFormation Stack
+## Step 3 - Launch CloudFormation Stack
 CloudFormation of S3 bucket for storage, IAM Roles, Cloudwatch event notifications, Codebuild, Codepipeline, SNS
 
-## Architecture and Implementation
-###  Architecture Diagram
+### Architecture and Implementation
+####  Architecture Diagram
 ![polly-arch](docs/polly-arch.png)
 
-## CloudFormation Templates resources
+### CloudFormation Templates resources
   - [AWS::CodeBuild::Project](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-project.html)
   - [AWS::S3::Bucket](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html)
   - [AWS::IAM::Role](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html)
   - [AWS::CodePipeline::Pipeline](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codepipeline-pipeline.html)
+  - [AWS::IAM::Policy](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-policy.html)
 
-## CodeBuild
+### CodeBuild
 
 @todo: Explain CodePipeline Input Artifacts
 
@@ -81,7 +94,7 @@ CloudFormation of S3 bucket for storage, IAM Roles, Cloudwatch event notificatio
       TimeoutInMinutes: 10
 ```
 
-## Deployment Steps
+### Deployment Steps
 ####  Step 1. Prepare an AWS Account
 Create or login AWS account at [http://aws.amazon.com](http://aws.amazon.com) by following the instructions on the site.
 
@@ -102,7 +115,7 @@ You can launch the same stack using the AWS CLI. Here's an example:
 aws cloudformation create-stack --stack-name YOURSTACKNAME --template-body file:///home/ec2-user/environment/cloudformation_templates/labs/polly/pipeline.yml --parameters ParameterKey=GitHubToken,ParameterValue=GITHUBTOKEN --capabilities CAPABILITY_NAMED_IAM --no-disable-rollback
 ```
 
-## Parameters
+##### Parameters
 Parameters | Description
 ---------- | -----------
 GitHubUser | Your unique GitHub userid. Default is `stelligent`
@@ -117,7 +130,7 @@ BuildImage | The build image to use for building the app. Default is `aws/codebu
 Go to the [AWS Polly Synthesis Tasks](https://console.aws.amazon.com/polly/home/SynthesisTasks) and verify the audio recordings have been generated. There's an S3 URL column available to download the file as well.
 
 
-# Step 4 - Deployment Pipeline
+## Step 4 - Deployment Pipeline
 Pipeline
 
 ![codepipeline-polly](docs/codepipeline-polly.png)
@@ -130,7 +143,7 @@ Copies file from Codepipeline input artifact to S3
 
 Run Amazon Polly commands and store Output in S3
 
-# Step 5 - Manually Update HTML
+## Step 5 - Manually Update HTML
 
 One Time: update Html with audio tag that points to location in S3. How to find the full URL for the mp3 file
 
@@ -141,7 +154,7 @@ One Time: update Html with audio tag that points to location in S3. How to find 
 </audio>
 ```
 
-## Costs
+# Costs
 This section outlines cost considerations for provisioning AWS Budgets Notifications. 
 - **CloudFormation** – No Additional Cost
 - **CodeBuild** – Charges per minute used. First 100 minutes each month come at no charge. For information on pricing beyond the first 100 minutes, see [AWS CodeBuild Pricing](https://aws.amazon.com/codebuild/pricing/).
@@ -160,7 +173,7 @@ This section outlines cost considerations for provisioning AWS Budgets Notificat
 * [Amazon Polly Plugin for WordPress Update – Translate and Vocalize Your Content](https://aws.amazon.com/blogs/aws/amazon-polly-plugin-for-wordpress-update-translate-and-vocalize-your-content/)
 * [Amazon Polly Update – Time-Driven Prosody and Asynchronous Synthesis](https://aws.amazon.com/blogs/aws/amazon-polly-update-time-driven-prosody-and-asynchronous-synthesis/)
 
-## Summary
+# Summary
 You learned how to create an audio recording of blog post and embed a player so readers can listen to an audio rendition of your post. 
 
 # Tips
