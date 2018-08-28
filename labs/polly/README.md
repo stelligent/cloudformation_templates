@@ -22,7 +22,7 @@ Each of these steps are described in the remainder of this blog post.
 
 1) Create a new group using CloudFormation template
 2) Update termination protection: aws cloudformation update-termination-protection --enable-termination-protection --stack-name 
-3) Create a new user and assign a group
+3) Create a new user and assign to the newly provisioned group
 4) Install Polly Plugin, Activate, and Configure Wordpress plugin
 
 ## Hosted Wordpress
@@ -170,6 +170,7 @@ This section outlines cost considerations for provisioning AWS Budgets Notificat
 # Additional Resources
 * [Give Your WordPress Blog a Voice With Our New Amazon Polly Plugin](https://aws.amazon.com/blogs/aws/give-your-wordpress-blog-a-voice-with-our-new-amazon-polly-plugin/)
 * [Installing the Amazon Polly Plugin](https://docs.aws.amazon.com/polly/latest/dg/plugin-install.html)
+* [Update CloudFormation Termination Protection](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/update-termination-protection.html)
 * [Amazon Polly Plugin for WordPress Update – Translate and Vocalize Your Content](https://aws.amazon.com/blogs/aws/amazon-polly-plugin-for-wordpress-update-translate-and-vocalize-your-content/)
 * [Amazon Polly Update – Time-Driven Prosody and Asynchronous Synthesis](https://aws.amazon.com/blogs/aws/amazon-polly-update-time-driven-prosody-and-asynchronous-synthesis/)
 
