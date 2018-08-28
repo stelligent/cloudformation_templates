@@ -1,7 +1,11 @@
 # AWS Polly
 ## Introduction
 
-Using Amazon Polly to create an audio version of a blog post.
+In our previous post on [automating AWS Budgets](https://stelligent.com/2018/08/22/aws-budget-notifications-in-cloudformation/), I included an embedded audio file that read each word of the blog post. I did this using an AWS service called [Amazon Polly](https://aws.amazon.com/polly/). I got this idea after noticing that [Jeff Barr](https://aws.amazon.com/developer/community/evangelists/jeff-barr/), Chief Evangelist at AWS, had started doing this for the AWS News blog. I really enjoy listening to books from my Audible collection so this was particularly intriguing to me.
+
+To create an audio file of my last post, I created an Amazon S3 bucket, copied the text from my blog post and pasted it into the text field for Amazon Polly, configured Polly to create the audio file, and click a button. Once it was complete, I made the mp3 file publicread in S3, and copied the URL to the blog post in Wordpress.
+
+Since there were some reptitive steps, I figured I would automate as many of them as I could because, well, I'm [lazy](http://wiki.c2.com/?LazinessImpatienceHubris) and don't like doing the same things over and over again. My other motiviation was that I would like to see more of the blogs I visit to include this kind of audio narration so that I and others can listen to them.
 
 # Step 1 - Copy display text from website
 Manual: Copy text from website
