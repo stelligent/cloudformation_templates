@@ -30,6 +30,10 @@ Parameters:
     Type: String
     Default: "aws/codebuild/ubuntu-base:14.04"
     Description: The build image to use for building the app
+  TextFileLocation:
+    Type: String
+    Description: Location of Text File
+    Default: "./labs/polly/blog.txt"
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -152,7 +156,7 @@ Resources:
             post_build:
               commands:
                 - aws --version
-                - testvar=$(cat ./labs/polly/blog.txt)
+                - testvar=$(cat ${TextFileLocation})
                 - aws polly start-speech-synthesis-task --output-format mp3 --output-s3-bucket-name ${PollyRecordingsBucket} --text "$testvar" --voice-id Joanna 
                 - pollyObjectId=$(aws polly list-speech-synthesis-tasks --max-results 1 --query 'SynthesisTasks[].TaskId' --output text)
                 - pollyObjectTaskId=$(echo $pollyObjectId.mp3)
