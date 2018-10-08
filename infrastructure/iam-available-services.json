@@ -39,6 +39,7 @@
                 "s3:*",
                 "ssm:*",
                 "support:*",
+                "tag:*",
                 "workspaces:*"
             ],
             "Resource": "*",
