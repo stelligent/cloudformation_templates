@@ -18,6 +18,7 @@
                 "dynamodb:*",
                 "ecr:*",
                 "ec2:*",
+                "elasticache:*",
                 "elasticbeanstalk:*",
                 "eks:*",
                 "es:*",
