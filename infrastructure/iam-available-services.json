@@ -24,7 +24,7 @@
                 "kms:*",
                 "lambda:*",
                 "macie:*",
-                "opsworks:*,
+                "opsworks:*",
                 "quicksight:*",
                 "rds:*",
                 "route53:*",
