@@ -6,6 +6,7 @@
             "Effect": "Allow",
             "Action": [
                 "acm:*",
+                "apigateway:*",
                 "budgets:*",
                 "cloud9:*",
                 "cloudformation:*",
@@ -23,6 +24,7 @@
                 "elasticache:*",
                 "elasticbeanstalk:*",
                 "eks:*",
+                "elasticloadbalancing:*",
                 "es:*",
                 "events:*",
                 "guardduty:*",
