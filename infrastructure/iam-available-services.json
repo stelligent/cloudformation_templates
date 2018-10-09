@@ -5,6 +5,7 @@
             "Sid": "AvailableServicesStatement",
             "Effect": "Allow",
             "Action": [
+                "acm:*",
                 "budgets:*",
                 "cloud9:*",
                 "cloudformation:*",
