@@ -11,6 +11,8 @@
                 "iam:DetachRolePolicy",
                 "iam:DeleteRole",
                 "iam:CreateInstanceProfile",
+                "iam:PutRolePolicy",
+                "iam:DeleteRolePolicy",
                 "iam:List*",
                 "iam:Get*"
             ],
