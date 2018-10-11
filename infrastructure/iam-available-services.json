@@ -17,6 +17,7 @@
                 "codecommit:*",
                 "codepipeline:*",
                 "codestar:*",
+                "cognito-identity:*",
                 "config:*",
                 "dynamodb:*",
                 "ecr:*",
