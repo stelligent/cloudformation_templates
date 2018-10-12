@@ -17,6 +17,8 @@ It might look like this (where `123456789012` is your AWS account id, `USERNAME`
 
 ```aws sts get-session-token --serial-number arn:aws:iam::123456789012:mfa/USERNAME --token-code 123456```
 
+You get the full ARN for serial-number by going to the specific user and selecting Security Credentials and then copying the value from the *Assigned MFA device* field
+
 You'll get a response like this: 
 
 ```{
