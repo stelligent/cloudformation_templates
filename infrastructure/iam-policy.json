@@ -4,17 +4,18 @@
         {
             "Effect": "Allow",
             "Action": [
-                "iam:CreateRole",
                 "iam:AddRoleToInstanceProfile",
                 "iam:AddRoleToInstanceProfile",
-                "iam:PassRole",
-                "iam:DetachRolePolicy",
-                "iam:DeleteRole",
+                "iam:AttachRolePolicy",
                 "iam:CreateInstanceProfile",
-                "iam:PutRolePolicy",
+                "iam:CreateRole",
+                "iam:DeleteRole",
                 "iam:DeleteRolePolicy",
-                "iam:List*",
+                "iam:DetachRolePolicy",
                 "iam:Get*"
+                "iam:List*",
+                "iam:PassRole",
+                "iam:PutRolePolicy"
             ],
             "Resource": "*"
         },
