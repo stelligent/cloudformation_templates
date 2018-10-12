@@ -19,7 +19,15 @@ It might look like this (where `123456789012` is your AWS account id, `USERNAME`
 
 You'll get a response like this: 
 
-TBD
+```{
+"Credentials": {
+    "SecretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "SessionToken": "AQoDYXdzEJr...<remainder of security token>",
+    "Expiration": "2018-10-11T10:09:50Z",
+    "AccessKeyId": "ASIAIOSFODNN7EXAMPLE",
+  }
+}
+```
 
 ```sudo vim .aws/credentials```
 
