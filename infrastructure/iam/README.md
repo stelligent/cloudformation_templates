@@ -48,6 +48,5 @@ aws_session_token = AQoDYXdzEJr...<remainder of security token>
 
 ```An error occurred (AccessDenied) when calling the GetSessionToken operation: Cannot call GetSessionToken with session credentials```
 
-```An error occurred (AccessDenied) when calling the GetSessionToken operation: MultiFactorAuthentication failed, unable to validate MFA code.  Please verify your MFA serial number is valid and associated with this user.
-```
+```An error occurred (AccessDenied) when calling the GetSessionToken operation: MultiFactorAuthentication failed, unable to validate MFA code.  Please verify your MFA serial number is valid and associated with this user.```
 
