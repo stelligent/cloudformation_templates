@@ -24,7 +24,8 @@ TBD
 ```sudo vim .aws/credentials```
 
 
-```[default]
+```
+[default]
 output = json
 region = us-east-1
 aws_access_key_id = AKIAIOSFODNN7EXAMPLE
