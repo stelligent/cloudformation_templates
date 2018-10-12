@@ -12,7 +12,7 @@
                 "iam:DeleteRole",
                 "iam:DeleteRolePolicy",
                 "iam:DetachRolePolicy",
-                "iam:Get*"
+                "iam:Get*",
                 "iam:List*",
                 "iam:PassRole",
                 "iam:PutRolePolicy"
