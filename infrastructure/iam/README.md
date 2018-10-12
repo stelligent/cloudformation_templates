@@ -23,6 +23,16 @@ TBD
 
 ```sudo vim .aws/credentials```
 
+
+```[default]
+output = json
+region = us-east-1
+aws_access_key_id = AKIAIOSFODNN7EXAMPLE
+aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+aws_session_token = AQoDYXdzEJr...<remainder of security token>
+```
+
+
 ### Troubleshooting
 
 ```An error occurred (AccessDenied) when calling the GetSessionToken operation: Cannot call GetSessionToken with session credentials```
