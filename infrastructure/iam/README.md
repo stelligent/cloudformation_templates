@@ -15,7 +15,7 @@ Here's an example:
 
 It might look like this (where `123456789012` is your AWS account id, `USERNAME` is your IAM username, and `123456` is the 6-digit code provided by your MFA device):
 
-```aws sts get-session-token --serial-number arn:aws:iam::123456789012:mfa/USERNAME--token-code 123456```
+```aws sts get-session-token --serial-number arn:aws:iam::123456789012:mfa/USERNAME --token-code 123456```
 
 You'll get a response like this: 
 
