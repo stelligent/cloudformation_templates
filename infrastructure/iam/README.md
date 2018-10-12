@@ -4,6 +4,9 @@
 
 IAM Policies
 
+
+## Session Token
+
 Refer to [How do I use an MFA token to authenticate access to my AWS resources through the AWS CLI?](https://aws.amazon.com/premiumsupport/knowledge-center/authenticate-mfa-cli/)
 
 Here's an example:
@@ -19,4 +22,8 @@ You'll get a response like this:
 TBD
 
 ```sudo vim .aws/credentials```
+
+### Troubleshooting
+
+```An error occurred (AccessDenied) when calling the GetSessionToken operation: Cannot call GetSessionToken with session credentials```
 
