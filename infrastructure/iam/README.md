@@ -63,16 +63,19 @@ When entering the wrong MFA six-digit token for the `--serial-number` (e.g. ARN 
 
 ```An error occurred (AccessDenied) when calling the GetSessionToken operation: MultiFactorAuthentication failed with invalid MFA one time pass code.```
 
-Incorrectly entering temporary credentials: 
+Incorrectly entering temporary session token: 
 
 ```An error occurred (InvalidToken) when calling the ListBuckets operation: The provided token is malformed or otherwise invalid.```
 
-OR
+Incorrectly entering temporary credentials (e.g. AccessKeyId and/or SecretAccessKey):
 
 ```An error occurred (SignatureDoesNotMatch) when calling the ListBuckets operation: The request signature we calculated does not match the signature you provided. Check your key and signing method.```
 
+Missing session token:
 
-TBD
+```An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The AWS Access Key Id you provided does not exist in our records.```
+
+TBD?
 
 ```An error occurred (AccessDenied) when calling the GetSessionToken operation: Cannot call GetSessionToken with session credentials```
 
@@ -83,10 +86,6 @@ When launching a CloudFormation stack from the CLI. Here's an example you might 
 Invalid credentials when calling a specific command (e.g. in this case, `aws s3 ls`): 
 
 ```An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The AWS Access Key Id you provided does not exist in our records.```
-
-Invalid temporary credentials: 
-
-```TBD```
 
 
 ### ToDo
