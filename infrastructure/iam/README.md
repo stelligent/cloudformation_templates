@@ -75,7 +75,7 @@ Missing session token:
 
 ```An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The AWS Access Key Id you provided does not exist in our records.```
 
-TBD?
+Attempting to run the `aws sts get-session-token` command when the local credentials contain the session credentials:
 
 ```An error occurred (AccessDenied) when calling the GetSessionToken operation: Cannot call GetSessionToken with session credentials```
 
