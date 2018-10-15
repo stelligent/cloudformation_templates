@@ -4,7 +4,6 @@
 
 IAM Policies
 
-
 ## Running from the Command Line
 
 Refer to [How do I use an MFA token to authenticate access to my AWS resources through the AWS CLI?](https://aws.amazon.com/premiumsupport/knowledge-center/authenticate-mfa-cli/)
@@ -46,21 +45,49 @@ aws_session_token = AQoDYXdzEJr...<remainder of security token>
 
 ### Troubleshooting
 
-When running a command from the AWS CLI or using the wrong `--serial-number`: 
 
-```An error occurred (AccessDenied) when calling the GetSessionToken operation: Cannot call GetSessionToken with session credentials```
+Incorrect "Permanent" Credentials: 
 
-When entering the wrong MFA six-digit token: 
+```An error occurred (InvalidClientTokenId) when calling the GetSessionToken operation: The security token included in the request is invalid.```
+
+When running a command (e.g. in this case, `aws s3 ls`) from the AWS CLI without temporary credentials:
+
+```An error occurred (AccessDenied) when calling the ListBuckets operation: Access Denied```
+
+When running a `aws sts get-session-token --serial-number arn-of-the-mfa-device --token-code code-from-token` command from the AWS CLI using the wrong `--serial-number`: 
 
 ```An error occurred (AccessDenied) when calling the GetSessionToken operation: MultiFactorAuthentication failed, unable to validate MFA code.  Please verify your MFA serial number is valid and associated with this user.```
 
-When launching a CloudFormation stack from the CLI. Here's an example you might see if access to SQS were denied withoyt MFA: 
+
+When entering the wrong MFA six-digit token for the `--serial-number` (e.g. ARN for the user): 
+
+```An error occurred (AccessDenied) when calling the GetSessionToken operation: MultiFactorAuthentication failed with invalid MFA one time pass code.```
+
+Incorrectly entering temporary credentials: 
+
+```An error occurred (InvalidToken) when calling the ListBuckets operation: The provided token is malformed or otherwise invalid.```
+
+OR
+
+```An error occurred (SignatureDoesNotMatch) when calling the ListBuckets operation: The request signature we calculated does not match the signature you provided. Check your key and signing method.```
+
+
+TBD
+
+```An error occurred (AccessDenied) when calling the GetSessionToken operation: Cannot call GetSessionToken with session credentials```
+
+When launching a CloudFormation stack from the CLI. Here's an example you might see if access to SQS were denied without MFA: 
 
 ```API: sqs:CreateQueue Access to the resource https://sqs.us-east-1.amazonaws.com/ is denied.```
 
-Expired temporary access key: 
+Invalid credentials when calling a specific command (e.g. in this case, `aws s3 ls`): 
 
 ```An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The AWS Access Key Id you provided does not exist in our records.```
+
+Invalid temporary credentials: 
+
+```TBD```
+
 
 ### ToDo
 
