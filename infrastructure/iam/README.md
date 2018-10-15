@@ -2,11 +2,9 @@
 
 ## Purpose
 
-IAM Policies for restricting access to AWS resource unless MFA is present.
+IAM Policies for restricting access to AWS resource unless MFA is present. Refer to [How do I use an MFA token to authenticate access to my AWS resources through the AWS CLI?](https://aws.amazon.com/premiumsupport/knowledge-center/authenticate-mfa-cli/)
 
-## Running from the Command Line
-
-Refer to [How do I use an MFA token to authenticate access to my AWS resources through the AWS CLI?](https://aws.amazon.com/premiumsupport/knowledge-center/authenticate-mfa-cli/)
+## Acessing AWS resources from the Command Line
 
 When running certain commands (e.g. EC2, IAM, etc.) from the command line, you will need to first authenticate against an MFA token and update your local credentials prior to running the commmands. 
 
