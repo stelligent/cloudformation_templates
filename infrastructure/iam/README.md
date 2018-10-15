@@ -46,7 +46,7 @@ aws_session_token = AQoDYXdzEJr...<remainder of security token>
 ### Troubleshooting
 
 
-Incorrect "Permanent" Credentials: 
+Incorrect "Permanent" Credentials - when calling `aws sts get-session-token`: 
 
 ```An error occurred (InvalidClientTokenId) when calling the GetSessionToken operation: The security token included in the request is invalid.```
 
