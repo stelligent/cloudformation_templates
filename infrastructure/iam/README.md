@@ -8,7 +8,9 @@ IAM Policies for restricting access to AWS resource unless MFA is present.
 
 Refer to [How do I use an MFA token to authenticate access to my AWS resources through the AWS CLI?](https://aws.amazon.com/premiumsupport/knowledge-center/authenticate-mfa-cli/)
 
-Here's an example:
+When running certain commands (e.g. EC2, IAM, etc.) from the command line, you will need to first authenticate against an MFA token and update your local credentials prior to running the commmands. 
+
+To obtain temporary credentials, here's an example you run:
 
 ```aws sts get-session-token --serial-number arn-of-the-mfa-device --token-code code-from-token```
 
@@ -16,9 +18,16 @@ It might look like this (where `123456789012` is your AWS account id, `USERNAME`
 
 ```aws sts get-session-token --serial-number arn:aws:iam::123456789012:mfa/USERNAME --token-code 123456```
 
-You get the full ARN for serial-number by going to the specific user and selecting Security Credentials and then copying the value from the *Assigned MFA device* field
+You can obtain the full ARN for the `serial-number` by following these steps:
 
-You'll get a response like this: 
+1. Go to your IAM console
+2. Select your user
+3. Select the **Security Credentials** tab
+4. Copy the value from the *Assigned MFA device* field
+
+You can obtain the full ARN for the `token-code` by going to your MFA device and getting the 6 digit code for your IAM user
+
+When running the `aws sts get-session-token` command, you'll get a response like this: 
 
 ```{
 "Credentials": {
@@ -30,8 +39,11 @@ You'll get a response like this:
 }
 ```
 
+If you used `aws configure` to configure your credentials, you can edit your configuration file by opening the credentials file:
+
 ```sudo vim .aws/credentials```
 
+and adding/updating the `aws_access_key_id`, `aws_secret_access_key`, and `aws_session_token` values you obtained when running the `aws sts get-session-token` command.
 
 ```
 [default]
@@ -42,6 +54,7 @@ aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 aws_session_token = AQoDYXdzEJr...<remainder of security token>
 ```
 
+Save the file and run your commands.
 
 ### Troubleshooting
 
