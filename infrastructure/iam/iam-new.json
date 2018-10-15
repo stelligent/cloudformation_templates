@@ -4,7 +4,127 @@
         {
             "Sid": "AvailableServicesStatement",
             "Effect": "Allow",
-            "Action": "*",
+            "Action": [
+                "a4b:*",
+                "acm:*",
+                "apigateway:*",
+                "application-autoscaling:*",
+                "appstream:*",
+                "appsync:*",
+                "artifact:*",
+                "athena:*",
+                "autoscaling-plans:*",
+                "autoscaling:*",
+                "aws-portal:*",
+                "budgets:*",
+                "ce:*",
+                "cloud9:*",
+                "clouddirectory:*",
+                "cloudformation:*",
+                "cloudfront:*",
+                "cloudhsm:*",
+                "cloudsearch:*",
+                "cloudtrail:*",
+                "cloudwatch:*",
+                "codebuild:*",
+                "codecommit:*",
+                "codedeploy:*",
+                "codepipeline:*",
+                "codestar:*",
+                "cognito-identity:*",
+                "cognito-idp:*",
+                "cognito-sync:*",
+                "comprehend:*",
+                "config:*",
+                "connect:*",
+                "crowd:*",
+                "cur:*",
+                "datapipeline:*",
+                "dax:*",
+                "devicefarm:*",
+                "directconnect:*",
+                "discovery:*",
+                "dms:*",
+                "ds:*",
+                "dynamodb:*",
+                "ec2messages:*",
+                "ecr:*",
+                "ecs:*",
+                "elasticache:*",
+                "elasticbeanstalk:*",
+                "elasticfilesystem:*",
+                "elasticloadbalancing:*",
+                "elasticmapreduce:*",
+                "elastictranscoder:*",
+                "es:*",
+                "events:*",
+                "execute-api:*",
+                "firehose:*",
+                "freertos:*",
+                "gamelift:*",
+                "glacier:*",
+                "glue:*",
+                "greengrass:*",
+                "guardduty:*",
+                "health:*",
+                "importexport:*",
+                "inspector:*",
+                "iot:*",
+                "iotanalytics:*",
+                "kinesis:*",
+                "kinesisanalytics:*",
+                "kinesisvideo:*",
+                "kms:*",
+                "lambda:*",
+                "lex:*",
+                "lightsail:*",
+                "logs:*",
+                "machinelearning:*",
+                "mediaconvert:*",
+                "medialive:*",
+                "mediapackage:*",
+                "mediastore:*",
+                "mgh:*",
+                "mobileanalytics:*",
+                "mobilehub:*",
+                "mobiletargeting:*",
+                "mq:*",
+                "opsworks-cm:*",
+                "opsworks:*",
+                "organizations:*",
+                "polly:*",
+                "pricing:*",
+                "rds:*",
+                "redshift:*",
+                "rekognition:*",
+                "resource-groups:*",
+                "route53:*",
+                "s3:*",
+                "sagemaker:*",
+                "sdb:*",
+                "serverlessrepo:*",
+                "servicecatalog:*",
+                "servicediscovery:*",
+                "ses:*",
+                "shield:*",
+                "sns:*",
+                "sqs:*",
+                "s3:*",
+                "ssm:*",
+                "sso:*",
+                "storagegateway:*",
+                "support:*",
+                "swf:*",
+                "tag:*",
+                "transcribe:*",
+                "translate:*",
+                "trustedadvisor:*",
+                "waf-regional:*",
+                "waf:*",
+                "wam:*",
+                "workspaces:*",
+                "xray:*"
+            ],
             "Resource": "*",
             "Condition": {
                 "StringEquals": {
@@ -18,14 +138,26 @@
             }
         },
         {
+            "Sid": "IAMReadonlyStatement",
             "Effect": "Allow",
             "Action": [
                 "iam:List*",
                 "iam:Get*"
             ],
-            "Resource": "*"
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-west-1",
+                        "us-west-2",
+                        "us-east-1",
+                        "us-east-2"
+                    ]
+                }
+            }
         },
         {
+            "Sid": "ModifyOwnIAMPermissionsWithMFAStatement",
             "Effect": "Allow",
             "Action": [
                 "iam:ChangePassword",
@@ -58,6 +190,7 @@
             ]
         },
         {
+            "Sid": "DeactivateOwnMFADeviceStatement",
             "Effect": "Allow",
             "Action": [
                 "iam:DeactivateMFADevice"
@@ -69,27 +202,66 @@
             "Condition": {
                 "Bool": {
                     "aws:MultiFactorAuthPresent": "true"
+                },
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-west-1",
+                        "us-west-2",
+                        "us-east-1",
+                        "us-east-2"
+                    ]
                 }
             }
         },
         {
+            "Sid": "IAMFullAccessWithMFAStatement",
+            "Effect": "Allow",
+            "Action": [
+                "iam:*"
+            ],
+            "Resource": [
+                "*"
+            ],
+            "Condition": {
+                "Bool": {
+                    "aws:MultiFactorAuthPresent": "true"
+                },
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-west-1",
+                        "us-west-2",
+                        "us-east-1",
+                        "us-east-2"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "DenyEC2RunStatement",
             "Effect": "Deny",
             "Action": [
                 "ec2:RunInstances",
                 "ec2:DescribeInstances",
                 "ec2:StopInstances",
-                "ec2:TerminateInstances",
-                "s3:*",
-                "sqs:*"
+                "ec2:TerminateInstances"
             ],
             "Resource": "*",
             "Condition": {
                 "BoolIfExists": {
                     "aws:MultiFactorAuthPresent": "false"
+                },
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-west-1",
+                        "us-west-2",
+                        "us-east-1",
+                        "us-east-2"
+                    ]
                 }
             }
         },
         {
+            "Sid": "DesignatedAWSServicesWithoutMFAStatement",
             "Effect": "Deny",
             "NotAction": [
                 "iam:CreateVirtualMFADevice",
@@ -209,6 +381,7 @@
                 "shield:*",
                 "sns:*",
                 "sqs:*",
+                "s3:*",
                 "ssm:*",
                 "sso:*",
                 "storagegateway:*",
@@ -228,6 +401,14 @@
             "Condition": {
                 "BoolIfExists": {
                     "aws:MultiFactorAuthPresent": "false"
+                },
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-west-1",
+                        "us-west-2",
+                        "us-east-1",
+                        "us-east-2"
+                    ]
                 }
             }
         }
