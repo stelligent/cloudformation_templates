@@ -2,7 +2,7 @@
 
 ## Purpose
 
-IAM Policies
+IAM Policies for restricting access to AWS resource unless MFA is present.
 
 ## Running from the Command Line
 
@@ -86,8 +86,4 @@ When launching a CloudFormation stack from the CLI. Here's an example you might 
 Invalid credentials when calling a specific command (e.g. in this case, `aws s3 ls`): 
 
 ```An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The AWS Access Key Id you provided does not exist in our records.```
-
-
-### ToDo
-
 
