@@ -48,6 +48,7 @@
                 "ds:*",
                 "dynamodb:*",
                 "ec2messages:*",
+                "ec2:*",
                 "ecr:*",
                 "ecs:*",
                 "elasticache:*",
@@ -241,7 +242,8 @@
             "Effect": "Deny",
             "Action": [
                 "ec2:RunInstances",
-                "ec2:DescribeInstances",
+                "ec2:RunScheduledInstances",
+                "ec2:StartInstances",
                 "ec2:StopInstances",
                 "ec2:TerminateInstances"
             ],
