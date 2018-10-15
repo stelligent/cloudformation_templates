@@ -55,6 +55,9 @@ When entering the wrong MFA six-digit token
 When launching a CloudFormation stack from the CLI:
 ```API: sqs:CreateQueue Access to the resource https://sqs.us-east-1.amazonaws.com/ is denied.```
 
+Expired temporary access key
+```An error occurred (InvalidAccessKeyId) when calling the ListBuckets operation: The AWS Access Key Id you provided does not exist in our records.```
+
 ### ToDo
 
 
