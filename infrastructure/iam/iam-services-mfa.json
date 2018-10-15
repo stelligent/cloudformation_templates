@@ -1,0 +1,424 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AvailableServicesStatement",
+            "Effect": "Allow",
+            "Action": [
+                "a4b:*",
+                "acm:*",
+                "apigateway:*",
+                "application-autoscaling:*",
+                "appstream:*",
+                "appsync:*",
+                "artifact:*",
+                "athena:*",
+                "autoscaling-plans:*",
+                "autoscaling:*",
+                "aws-portal:*",
+                "budgets:*",
+                "ce:*",
+                "cloud9:*",
+                "clouddirectory:*",
+                "cloudformation:*",
+                "cloudfront:*",
+                "cloudhsm:*",
+                "cloudsearch:*",
+                "cloudtrail:*",
+                "cloudwatch:*",
+                "codebuild:*",
+                "codecommit:*",
+                "codedeploy:*",
+                "codepipeline:*",
+                "codestar:*",
+                "cognito-identity:*",
+                "cognito-idp:*",
+                "cognito-sync:*",
+                "comprehend:*",
+                "config:*",
+                "connect:*",
+                "crowd:*",
+                "cur:*",
+                "datapipeline:*",
+                "dax:*",
+                "devicefarm:*",
+                "directconnect:*",
+                "discovery:*",
+                "dms:*",
+                "ds:*",
+                "dynamodb:*",
+                "ec2messages:*",
+                "ec2:*",
+                "ecr:*",
+                "ecs:*",
+                "elasticache:*",
+                "elasticbeanstalk:*",
+                "elasticfilesystem:*",
+                "elasticloadbalancing:*",
+                "elasticmapreduce:*",
+                "elastictranscoder:*",
+                "es:*",
+                "events:*",
+                "execute-api:*",
+                "firehose:*",
+                "freertos:*",
+                "gamelift:*",
+                "glacier:*",
+                "glue:*",
+                "greengrass:*",
+                "guardduty:*",
+                "health:*",
+                "importexport:*",
+                "inspector:*",
+                "iot:*",
+                "iotanalytics:*",
+                "kinesis:*",
+                "kinesisanalytics:*",
+                "kinesisvideo:*",
+                "kms:*",
+                "lambda:*",
+                "lex:*",
+                "lightsail:*",
+                "logs:*",
+                "machinelearning:*",
+                "mediaconvert:*",
+                "medialive:*",
+                "mediapackage:*",
+                "mediastore:*",
+                "mgh:*",
+                "mobileanalytics:*",
+                "mobilehub:*",
+                "mobiletargeting:*",
+                "mq:*",
+                "opsworks-cm:*",
+                "opsworks:*",
+                "organizations:*",
+                "polly:*",
+                "pricing:*",
+                "rds:*",
+                "redshift:*",
+                "rekognition:*",
+                "resource-groups:*",
+                "route53:*",
+                "s3:*",
+                "sagemaker:*",
+                "sdb:*",
+                "serverlessrepo:*",
+                "servicecatalog:*",
+                "servicediscovery:*",
+                "ses:*",
+                "shield:*",
+                "sns:*",
+                "sqs:*",
+                "s3:*",
+                "ssm:*",
+                "sso:*",
+                "storagegateway:*",
+                "support:*",
+                "swf:*",
+                "tag:*",
+                "transcribe:*",
+                "translate:*",
+                "trustedadvisor:*",
+                "waf-regional:*",
+                "waf:*",
+                "wam:*",
+                "workspaces:*",
+                "xray:*"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-west-1",
+                        "us-west-2",
+                        "us-east-1",
+                        "us-east-2"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "IAMReadonlyStatement",
+            "Effect": "Allow",
+            "Action": [
+                "iam:List*",
+                "iam:Get*"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-west-1",
+                        "us-west-2",
+                        "us-east-1",
+                        "us-east-2"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "ModifyOwnIAMPermissionsWithMFAStatement",
+            "Effect": "Allow",
+            "Action": [
+                "iam:ChangePassword",
+                "iam:CreateAccessKey",
+                "iam:CreateLoginProfile",
+                "iam:DeleteAccessKey",
+                "iam:DeleteLoginProfile",
+                "iam:GetLoginProfile",
+                "iam:ListAccessKeys",
+                "iam:UpdateAccessKey",
+                "iam:UpdateLoginProfile",
+                "iam:ListSigningCertificates",
+                "iam:DeleteSigningCertificate",
+                "iam:UpdateSigningCertificate",
+                "iam:UploadSigningCertificate",
+                "iam:ListSSHPublicKeys",
+                "iam:GetSSHPublicKey",
+                "iam:DeleteSSHPublicKey",
+                "iam:UpdateSSHPublicKey",
+                "iam:UploadSSHPublicKey",
+                "iam:CreateVirtualMFADevice",
+                "iam:DeleteVirtualMFADevice",
+                "iam:EnableMFADevice",
+                "iam:ListMFADevices",
+                "iam:ResyncMFADevice"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:mfa/${aws:username}",
+                "arn:aws:iam::*:user/${aws:username}"
+            ]
+        },
+        {
+            "Sid": "DeactivateOwnMFADeviceStatement",
+            "Effect": "Allow",
+            "Action": [
+                "iam:DeactivateMFADevice"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:mfa/${aws:username}",
+                "arn:aws:iam::*:user/${aws:username}"
+            ],
+            "Condition": {
+                "Bool": {
+                    "aws:MultiFactorAuthPresent": "true"
+                },
+                "NumericLessThan": {
+                    "aws:MultiFactorAuthAge": "43200"
+                },
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-west-1",
+                        "us-west-2",
+                        "us-east-1",
+                        "us-east-2"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "IAMFullAccessWithMFAStatement",
+            "Effect": "Allow",
+            "Action": [
+                "iam:*"
+            ],
+            "Resource": [
+                "*"
+            ],
+            "Condition": {
+                "Bool": {
+                    "aws:MultiFactorAuthPresent": "true"
+                },
+                "NumericLessThan": {
+                    "aws:MultiFactorAuthAge": "43200"
+                },
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-west-1",
+                        "us-west-2",
+                        "us-east-1",
+                        "us-east-2"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "DenyEC2RunStatement",
+            "Effect": "Deny",
+            "Action": [
+                "ec2:RunInstances",
+                "ec2:RunScheduledInstances",
+                "ec2:StartInstances",
+                "ec2:StopInstances",
+                "ec2:TerminateInstances"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "BoolIfExists": {
+                    "aws:MultiFactorAuthPresent": "false"
+                },
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-west-1",
+                        "us-west-2",
+                        "us-east-1",
+                        "us-east-2"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "DesignatedAWSServicesWithoutMFAStatement",
+            "Effect": "Deny",
+            "NotAction": [
+                "iam:CreateVirtualMFADevice",
+                "iam:DeleteVirtualMFADevice",
+                "iam:ListVirtualMFADevices",
+                "iam:EnableMFADevice",
+                "iam:ResyncMFADevice",
+                "iam:ListAccountAliases",
+                "iam:ListUsers",
+                "iam:ListSSHPublicKeys",
+                "iam:ListAccessKeys",
+                "iam:ListServiceSpecificCredentials",
+                "iam:ListMFADevices",
+                "iam:GetAccountSummary",
+                "sts:GetSessionToken",
+                "a4b:*",
+                "acm:*",
+                "apigateway:*",
+                "application-autoscaling:*",
+                "appstream:*",
+                "appsync:*",
+                "artifact:*",
+                "athena:*",
+                "autoscaling-plans:*",
+                "autoscaling:*",
+                "aws-portal:*",
+                "budgets:*",
+                "ce:*",
+                "cloud9:*",
+                "clouddirectory:*",
+                "cloudformation:*",
+                "cloudfront:*",
+                "cloudhsm:*",
+                "cloudsearch:*",
+                "cloudtrail:*",
+                "cloudwatch:*",
+                "codebuild:*",
+                "codecommit:*",
+                "codedeploy:*",
+                "codepipeline:*",
+                "codestar:*",
+                "cognito-identity:*",
+                "cognito-idp:*",
+                "cognito-sync:*",
+                "comprehend:*",
+                "config:*",
+                "connect:*",
+                "crowd:*",
+                "cur:*",
+                "datapipeline:*",
+                "dax:*",
+                "devicefarm:*",
+                "directconnect:*",
+                "discovery:*",
+                "dms:*",
+                "ds:*",
+                "dynamodb:*",
+                "ec2messages:*",
+                "ecr:*",
+                "ecs:*",
+                "elasticache:*",
+                "elasticbeanstalk:*",
+                "elasticfilesystem:*",
+                "elasticloadbalancing:*",
+                "elasticmapreduce:*",
+                "elastictranscoder:*",
+                "es:*",
+                "events:*",
+                "execute-api:*",
+                "firehose:*",
+                "freertos:*",
+                "gamelift:*",
+                "glacier:*",
+                "glue:*",
+                "greengrass:*",
+                "guardduty:*",
+                "health:*",
+                "importexport:*",
+                "inspector:*",
+                "iot:*",
+                "iotanalytics:*",
+                "kinesis:*",
+                "kinesisanalytics:*",
+                "kinesisvideo:*",
+                "kms:*",
+                "lambda:*",
+                "lex:*",
+                "lightsail:*",
+                "logs:*",
+                "machinelearning:*",
+                "mediaconvert:*",
+                "medialive:*",
+                "mediapackage:*",
+                "mediastore:*",
+                "mgh:*",
+                "mobileanalytics:*",
+                "mobilehub:*",
+                "mobiletargeting:*",
+                "mq:*",
+                "opsworks-cm:*",
+                "opsworks:*",
+                "organizations:*",
+                "polly:*",
+                "pricing:*",
+                "rds:*",
+                "redshift:*",
+                "rekognition:*",
+                "resource-groups:*",
+                "route53:*",
+                "s3:*",
+                "sagemaker:*",
+                "sdb:*",
+                "serverlessrepo:*",
+                "servicecatalog:*",
+                "servicediscovery:*",
+                "ses:*",
+                "shield:*",
+                "sns:*",
+                "sqs:*",
+                "s3:*",
+                "ssm:*",
+                "sso:*",
+                "storagegateway:*",
+                "support:*",
+                "swf:*",
+                "tag:*",
+                "transcribe:*",
+                "translate:*",
+                "trustedadvisor:*",
+                "waf-regional:*",
+                "waf:*",
+                "wam:*",
+                "workspaces:*",
+                "xray:*"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "BoolIfExists": {
+                    "aws:MultiFactorAuthPresent": "false"
+                },
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-west-1",
+                        "us-west-2",
+                        "us-east-1",
+                        "us-east-2"
+                    ]
+                }
+            }
+        }
+    ]
+}
