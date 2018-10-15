@@ -46,7 +46,15 @@ aws_session_token = AQoDYXdzEJr...<remainder of security token>
 
 ### Troubleshooting
 
+When running a command from the AWS CLI or using the wrong `--serial-number`
 ```An error occurred (AccessDenied) when calling the GetSessionToken operation: Cannot call GetSessionToken with session credentials```
 
+When entering the wrong MFA six-digit token
 ```An error occurred (AccessDenied) when calling the GetSessionToken operation: MultiFactorAuthentication failed, unable to validate MFA code.  Please verify your MFA serial number is valid and associated with this user.```
+
+When launching a CloudFormation stack from the CLI:
+```API: sqs:CreateQueue Access to the resource https://sqs.us-east-1.amazonaws.com/ is denied.```
+
+### ToDo
+
 
