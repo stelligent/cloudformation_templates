@@ -5,9 +5,10 @@
             "Effect": "Allow",
             "Action": [
                 "iam:AddRoleToInstanceProfile",
-                "iam:AddRoleToInstanceProfile",
+                "iam:RemoveRoleFromInstanceProfile",
                 "iam:AttachRolePolicy",
                 "iam:CreateInstanceProfile",
+                "iam:DeleteInstanceProfile",
                 "iam:CreateRole",
                 "iam:DeleteRole",
                 "iam:DeleteRolePolicy",
