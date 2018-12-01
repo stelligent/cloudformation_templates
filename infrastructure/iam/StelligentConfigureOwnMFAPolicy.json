@@ -1,0 +1,84 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:List*",
+                "iam:Get*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:ChangePassword",
+                "iam:CreateAccessKey",
+                "iam:CreateLoginProfile",
+                "iam:DeleteAccessKey",
+                "iam:DeleteLoginProfile",
+                "iam:GetLoginProfile",
+                "iam:ListAccessKeys",
+                "iam:UpdateAccessKey",
+                "iam:UpdateLoginProfile",
+                "iam:ListSigningCertificates",
+                "iam:DeleteSigningCertificate",
+                "iam:UpdateSigningCertificate",
+                "iam:UploadSigningCertificate",
+                "iam:ListSSHPublicKeys",
+                "iam:GetSSHPublicKey",
+                "iam:DeleteSSHPublicKey",
+                "iam:UpdateSSHPublicKey",
+                "iam:UploadSSHPublicKey",
+                "iam:CreateVirtualMFADevice",
+                "iam:DeleteVirtualMFADevice",
+                "iam:EnableMFADevice",
+                "iam:ListMFADevices",
+                "iam:ResyncMFADevice"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:mfa/${aws:username}",
+                "arn:aws:iam::*:user/${aws:username}"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "iam:DeactivateMFADevice"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:mfa/${aws:username}",
+                "arn:aws:iam::*:user/${aws:username}"
+            ],
+            "Condition": {
+                "Bool": {
+                    "aws:MultiFactorAuthPresent": "true"
+                }
+            }
+        },
+        {
+            "Effect": "Deny",
+            "NotAction": [
+                "iam:CreateVirtualMFADevice",
+                "iam:DeleteVirtualMFADevice",
+                "iam:ListVirtualMFADevices",
+                "iam:EnableMFADevice",
+                "iam:ResyncMFADevice",
+                "iam:ListAccountAliases",
+                "iam:ListUsers",
+                "iam:ListSSHPublicKeys",
+                "iam:ListAccessKeys",
+                "iam:ListServiceSpecificCredentials",
+                "iam:ListMFADevices",
+                "iam:GetAccountSummary",
+                "sts:GetSessionToken"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "BoolIfExists": {
+                    "aws:MultiFactorAuthPresent": "false"
+                }
+            }
+        }
+    ]
+}

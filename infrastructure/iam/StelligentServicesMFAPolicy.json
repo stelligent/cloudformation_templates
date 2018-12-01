@@ -1,0 +1,27 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AvailableServicesStatement",
+            "Effect": "Allow",
+            "Action": "*",
+            "Resource": "*",
+            "Condition": {
+                "Bool": {
+                    "aws:MultiFactorAuthPresent": "true"
+                },
+                "NumericLessThan": {
+                    "aws:MultiFactorAuthAge": "43200"
+                },
+                "StringEquals": {
+                    "aws:RequestedRegion": [
+                        "us-west-1",
+                        "us-west-2",
+                        "us-east-1",
+                        "us-east-2"
+                    ]
+                }
+            }
+        }
+    ]
+}
