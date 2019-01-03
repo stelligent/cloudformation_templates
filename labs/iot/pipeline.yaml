@@ -1,0 +1,297 @@
+Description: NXP LPC54018 IoT Module Build Pipeline 
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  PipelineSource:
+    Description: The Source to use for CodePipeline
+    Type: String
+    Default: CodeCommit
+    AllowedValues: 
+      - CodeCommit
+      - S3
+      - GitHub
+  GitHubRepoOwner:
+    Description: Github repository owner
+    Type: String
+    Default: ''
+  GitHubRepo: 
+    Description: Github repository name
+    Type: String
+    Default: ''
+  GitHubToken:
+    Description: Github access token for codepipeline build access
+    Type: String
+    NoEcho: true
+    Default: ''
+
+Conditions:
+  IsGitHubSource: 
+    !Equals [!Ref PipelineSource, 'GitHub']
+  IsS3Source: 
+    !Equals [!Ref PipelineSource, 'S3']
+  IsCodeCommitSource: 
+    !Equals [!Ref PipelineSource, 'CodeCommit']
+
+Resources:
+  PipelineArtifactS3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          -
+            ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+  PipelineS3Bucket:
+    Type: AWS::S3::Bucket
+    Condition: IsS3Source
+    Properties:
+      BucketName: !Sub nxp-lpc54018-iot-module-${AWS::AccountId}-${AWS::Region}
+      VersioningConfiguration:
+        Status: Enabled
+  PipelineCodeCommit:
+    Type: AWS::CodeCommit::Repository
+    Condition: IsCodeCommitSource
+    Properties: 
+      RepositoryDescription: NXP LPC54018 IoT Module Source
+      RepositoryName: nxp-lpc54018-iot-module
+  CodePipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: CodePipelineRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - codepipeline.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        -
+          PolicyName: NXP-LPC54018-IoT-Module-CodePipeline-Policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              -
+                Effect: Allow
+                Action:
+                  - 's3:GetBucketVersioning'
+                Resource: 
+                  - !Sub arn:aws:s3:::${PipelineArtifactS3Bucket}
+              -
+                Effect: Allow
+                Action:
+                  - 's3:PutObject'
+                  - 's3:GetObject'
+                  - 's3:GetObjectVersion'
+                Resource:
+                  - !Sub arn:aws:s3:::${PipelineArtifactS3Bucket}/*
+              -
+                Effect: Allow
+                Action:
+                  - 'codebuild:BatchGetBuilds'
+                  - 'codebuild:StartBuild'
+                Resource: !Sub arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/${CodeBuild}
+              -
+                Effect: Allow
+                Action:
+                  - 'lambda:ListFunctions'
+                  - 'lambda:ListVersionsByFunction'
+                Resource: '*'
+              - !If
+                  - IsS3Source
+                  - Effect: Allow
+                    Action:
+                      - 's3:GetObject'
+                      - 's3:GetObjectVersion'
+                    Resource:
+                      - !Sub arn:aws:s3:::${PipelineS3Bucket}/*
+                  - !Ref AWS::NoValue
+              - !If
+                  - IsCodeCommitSource
+                  - Effect: Allow
+                    Action:
+                      - 'codecommit:GetBranch'
+                      - 'codecommit:GetCommit'
+                      - 'codecommit:UploadArchive'
+                      - 'codecommit:GetUploadArchiveStatus'
+                      - 'codecommit:CancelUploadArchive'
+                    Resource:
+                      - !Sub arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${PipelineCodeCommit.Name}
+                  - !Ref AWS::NoValue
+  CodePipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: NXP-LPC54018-IoT-Module-CodePipeline
+      RoleArn: !GetAtt CodePipelineRole.Arn
+      ArtifactStore:
+        Location: !Ref PipelineArtifactS3Bucket
+        Type: S3
+      Stages:
+        -
+          Name: Source
+          Actions:
+            - !If
+                - IsCodeCommitSource
+                - ActionTypeId:
+                    Category: Source
+                    Owner: AWS
+                    Provider: CodeCommit
+                    Version: '1'
+                  Configuration:
+                    BranchName: master
+                    RepositoryName: !GetAtt PipelineCodeCommit.Name
+                    PollForSourceChanges: true
+                  InputArtifacts: []
+                  Name: CodeCommitSource
+                  OutputArtifacts:
+                    -
+                      Name: SourceApp
+                  RunOrder: 1
+                - !Ref AWS::NoValue
+            - !If
+                - IsGitHubSource
+                - ActionTypeId:
+                    Category: Source
+                    Owner: ThirdParty
+                    Provider: GitHub
+                    Version: '1'
+                  Configuration:
+                    Owner: !Ref GitHubRepoOwner
+                    Repo: !Ref GitHubRepo
+                    Branch: master
+                    OAuthToken: !Ref GitHubToken
+                    PollForSourceChanges: true
+                  InputArtifacts: []
+                  Name: GitHubSource
+                  OutputArtifacts:
+                    -
+                      Name: SourceApp
+                  RunOrder: 1
+                - !Ref AWS::NoValue
+            - !If
+              - IsS3Source
+              - ActionTypeId:
+                  Category: Source
+                  Owner: AWS
+                  Provider: S3
+                  Version: '1'
+                Configuration:
+                  S3Bucket : !Ref PipelineS3Bucket
+                  PollForSourceChanges : True
+                  S3ObjectKey : iot-module.zip
+                InputArtifacts: []
+                Name: S3Source
+                OutputArtifacts:
+                  -
+                    Name: SourceApp
+                RunOrder: 1
+              - !Ref AWS::NoValue
+        -
+          Name: Build
+          Actions:
+            -
+              Name: CodeBuild
+              InputArtifacts:
+                -
+                  Name: SourceApp
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: '1'
+                Provider: CodeBuild
+              OutputArtifacts:
+                -
+                  Name: BuiltApp
+              Configuration:
+                ProjectName:
+                  Ref: CodeBuild
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        -
+          PolicyName: NXP-LPC54018-IoT-Module-CodeBuild-Policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              -
+                Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource:
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*
+              -
+                Effect: Allow
+                Action:
+                  - 's3:PutObject'
+                  - 's3:GetObject'
+                  - 's3:GetObjectVersion'
+                  - 's3:DeleteObject'
+                Resource:
+                  - !Sub arn:aws:s3:::${PipelineArtifactS3Bucket}/*
+              -
+                Effect: Allow
+                Action:
+                  - 'cloudformation:ValidateTemplate'
+                Resource: '*'
+
+  CodeBuild:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: NXP-LPC54018-IoT-Module-CodeBuild
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: |
+          version: 0.2
+          phases:
+            install:
+              commands:
+                - echo Nothing to do in the install phase...
+            pre_build:
+              commands:
+                - echo Nothing to do in the pre_build phase...
+            build:
+              commands:
+                - echo Build started on `date`
+                - /usr/local/mcuxpressoide/ide/mcuxpressoide -nosplash --launcher.suppressErrors -application org.eclipse.cdt.managedbuilder.core.headlessbuild -import ${CODEBUILD_SRC_DIR}/demos/nxp/lpc54018iotmodule/mcuxpresso -build aws_demos/Release
+            post_build:
+              commands:
+                - echo Build completed on `date`
+          artifacts:
+            files:
+              - 'demos/nxp/lpc54018iotmodule/mcuxpresso/Release/**/*'
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/nxp-lpc54018-iot-module:latest
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          -
+            Name: ARTIFACT_BUCKET
+            Value:
+              Ref: PipelineArtifactS3Bucket
+      Artifacts:
+        Name: !Sub ${PipelineArtifactS3Bucket}-Built
+        Type: CODEPIPELINE
+
+
