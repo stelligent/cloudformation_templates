@@ -57,18 +57,41 @@ Save the file and run your commands.
 ### Troubleshooting
 
 
-Incorrect "Permanent" Credentials - when calling `aws sts get-session-token`: 
+**Problem**: Incorrect "Permanent" Credentials - when calling `aws sts get-session-token`: 
 
-```An error occurred (InvalidClientTokenId) when calling the GetSessionToken operation: The security token included in the request is invalid.```
+```An error occurred (InvalidClientTokenId) when calling the GetSessionToken operation: The security token included in the request is invalid.``` 
+
+**Solution**: To fix, update your credentials to use your access key id and secret access key as shown below:
+
+```sudo vim .aws/credentials```
+
+```
+[default]
+output = json
+region = us-east-1
+aws_access_key_id = AKIAIOSFODNN7EXAMPLE
+aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+```
 
 When running a command (e.g. in this case, `aws s3 ls`) from the AWS CLI without temporary credentials:
 
 ```An error occurred (AccessDenied) when calling the ListBuckets operation: Access Denied```
 
-When running a `aws sts get-session-token --serial-number arn-of-the-mfa-device --token-code code-from-token` command from the AWS CLI using the wrong `--serial-number`: 
+**Solution**: To fix, update your credentials to use the `aws_session_token` as shown below:
+
+```
+[default]
+output = json
+region = us-east-1
+aws_access_key_id = AKIAIOSFODNN7EXAMPLE
+aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+aws_session_token = AQoDYXdzEJr...<remainder of security token>
+```
+
+
+When running a `aws sts get-session-token --serial-number arn-of-the-mfa-device --token-code code-from-token` command from the AWS CLI using the wrong `--serial-number`. This also occurs if you're using the ARN for the *user* (vs. `mfa`): 
 
 ```An error occurred (AccessDenied) when calling the GetSessionToken operation: MultiFactorAuthentication failed, unable to validate MFA code.  Please verify your MFA serial number is valid and associated with this user.```
-
 
 When entering the wrong MFA six-digit token for the `--serial-number` (e.g. ARN for the user): 
 
