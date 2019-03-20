@@ -39,7 +39,7 @@ When running the `aws sts get-session-token` command, you'll get a response like
 
 If you used `aws configure` to configure your credentials, you can edit your configuration file by opening the credentials file:
 
-```sudo vim .aws/credentials```
+```sudo vim ~/.aws/credentials```
 
 and adding/updating the `aws_access_key_id`, `aws_secret_access_key`, and `aws_session_token` values you obtained when running the `aws sts get-session-token` command.
 
@@ -63,7 +63,7 @@ Save the file and run your commands.
 
 **Solution**: To fix, update your credentials to use your access key id and secret access key as shown below:
 
-```sudo vim .aws/credentials```
+```sudo vim ~/.aws/credentials```
 
 ```
 [default]
