@@ -71,7 +71,8 @@
                 "iam:ListServiceSpecificCredentials",
                 "iam:ListMFADevices",
                 "iam:GetAccountSummary",
-                "sts:GetSessionToken"
+                "sts:GetSessionToken",
+                "iam:ChangePassword"
             ],
             "Resource": "*",
             "Condition": {
