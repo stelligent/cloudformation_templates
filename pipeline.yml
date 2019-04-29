@@ -157,7 +157,7 @@ Resources:
       Source:
         Type: CODEPIPELINE
         BuildSpec: !Sub |
-          version: 0.1
+          version: 0.2
           phases:
             post_build:
               commands:
