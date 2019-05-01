@@ -55,10 +55,6 @@ Resources:
         PolicyDocument:
           Statement:
           - Action:
-            - codebuild:*
-            Resource: "*"
-            Effect: Allow
-          - Action:
             - s3:GetObject
             - s3:GetObjectVersion
             - s3:GetBucketVersioning
@@ -70,8 +66,6 @@ Resources:
             - arn:aws:s3:::codepipeline*
             Effect: Allow
           - Action:
-            - s3:*
-            - cloudformation:*
             - iam:PassRole
             Resource: "*"
             Effect: Allow
