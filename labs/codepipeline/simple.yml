@@ -66,6 +66,7 @@ Resources:
             - arn:aws:s3:::codepipeline*
             Effect: Allow
           - Action:
+            - s3:*
             - iam:PassRole
             Resource: "*"
             Effect: Allow
