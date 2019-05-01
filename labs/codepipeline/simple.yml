@@ -66,7 +66,10 @@ Resources:
             - arn:aws:s3:::codepipeline*
             Effect: Allow
           - Action:
-            - s3:*
+            - s3:GetObject
+            - s3:GetObjectVersion
+            - s3:GetBucketVersioning
+            - s3:PutObject
             - iam:PassRole
             Resource: "*"
             Effect: Allow
