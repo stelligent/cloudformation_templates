@@ -1,0 +1,245 @@
+Parameters:
+  AccountAlias:
+    Default: ''
+    Type: String
+  SnsTopicEmailAddress:
+    Default: ''
+    Type: String
+    Description: >-
+      'Email address for recipients who wish to recieve notifications when someone approves/rejects an approval gate in any pipeline in the account. 
+      (Leave blank if there is no need for notifications)'
+Conditions:
+  SnsEmailAddressExists: !Not
+    - !Equals
+      - !Ref SnsTopicEmailAddress
+      - ''
+Resources:
+  PipelineApprovalTrackingS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+      AccessControl: Private
+      BucketName: 
+        !Sub '${AccountAlias}-pipeline-approval-gate-tracking-${AWS::Region}'
+      Tags:
+        - Key: String
+          Value: String
+      VersioningConfiguration:
+        Status: Enabled
+  LambdaFunctionNotificationTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      TopicName: !Sub '${AccountAlias}-pipeline-approval-gate-tracking-topic'
+      Subscription: !If
+        - SnsEmailAddressExists
+        -
+          - Endpoint: !Ref SnsTopicEmailAddress
+            Protocol: email
+        - !Ref AWS::NoValue
+  LambdaFunctionNotificationTopicPolicy:
+    Type: 'AWS::SNS::TopicPolicy'
+    Properties:
+      Topics:
+        - !Ref LambdaFunctionNotificationTopic
+      PolicyDocument:
+        Version: 2012-10-17
+        Id: __default_policy_ID
+        Statement:
+          - Sid: AWSLambda
+            Effect: Allow
+            Principal:
+              Service: 
+              - lambda.amazonaws.com
+              - events.amazonaws.com
+            Action: 'sns:Publish'
+            Resource: !Ref LambdaFunctionNotificationTopic
+  AuditTrackingEventLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Sid: ''
+          Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action: sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName:
+          !Sub '${AccountAlias}-pipeline-approval-gate-tracking'
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action: 
+            - 'sns:Publish'
+            Resource: 
+            - !Ref LambdaFunctionNotificationTopic
+          - Effect: Allow
+            Action:
+            - s3:PutObject
+            - s3:PutObjectTagging
+            Resource:
+            - !Sub arn:aws:s3:::${PipelineApprovalTrackingS3Bucket}
+            - !Sub arn:aws:s3:::${PipelineApprovalTrackingS3Bucket}/*
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource:
+            - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*
+          - Effect: Allow
+            Action: 
+            - 'cloudtrail:LookupEvents'
+            - 'cloudtrail:DescribeTrails'
+            Resource: 
+            - '*'
+          - Effect: Allow
+            Action: 
+            - 'cloudtrail:GetTrailStatus'
+            Resource: 
+            - !Sub 'arn:aws:cloudtrail:${AWS::Region}:${AWS::AccountId}:trail/*'
+  PermissionForEventsToInvokeLambda: 
+    Type: AWS::Lambda::Permission
+    Properties: 
+      FunctionName: 
+        !Ref ApprovalGateEventTrackingLambdaFunction
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: 
+        !GetAtt ApprovalGateEventRule.Arn
+  ApprovalGateEventRule:
+    Type: AWS::Events::Rule
+    Properties: 
+      Description: Event Rule that tracks whenever someone approves/rejects an approval gate in a pipeline
+      EventPattern: 
+        {
+          "source": [
+            "aws.codepipeline"
+          ],
+          "detail-type": [
+            "AWS API Call via CloudTrail"
+          ],
+          "detail": {
+            "eventSource": [
+              "codepipeline.amazonaws.com"
+            ],
+            "eventName": [
+              "PutApprovalResult"
+            ]
+          }
+        }
+      Name: !Sub '${AccountAlias}-pipeline-approval-cloudtrail-event-rule'
+      State: ENABLED
+      Targets:
+        - 
+          Arn: 
+            Fn::GetAtt: 
+              - "ApprovalGateEventTrackingLambdaFunction"
+              - "Arn"
+          Id: "TargetFunctionV1"
+  ApprovalGateEventTrackingLambdaFunction:
+    Type: "AWS::Lambda::Function"
+    Properties: 
+      Code:
+        ZipFile: |
+          import json
+          import boto3
+          import os
+          import time
+          import datetime
+          from datetime import datetime
+          from dateutil import tz
+
+          sns = boto3.client('sns')
+          s3 = boto3.client('s3')
+          bucket = os.environ['BUCKETNAME']
+          sns_topic_arn = os.environ['SNSTOPICARN']
+
+          # Method for sending SNS notification messages
+          def send_sns_message(sns_topic_arn, sns_message, message_subject):
+            sns.publish(
+              TargetArn=sns_topic_arn,
+              Message=sns_message,
+              Subject=message_subject
+            )
+          # Method for tagging S3 objects with tag set
+          def tag_s3_object(bucket, key, tag_set):
+            s3.put_object_tagging(
+              Bucket=bucket,
+              Key=key,
+              Tagging={
+                  'TagSet': tag_set
+              }
+            )
+          # Lambda handler
+          def lambda_handler(event, context):
+            body = event["detail"]
+            # Record CloudTrail event body information to Lambda Function's CloudWatch log group
+            print(body)
+
+            iam_user_arn = body["userIdentity"]["arn"]
+            pipeline_name = body["requestParameters"]["pipelineName"]
+            approval_gate = body["requestParameters"]["stageName"]
+            approval_status = body["requestParameters"]["result"]["status"]
+            approval_summary = body["requestParameters"]["result"]["summary"]
+            approval_date = body["responseElements"]["approvedAt"]
+            account_id = body["userIdentity"]["accountId"]
+            region = body["awsRegion"]
+
+            # Change approval date time from UTC to EST
+            date_str = approval_date
+            from_zone = tz.gettz('UTC')
+            to_zone = tz.gettz('US/Eastern')
+            utc = datetime.strptime(date_str, '%b %d, %Y %I:%M:%S %p')
+            utc = utc.replace(tzinfo=from_zone)
+            est_time = utc.astimezone(to_zone)
+            est_time_approval_date = datetime.strftime(est_time, '%b %d, %Y %I:%M:%S %p')
+            year = est_time.strftime("%Y")
+            month = est_time.strftime("%m")
+            day = est_time.strftime("%d")
+            time_of_day = est_time.strftime("%I:%M:%S %p").replace(" ", "-")
+
+            # Create SNS message body
+            sns_message = (f"Approval Gate {approval_gate} \
+          for Pipeline {pipeline_name} \
+          was {approval_status} \
+          by {iam_user_arn} \
+          on {est_time_approval_date} \
+          inside the {region} region \
+          in AWS Account {account_id}. \
+          Approval Gate Response Summary: \
+          {approval_summary}")
+            message_subject = 'Pipeline Approval Gate Information'
+            # Send SNS message containing information about the approval gate action
+            send_sns_message(sns_topic_arn, sns_message, message_subject)
+            
+            # Open up temp file and write the CloudTrail JSON event body information to JSON file.
+            # This JSON file will be the S3 object that gets uploaded and stored in S3.
+            with open(f"/tmp/{approval_gate}__{est_time_approval_date}.txt".replace(" ", "-").replace(",", ""), 'w') as outfile:  
+              json.dump(body, outfile)
+            file = (f"/tmp/{approval_gate}__{est_time_approval_date}.txt").replace(" ", "-").replace(",", "")
+            object_key = (f"PipelineApprovalGateActions/{pipeline_name}/{year}/{month}/{day}/{approval_gate}-{approval_status.upper()}-{time_of_day}.txt")
+            s3.upload_file(file, bucket, object_key)
+
+            # Sleep for 5 seconds to allow object upload to complete. 
+            time.sleep(5)
+            # Create S3 object tag set
+            s3_tag_set = []
+            s3_tag_set.append({"Key": "Pipeline Name",  "Value": pipeline_name})
+            s3_tag_set.append({"Key": "Approval Gate",  "Value": approval_gate})
+            s3_tag_set.append({"Key": "Approval Gate Status",  "Value": approval_status})
+            s3_tag_set.append({"Key": "IAM Approver",  "Value": iam_user_arn})
+            # Tag newly upload S3 object
+            tag_s3_object(bucket, object_key, s3_tag_set)
+      FunctionName: !Sub '${AccountAlias}-pipeline-approval-gate-tracking'
+      Handler: index.lambda_handler
+      Environment:
+        Variables: 
+          SNSTOPICARN: !Ref LambdaFunctionNotificationTopic
+          BUCKETNAME: !Ref PipelineApprovalTrackingS3Bucket
+      MemorySize: 128
+      Role: !GetAtt AuditTrackingEventLambdaRole.Arn
+      Runtime: python3.6
+      Timeout: 10
