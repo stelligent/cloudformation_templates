@@ -1,0 +1,46 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: DDB
+Parameters:
+  App:
+    Type: String
+    Default: 1234
+  Stage:
+    Type: String
+    Default: 1234
+  Stack:
+    Type: String
+    Default: 1234
+  ReadCapacityUnits:
+    Type: Number
+    Default: 5
+  WriteCapacityUnits:
+    Type: Number
+    Default: 5
+Resources:
+  userTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub ${App}-${Stage}-${Stack}-user
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+      ProvisionedThroughput:
+          ReadCapacityUnits: !Ref ReadCapacityUnits
+          WriteCapacityUnits: !Ref WriteCapacityUnits
+      SSESpecification:
+          SSEEnabled: true
+      TimeToLiveSpecification:
+          Enabled: true
+          AttributeName: 'ttl'
+      Tags:
+        - Key: Stage
+          Value: !Ref Stage
+        - Key: Stack
+          Value: !Ref Stack
+        - Key: App
+          Value: !Ref App
+
