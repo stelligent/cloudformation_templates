@@ -1,6 +1,7 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
-Description: This template creates one or more Amazon resources. You will be billed for the AWS resources used if you create a stack from this template.
+Description: This template creates one or more Amazon resources. 
+  You will be billed for the AWS resources used if you create a stack from this template.
 Resources:
   MyQueue:
     Type: AWS::SQS::Queue
@@ -11,6 +12,9 @@ Resources:
         - - SampleQueue-
           - Ref: AWS::StackName
 Outputs:
-  MyAWSAccountId:
-    Value:
-      Ref: MyQueue
+  SourceQueueARN: 
+    Description: "ARN of source queue"
+    Value: 
+      Fn::GetAtt: 
+        - "MyQueue"
+        - "Arn"
