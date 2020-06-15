@@ -19,18 +19,12 @@ cd $TMPDIR
 git clone https://github.com/stelligent/cloudformation_templates.git
 
 aws s3api list-buckets --query 'Buckets[?starts_with(Name, `'$S3BUCKET'`) == `true`].[Name]' --output text | xargs -I {} aws s3 rb s3://{} --force
-aws s3api list-buckets --query 'Buckets[?starts_with(Name, `'$OTHER'`) == `true`].[Name]' --output text | xargs -I {} aws s3 rb s3://{} --force
-
 
 aws s3 mb s3://$S3BUCKET-$(aws sts get-caller-identity --output text --query 'Account')
 
 aws cloudformation delete-stack --stack-name $CFNSTACK
 
 aws cloudformation wait stack-delete-complete --stack-name $CFNSTACK
-
-aws cloudformation delete-stack --stack-name $OTHER
-
-aws cloudformation wait stack-delete-complete --stack-name $OTHER
 
 cd cloudformation_templates/labs/polly
 
